@@ -1,0 +1,26 @@
+Quickstart
+**********
+
+
+Building the Code
+=================
+
+This guide will help you configure the IDE/Environment.
+
+External Tools:
+
+1. Android Studio
+
+2. Gradle
+
+3. Android SDK 29
+
+4. Intellj (Optional)
+
+To Build the code:
+
+1. Build the gradle project
+
+2. Use adb to connect to the robot
+
+3. Run the code

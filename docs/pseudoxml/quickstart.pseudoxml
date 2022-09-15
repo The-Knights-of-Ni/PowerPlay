@@ -1,0 +1,36 @@
+<document source="/Users/priya.govindarajan/Documents/github/FreightFrenzy/docs/source/quickstart.rst">
+    <section ids="quickstart" names="quickstart">
+        <title>
+            Quickstart
+        <section ids="building-the-code" names="building\ the\ code">
+            <title>
+                Building the Code
+            <paragraph>
+                This guide will help you configure the IDE/Environment.
+            <paragraph>
+                External Tools:
+            <enumerated_list enumtype="arabic" prefix="" suffix=".">
+                <list_item>
+                    <paragraph>
+                        Android Studio
+                <list_item>
+                    <paragraph>
+                        Gradle
+                <list_item>
+                    <paragraph>
+                        Android SDK 29
+                <list_item>
+                    <paragraph>
+                        Intellj (Optional)
+            <paragraph>
+                To Build the code:
+            <enumerated_list enumtype="arabic" prefix="" suffix=".">
+                <list_item>
+                    <paragraph>
+                        Build the gradle project
+                <list_item>
+                    <paragraph>
+                        Use adb to connect to the robot
+                <list_item>
+                    <paragraph>
+                        Run the code
