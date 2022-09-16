@@ -13,7 +13,7 @@ public class AutoRedSecondaryPark extends Auto {
         initAuto(AllianceColor.RED);
         PlacementLevel placementLevel = getHubLevel();
         waitForStart();
-        Drive drive = robot.drive
+        Drive drive = robot.drive;
 
         robot.control.setLidPosition(LidPosition.CLOSED);
 
