@@ -1,0 +1,85 @@
+<document source="/Users/priya.govindarajan/Documents/github/FreightFrenzy/docs/source/index.rst">
+    <comment xml:space="preserve">
+        Freight Frenzy documentation master file, created by
+        sphinx-quickstart on Tue Nov  9 10:24:43 2021.
+        You can adapt this file completely to your liking, but it should at least
+        contain the root `toctree` directive.
+    <section ids="welcome-to-the-knights-of-ni-s-freight-frenzy-game-robot-s-manual" names="welcome\ to\ the\ knights\ of\ ni's\ freight\ frenzy\ game\ robot's\ manual!">
+        <title>
+            Welcome to The Knights of Ni’s Freight Frenzy Game Robot’s Manual!
+        <paragraph>
+            If you are looking to see what a game pad key does or how to configure the robot, look at the quickstart guide.
+            If there are errors with the code, look at the common errors page. If you want detailed instruction on how to use the
+            robot take a look at 
+            <reference internal="True" refuri="game_pad">
+                <inline classes="doc">
+                    Game Pad
+            .
+        <section ids="contents" names="contents">
+            <title>
+                Contents
+            <compound classes="toctree-wrapper">
+                <compact_paragraph toctree="True">
+                    <bullet_list>
+                        <list_item classes="toctree-l1">
+                            <compact_paragraph classes="toctree-l1">
+                                <reference anchorname="" internal="True" refuri="quickstart">
+                                    Quickstart
+                            <bullet_list>
+                                <list_item classes="toctree-l2">
+                                    <compact_paragraph classes="toctree-l2">
+                                        <reference anchorname="#building-the-code" internal="True" refuri="quickstart#building-the-code">
+                                            Building the Code
+                        <list_item classes="toctree-l1">
+                            <compact_paragraph classes="toctree-l1">
+                                <reference anchorname="" internal="True" refuri="game_pad">
+                                    Game Pad
+                            <bullet_list>
+                                <list_item classes="toctree-l2">
+                                    <compact_paragraph classes="toctree-l2">
+                                        <reference anchorname="#game-pad-1" internal="True" refuri="game_pad#game-pad-1">
+                                            Game Pad 1
+                                <list_item classes="toctree-l2">
+                                    <compact_paragraph classes="toctree-l2">
+                                        <reference anchorname="#gamepad-2" internal="True" refuri="game_pad#gamepad-2">
+                                            Gamepad 2
+                        <list_item classes="toctree-l1">
+                            <compact_paragraph classes="toctree-l1">
+                                <reference anchorname="" internal="True" refuri="common_errors">
+                                    Common Errors
+                            <bullet_list>
+                                <list_item classes="toctree-l2">
+                                    <compact_paragraph classes="toctree-l2">
+                                        <reference anchorname="#out-of-memory-error" internal="True" refuri="common_errors#out-of-memory-error">
+                                            Out of Memory error
+                                <list_item classes="toctree-l2">
+                                    <compact_paragraph classes="toctree-l2">
+                                        <reference anchorname="#java-1-8-error" internal="True" refuri="common_errors#java-1-8-error">
+                                            Java 1.8 Error
+                                <list_item classes="toctree-l2">
+                                    <compact_paragraph classes="toctree-l2">
+                                        <reference anchorname="#the-marker-is-not-detected" internal="True" refuri="common_errors#the-marker-is-not-detected">
+                                            The Marker is not Detected
+                        <list_item classes="toctree-l1">
+                            <compact_paragraph classes="toctree-l1">
+                                <reference anchorname="" internal="True" refuri="robot_placement">
+                                    Robot Placement
+    <section ids="indices-and-tables" names="indices\ and\ tables">
+        <title>
+            Indices and tables
+        <bullet_list bullet="*">
+            <list_item>
+                <paragraph>
+                    <reference internal="True" refuri="genindex">
+                        <inline classes="std std-ref">
+                            Index
+            <list_item>
+                <paragraph>
+                    <reference internal="True" refuri="py-modindex">
+                        <inline classes="std std-ref">
+                            Module Index
+            <list_item>
+                <paragraph>
+                    <reference internal="True" refuri="search">
+                        <inline classes="std std-ref">
+                            Search Page

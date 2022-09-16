@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<ncx version="2005-1" xmlns="http://www.daisy.org/z3986/2005/ncx/">
+  <head>
+    <meta name="dtb:uid" content="unknown"/>
+    <meta name="dtb:depth" content="2"/>
+    <meta name="dtb:totalPageCount" content="0"/>
+    <meta name="dtb:maxPageNumber" content="0"/>
+  </head>
+  <docTitle>
+    <text>Freight Frenzy</text>
+  </docTitle>
+  <navMap>    
+    <navPoint id="navPoint1" playOrder="1">
+      <navLabel>
+        <text>Welcome to The Knights of Ni’s Freight Frenzy Game Robot’s Manual!</text>
+      </navLabel>
+      <content src="index.xhtml" />  
+    </navPoint>
+    <navPoint id="navPoint2" playOrder="2">
+      <navLabel>
+        <text>Quickstart</text>
+      </navLabel>
+      <content src="quickstart.xhtml" />  
+      <navPoint id="navPoint3" playOrder="2">
+        <navLabel>
+          <text>Quickstart</text>
+        </navLabel>
+        <content src="quickstart.xhtml" />  
+      </navPoint>
+      <navPoint id="navPoint4" playOrder="3">
+        <navLabel>
+          <text>Building the Code</text>
+        </navLabel>
+        <content src="quickstart.xhtml#building-the-code" />  
+      </navPoint>
+    </navPoint>
+    <navPoint id="navPoint5" playOrder="4">
+      <navLabel>
+        <text>Game Pad</text>
+      </navLabel>
+      <content src="game_pad.xhtml" />  
+      <navPoint id="navPoint6" playOrder="4">
+        <navLabel>
+          <text>Game Pad</text>
+        </navLabel>
+        <content src="game_pad.xhtml" />  
+      </navPoint>
+      <navPoint id="navPoint7" playOrder="5">
+        <navLabel>
+          <text>Game Pad 1</text>
+        </navLabel>
+        <content src="game_pad.xhtml#game-pad-1" />  
+      </navPoint>
+      <navPoint id="navPoint8" playOrder="6">
+        <navLabel>
+          <text>Gamepad 2</text>
+        </navLabel>
+        <content src="game_pad.xhtml#gamepad-2" />  
+      </navPoint>
+    </navPoint>
+    <navPoint id="navPoint9" playOrder="7">
+      <navLabel>
+        <text>Common Errors</text>
+      </navLabel>
+      <content src="common_errors.xhtml" />  
+      <navPoint id="navPoint10" playOrder="7">
+        <navLabel>
+          <text>Common Errors</text>
+        </navLabel>
+        <content src="common_errors.xhtml" />  
+      </navPoint>
+      <navPoint id="navPoint11" playOrder="8">
+        <navLabel>
+          <text>Out of Memory error</text>
+        </navLabel>
+        <content src="common_errors.xhtml#out-of-memory-error" />  
+      </navPoint>
+      <navPoint id="navPoint12" playOrder="9">
+        <navLabel>
+          <text>Java 1.8 Error</text>
+        </navLabel>
+        <content src="common_errors.xhtml#java-1-8-error" />  
+      </navPoint>
+      <navPoint id="navPoint13" playOrder="10">
+        <navLabel>
+          <text>The Marker is not Detected</text>
+        </navLabel>
+        <content src="common_errors.xhtml#the-marker-is-not-detected" />  
+      </navPoint>
+    </navPoint>
+    <navPoint id="navPoint14" playOrder="11">
+      <navLabel>
+        <text>Robot Placement</text>
+      </navLabel>
+      <content src="robot_placement.xhtml" />  
+    </navPoint>
+  </navMap>
+</ncx>

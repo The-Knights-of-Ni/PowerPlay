@@ -1,0 +1,6 @@
+<document source="/Users/priya.govindarajan/Documents/github/FreightFrenzy/docs/source/robot_placement.rst">
+    <section ids="robot-placement" names="robot\ placement">
+        <title>
+            Robot Placement
+        <paragraph>
+            Place the robot so that it touches the wall and the camera is aligned with the middle tape.

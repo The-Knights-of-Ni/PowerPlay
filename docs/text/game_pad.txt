@@ -1,0 +1,19 @@
+Game Pad
+********
+
+
+Game Pad 1
+==========
+
+[image: Xbox 360 Game Pad][image]
+
+Left Joystick - Movement Right Joystick - Turning A - Intake counter
+clockwise B - Intake clockwise X -  Bucket Up Y - Bucket Down
+
+
+Gamepad 2
+=========
+
+A - Linear Slide Level 3 B - Linear Slide Retract X - Duck Wheel
+Toggle Forward Y - Duck Wheel Toggle Backward Left Bumper - Claw
+Retract Right Bumper - Claw Extend

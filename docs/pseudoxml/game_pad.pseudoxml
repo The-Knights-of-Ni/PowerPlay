@@ -1,0 +1,25 @@
+<document source="/Users/priya.govindarajan/Documents/github/FreightFrenzy/docs/source/game_pad.rst">
+    <section ids="game-pad" names="game\ pad">
+        <title>
+            Game Pad
+        <section ids="game-pad-1" names="game\ pad\ 1">
+            <title>
+                Game Pad 1
+            <image align="center" alt="Xbox 360 Game Pad" candidates="{'*': '_static/xbox-360-controller-front.jpg'}" scale="30" uri="_static/xbox-360-controller-front.jpg">
+            <paragraph>
+                Left Joystick - Movement
+                Right Joystick - Turning
+                A - Intake counter clockwise
+                B - Intake clockwise
+                X -  Bucket Up
+                Y - Bucket Down
+        <section ids="gamepad-2" names="gamepad\ 2">
+            <title>
+                Gamepad 2
+            <paragraph>
+                A - Linear Slide Level 3
+                B - Linear Slide Retract
+                X - Duck Wheel Toggle Forward
+                Y - Duck Wheel Toggle Backward
+                Left Bumper - Claw Retract
+                Right Bumper - Claw Extend
