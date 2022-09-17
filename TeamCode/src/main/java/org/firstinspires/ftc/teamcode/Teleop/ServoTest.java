@@ -35,8 +35,6 @@ public class ServoTest extends LinearOpMode {
         waitForStart();
         while(opModeIsActive()) {
             robot.getGamePadInputs();
-            robot.markerSlide.setPosition(0);
-            robot.markerHook.setPosition(0.425);
 
 //            robot.markerSlide.setPosition(0.425);
 //            robot.markerHook.setPosition(0.375);

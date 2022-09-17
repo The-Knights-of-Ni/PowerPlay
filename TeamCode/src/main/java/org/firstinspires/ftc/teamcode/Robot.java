@@ -24,14 +24,6 @@ public class Robot {
     public DcMotorEx frontRightDriveMotor;
     public DcMotorEx rearRightDriveMotor;
     public DcMotorEx rearLeftDriveMotor;
-    public DcMotorEx intake;
-    public DcMotorEx bucket;
-    public DcMotorEx slide;
-    // Servos
-    public CRServo duckWheel;
-    public Servo lid;
-    public Servo markerSlide;
-    public Servo markerHook;
     // Odometry
     public List<LynxModule> allHubs;
     public DigitalChannel odometryRA;
@@ -149,28 +141,6 @@ public class Robot {
         frontRightDriveMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         rearLeftDriveMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         rearRightDriveMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-
-        intake = (DcMotorEx) hardwareMap.dcMotor.get("intake");
-        intake.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        intake.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        intake.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        intake.setPower(0.0);
-
-        bucket = (DcMotorEx) hardwareMap.dcMotor.get("bucket");
-        bucket.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        bucket.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        bucket.setPower(0.0);
-
-        slide = (DcMotorEx) hardwareMap.dcMotor.get("slide");
-        slide.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        slide.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        slide.setPower(0.0);
-
-        // Servos
-        duckWheel = new CRServo(hardwareMap, "duckWheel");
-        lid = hardwareMap.servo.get("lid");
-        markerSlide = hardwareMap.servo.get("markerSlide");
-        markerHook = hardwareMap.servo.get("markerHook");
 
         // Sensors
         imu = hardwareMap.get(BNO055IMU.class, "imu");
