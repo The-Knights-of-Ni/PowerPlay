@@ -199,7 +199,7 @@ public class Robot {
         drive = new Drive(frontLeftDriveMotor, frontRightDriveMotor, rearLeftDriveMotor, rearRightDriveMotor, imu, telemetry, hardwareMap, timer);
 
         telemetryBroadcast("Status", " control initializing...");
-        control = new Control(intake, bucket, slide, duckWheel, lid, markerSlide, markerHook, imu, loadSensor, telemetry, hardwareMap, timer);
+        control = new Control(telemetry, hardwareMap, timer);
 
         if(visionEnabled) {
             telemetryBroadcast("Status", " vision initializing...");
