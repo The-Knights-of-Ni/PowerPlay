@@ -58,34 +58,6 @@ public class Auto extends LinearOpMode {
     }
 
     /**
-     * Returns the hub level by running until the hub level is not {@link DetectMarkerPipeline.MarkerLocation#NOT_FOUND}
-     * @return The hub level as an int.
-     */
-    public PlacementLevel getHubLevel() {
-        PlacementLevel level;
-        DetectMarkerPipeline.MarkerLocation location;
-        do {
-            location = robot.vision.detectMarkerRun();
-        } while (location == DetectMarkerPipeline.MarkerLocation.NOT_FOUND);
-        switch(location) {
-            case LEFT:
-                level = PlacementLevel.BOTTOM;
-                break;
-            case MIDDLE:
-                level = PlacementLevel.MIDDLE;
-                break;
-            case RIGHT:
-                level = PlacementLevel.TOP;
-                break;
-            default:
-                level = PlacementLevel.NOT_FOUND;
-                break;
-        }
-        robot.vision.stop(); // DO NOT remove this line. It is to avoid potential memory leaks
-        return level;
-    }
-
-    /**
      * Override of runOpMode()
      *
      * <p>Please do not swallow the InterruptedException, as it is used in cases where the op mode
