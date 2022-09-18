@@ -25,8 +25,6 @@ public class MotorTest extends LinearOpMode {
         waitForStart();
         while (opModeIsActive()) {
 
-            telemetry.addData("Position (bucket)", robot.bucket.getCurrentPosition());
-            telemetry.addData("Position (slide)", robot.slide.getCurrentPosition());
             telemetry.addData("Position (front left)", robot.frontLeftDriveMotor.getCurrentPosition());
             telemetry.addData("Position (front right)", robot.frontRightDriveMotor.getCurrentPosition());
             telemetry.addData("Position (rear left)", robot.rearLeftDriveMotor.getCurrentPosition());
