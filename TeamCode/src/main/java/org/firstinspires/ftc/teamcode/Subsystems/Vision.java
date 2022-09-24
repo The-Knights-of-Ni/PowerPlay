@@ -20,7 +20,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.
 /**
  * The Vision Subsystem
  *
- * @see org.firstinspires.ftc.teamcode.Subsystems.DetectMarkerPipeline
+ * @see org.firstinspires.ftc.teamcode.Subsystems.ConeColorPipeline
  * @see <a href="https://github.com/OpenFTC/EasyOpenCV">EasyOpenCV</a>
  */
 public class Vision extends Subsystem {
@@ -53,7 +53,7 @@ public class Vision extends Subsystem {
     private VectorF targetTranslation;
     private Orientation targetRotation;
 
-    private DetectMarkerPipeline pipeline;
+    private ConeColorPipeline pipeline;
     private OpenCvCamera camera;
 
     private int[] viewportContainerIds;
@@ -101,7 +101,7 @@ public class Vision extends Subsystem {
                         .createWebcam(hardwareMap.get(WebcamName.class, WEBCAM_NAME), cameraMonitorViewId);
 
         // Create a detection pipeline for detecting the position
-        pipeline = new DetectMarkerPipeline(allianceColor, CAMERA_WIDTH);
+        pipeline = new ConeColorPipeline(allianceColor, CAMERA_WIDTH);
         camera.setPipeline(pipeline);
 
         // Create listeners for the camera
@@ -139,8 +139,8 @@ public class Vision extends Subsystem {
      *
      * @return Where the marker is
      */
-    public DetectMarkerPipeline.MarkerLocation detectMarkerRun() {
+    public ConeColorPipeline coneColorPipelineRun() {
         // Return the marker location
-        return pipeline.getMarkerLocation();
+        return pipeline.coneColorPipeline();
     }
 }

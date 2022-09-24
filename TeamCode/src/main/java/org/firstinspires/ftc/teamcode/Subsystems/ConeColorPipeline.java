@@ -20,13 +20,19 @@ import java.util.List;
  * @see OpenCvPipeline
  * @see Vision
  */
-public class DetectMarkerPipeline extends OpenCvPipeline {
+public class ConeColorPipeline extends OpenCvPipeline {
     private final AllianceColor allianceColor;
     private final int CAMERA_WIDTH;
-    private MarkerLocation markerLocation = MarkerLocation.NOT_FOUND;
+    private ConeColor coneColor = ConeColor.OTHER;
 
-    public enum MarkerLocation {
-        LEFT, MIDDLE, RIGHT, NOT_FOUND
+    public enum ConeColor {
+        GREEN(new Scalar(1,1,1), new Scalar(1,1,1)), //TODO: Calibrate HSV values for colors
+        CYAN(new Scalar(2,2,2), new Scalar(2,2,2)),
+        BROWN(new Scalar(3,3,3), new Scalar(3,3,3)),
+        OTHER(new Scalar(0,0,0), new Scalar(0,0,0));
+        private final Scalar lowHSV;
+        private final Scalar highHSV;
+        ConeColor(Scalar lowHSV, Scalar highHSV) { this.highHSV = highHSV; this.lowHSV = lowHSV;}
     }
 
     /**
@@ -36,7 +42,7 @@ public class DetectMarkerPipeline extends OpenCvPipeline {
      * @see Telemetry
      * @see AllianceColor
      */
-    public DetectMarkerPipeline(AllianceColor allianceColor, int width) {
+    public ConeColorPipeline(AllianceColor allianceColor, int width) {
         this.allianceColor = allianceColor;
         this.CAMERA_WIDTH = width;
     }
@@ -51,27 +57,26 @@ public class DetectMarkerPipeline extends OpenCvPipeline {
      * #allianceColor}), and that the marker color is (0, 255, 0), which is a bright green ({@link
      * Scalar}'s are used for colors). We compare the marker color with the alliance color on each of
      * the rectangles, if the marker color is on none or multiple of them, it is marked as {@link
-     * MarkerLocation#NOT_FOUND}, if otherwise, the respective Location it is in is returned via a
-     * {@link MarkerLocation} variable called {@link #markerLocation}
+     * ConeColor#OTHER}, if otherwise, the respective Location it is in is returned via a
+     * {@link ConeColor} variable called {@link #markerLocation}
      *
      * @param input A Mask (the class is called {@link Mat})
      * @return The marker location
      * @see #allianceColor
      * @see Mat
      * @see Scalar
-     * @see MarkerLocation
+     * @see ConeColor
      */
     @Override
     public Mat processFrame(Mat input) {
         Mat mask = new Mat();
         Imgproc.cvtColor(input, mask, Imgproc.COLOR_RGB2HSV);
 
-        Rect rectCrop = new Rect(0, 720, 1920, 360);
+        Rect rectCrop = new Rect(0, 720, 1920, 360); //TODO: Calibrate crop constants if necessary
         Mat crop = new Mat(mask, rectCrop);
 
 
-        if(crop.empty()) {
-            markerLocation = MarkerLocation.NOT_FOUND;
+        if (crop.empty()) {
             return input;
         }
 
@@ -81,42 +86,16 @@ public class DetectMarkerPipeline extends OpenCvPipeline {
 
         Core.inRange(crop, lowHSV, highHSV, thresh);
 
-        Mat edges = new Mat();
-        Imgproc.Canny(thresh, edges, 100, 300);
-
-        List<MatOfPoint> contours = new ArrayList<>();
-        Mat hierarchy = new Mat();
-        Imgproc.findContours(edges, contours, hierarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
-
-        MatOfPoint2f[] contoursPoly = new MatOfPoint2f[contours.size()];
-        Rect[] boundRect = new Rect[contours.size()];
-
-        for(int i = 0; i < contours.size(); i++) {
-            contoursPoly[i] = new MatOfPoint2f();
-            Imgproc.approxPolyDP(new MatOfPoint2f(contours.get(i).toArray()), contoursPoly[i], 3, true);
-            boundRect[i] = Imgproc.boundingRect(new MatOfPoint(contoursPoly[i].toArray()));
-//            Imgproc.contourArea(contoursPoly[i]); // TODO Maybe implement contour area check for next tourney
-        }
-
         double left_x = 0.375 * CAMERA_WIDTH;
         double right_x = 0.625 * CAMERA_WIDTH;
 
-        boolean left = false;
-        boolean middle = false;
-        boolean right = false;
+        boolean brown = false;
+        boolean green = false;
+        boolean cyan = false;
 
-        for(int i = 0; i != boundRect.length; i++) {
-            int midpoint = boundRect[i].x + boundRect[i].width/2;
-            if (midpoint < left_x)
-                left = true;
-            if (left_x <= midpoint && midpoint <= right_x)
-                middle = true;
-            if (right_x < midpoint)
-                right = true;
-        }
-        if(left) markerLocation = MarkerLocation.LEFT;
-        if(middle) markerLocation = MarkerLocation.MIDDLE;
-        if(right) markerLocation = MarkerLocation.RIGHT;
+        if (brown) { coneColor = ConeColor.BROWN; };
+        if (green) { coneColor = ConeColor.BROWN; };
+        if (cyan)  { coneColor = ConeColor.BROWN; }
 
         return crop;
     }
@@ -125,9 +104,9 @@ public class DetectMarkerPipeline extends OpenCvPipeline {
      * Gets the Marker Location, might be not found because of the Search Status.
      *
      * @return Where the marker is.
-     * @see MarkerLocation
+     * @see ConeColor
      */
-    public MarkerLocation getMarkerLocation() {
-        return markerLocation;
+    public ConeColorPipeline coneColorPipeline() {
+        return this;
     }
 }
