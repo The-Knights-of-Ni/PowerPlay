@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.Util.AllianceColor;
 import java.util.List;
 
 public class Robot {
-    public String name;
+    public String name = "PowerPlay 2023";
     public final ElapsedTime timer;
     // DC Motors
     public DcMotorEx frontLeftDriveMotor;
@@ -41,7 +41,9 @@ public class Robot {
      * <p>-------------------- Expansion Hub 2 --------------------
      */
 
-    // Sensors
+    /**
+     * Sensors
+     */
     public BNO055IMU imu;
     public DistanceSensor loadSensor;
     /**
