@@ -44,7 +44,9 @@ public class Robot {
     // Sensors
     public BNO055IMU imu;
     public DistanceSensor loadSensor;
-    // Declare game pad objects
+    /**
+     * Declare game pad objects
+     */
     public double leftStickX;
     public double leftStickY;
     public double rightStickX;
@@ -235,6 +237,11 @@ public class Robot {
         bumperRight2 = gamepad2.right_bumper;
     }
 
+    /**
+     * Discards joystick inputs between -joystickDeadZone and joystickDeadZone
+     * @param joystickInput the input of the joystick
+     * @return the corrected input of the joystick
+     */
     public double joystickDeadzoneCorrection(double joystickInput) {
         double joystickOutput;
         if (joystickInput > joystickDeadZone) {
