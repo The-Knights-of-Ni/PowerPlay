@@ -1,31 +1,66 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.Servo;
+
 
 /**
  * Control subsystem for controlling arms and claws
  */
 public class Control extends Subsystem {
-    public Control(Telemetry telemetry, HardwareMap hardwareMap, ElapsedTime timer) {
-        super(telemetry, hardwareMap, timer);
-    }
+    private DcMotorEx extendBar;
+    private Servo flipServo;
+    private Servo clawServo;
 
-    public void Extend4Bar() {
-        //extend code here
-    }
-
-    public enum BarPosition {
-        HIGH(0), //TODO: calibrate constants
-        MIDDLE(1),
-        LOW(2);
+    public enum BarState {
+        HIGH(0, 0.5), //TODO: calibrate constants
+        MIDDLE(1, 0.5),
+        LOW(2, 0.5);
 
         public final int position;
+        public final double power;
 
-        BarPosition(int position) {
+        BarState(int position, double power) {
             this.position = position;
+            this.power = power;
         }
     }
 
+    public Control(Telemetry telemetry, HardwareMap hardwareMap, ElapsedTime timer) {
+        super(telemetry, hardwareMap, timer);
+        // this.extendBar = extendBar;
+    }
+
+    public void extend4Bar(BarState position) {
+        this.turn4Bar(position);
+        switch (position) {
+            case LOW:
+                this.turnFlipServo(0);
+                break;
+            case MIDDLE:
+                this.turnFlipServo(0);
+                break;
+            case HIGH:
+                this.turnFlipServo(0);
+                break;
+        }
+    }
+
+    private void turn4Bar(BarState position) {
+        this.extendBar.setTargetPosition(position.position);
+        this.extendBar.setPower(position.power);
+        this.extendBar.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+
+    private void turnFlipServo(double position) {
+        this.flipServo.setPosition(position);
+    }
+
+    private void turnClawServo(double position) {
+        this.clawServo.setPosition(position);
+    }
 }
