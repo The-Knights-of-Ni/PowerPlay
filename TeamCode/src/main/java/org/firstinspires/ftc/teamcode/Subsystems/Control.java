@@ -19,7 +19,7 @@ public class Control extends Subsystem {
     public enum BarPosition {
         HIGH(0), //TODO: calibrate constants
         MIDDLE(1),
-        LOW(2)
+        LOW(2);
 
         public final int position;
 
