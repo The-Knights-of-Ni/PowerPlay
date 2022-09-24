@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.Util.AllianceColor;
 import java.util.List;
 
 public class Robot {
-    public String name;
+    public String name = "PowerPlay 2023";
     public final ElapsedTime timer;
     // DC Motors
     public DcMotorEx frontLeftDriveMotor;
@@ -41,10 +41,14 @@ public class Robot {
      * <p>-------------------- Expansion Hub 2 --------------------
      */
 
-    // Sensors
+    /**
+     * Sensors
+     */
     public BNO055IMU imu;
     public DistanceSensor loadSensor;
-    // Declare game pad objects
+    /**
+     * Declare game pad objects
+     */
     public double leftStickX;
     public double leftStickY;
     public double rightStickX;
@@ -234,6 +238,11 @@ public class Robot {
         bumperRight2 = gamepad2.right_bumper;
     }
 
+    /**
+     * Discards joystick inputs between -joystickDeadZone and joystickDeadZone
+     * @param joystickInput the input of the joystick
+     * @return the corrected input of the joystick
+     */
     public double joystickDeadzoneCorrection(double joystickInput) {
         double joystickOutput;
         if (joystickInput > joystickDeadZone) {
