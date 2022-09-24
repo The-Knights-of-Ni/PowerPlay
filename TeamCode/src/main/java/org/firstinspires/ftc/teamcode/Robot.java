@@ -175,8 +175,7 @@ public class Robot {
             telemetryBroadcast("Status", " vision initializing...");
             vision = new Vision(telemetry, hardwareMap, timer, allianceColor);
         }
-
-
+        telemetryBroadcast("Status", " all subsystems inited");
     }
 
     public void getGamePadInputs() {
