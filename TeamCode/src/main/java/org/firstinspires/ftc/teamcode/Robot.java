@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.arcrobotics.ftclib.hardware.motors.CRServo;
-import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
@@ -44,7 +43,6 @@ public class Robot {
     /**
      * Sensors
      */
-    public BNO055IMU imu;
     public DistanceSensor loadSensor;
     /**
      * Declare game pad objects
@@ -146,31 +144,14 @@ public class Robot {
         rearLeftDriveMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         rearRightDriveMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 
-        // Sensors
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-//        loadSensor = hardwareMap.get(DistanceSensor.class, "load");
-
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.calibrationDataFile =
-                "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        parameters.loggingEnabled = true;
-        parameters.loggingTag = "IMU";
-        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-
-        telemetryBroadcast("Status", " IMU initializing...");
-        imu.initialize(parameters);
-        telemetryBroadcast("Status", " IMU calibrating...");
-        // make sure the imu gyro is calibrated before continuing.
-        while (opMode.opModeIsActive() && !imu.isGyroCalibrated()) {
-            opMode.sleep(50);
-            opMode.idle();
-        }
-
         // Subsystems
+        subsystemInit();
+    }
+
+    public void subsystemInit()
+    {
         telemetryBroadcast("Status", " drive initializing...");
-        drive = new Drive(frontLeftDriveMotor, frontRightDriveMotor, rearLeftDriveMotor, rearRightDriveMotor, imu, telemetry, hardwareMap, timer);
+        drive = new Drive(frontLeftDriveMotor, frontRightDriveMotor, rearLeftDriveMotor, rearRightDriveMotor, telemetry, hardwareMap, timer);
 
         telemetryBroadcast("Status", " control initializing...");
         control = new Control(telemetry, hardwareMap, timer);

@@ -40,7 +40,6 @@ public class Auto extends LinearOpMode {
      * Inits the robot class and sets the robot as the newly inited robot.
      * @param allianceColor The alliance color
      */
-    // START ROBOT 4.5 INCHES AWAY FROM LEFT EDGE
     public void initAuto(AllianceColor allianceColor) {
         ElapsedTime timer = new ElapsedTime();
         try {

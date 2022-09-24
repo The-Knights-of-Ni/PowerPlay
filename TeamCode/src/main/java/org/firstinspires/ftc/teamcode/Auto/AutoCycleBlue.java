@@ -18,8 +18,12 @@ public class AutoCycleBlue extends Auto {
     @Override
     public void runOpMode() throws InterruptedException {
         initAuto(AllianceColor.BLUE);
-        robot.drive.moveBackward(22*mmPerInch);
-        robot.drive.moveForward(22*mmPerInch);
-        robot.drive.moveBackward(22*mmPerInch);
+        waitForStart();
+        robot.drive.moveRight(24*mmPerInch);
+        robot.drive.moveForward(48*mmPerInch);
+        // TODO: Pick up Cone
+        robot.drive.moveLeft(22*mmPerInch);
+        // TODO: Insert Scoring code
+        robot.drive.moveRight(22*mmPerInch);
     }
 }

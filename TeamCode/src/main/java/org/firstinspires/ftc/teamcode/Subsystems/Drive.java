@@ -90,8 +90,6 @@ public class Drive extends Subsystem {
      * Odometry Right
      */
     public DcMotorEx odR;
-    // Sensors
-    private final BNO055IMU imu;
     /**
      * Current Robot x position in millimeters
      */
@@ -129,7 +127,7 @@ public class Drive extends Subsystem {
      * @param hardwareMap The hardware map for getting the motors
      * @param timer       The timer for the elapsed time
      */
-    public Drive(DcMotorEx frontLeft, DcMotorEx frontRight, DcMotorEx rearLeft, DcMotorEx rearRight, BNO055IMU imu,
+    public Drive(DcMotorEx frontLeft, DcMotorEx frontRight, DcMotorEx rearLeft, DcMotorEx rearRight,
                  Telemetry telemetry,
                  HardwareMap hardwareMap,
                  ElapsedTime timer) {
@@ -141,7 +139,6 @@ public class Drive extends Subsystem {
 //        this.odL = odL;
 //        this.odB = odB;
 //        this.odR = odR;
-        this.imu = imu;
         setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
@@ -469,10 +466,6 @@ public class Drive extends Subsystem {
         // Display it for the driver.
         telemetry.addData("turnRobot", "turn to %7.2f degrees", robotCurrentAngle);
         telemetry.update();
-    }
-
-    public double getYaw() {
-        return imu.getAngularOrientation().firstAngle;
     }
 
     /**
