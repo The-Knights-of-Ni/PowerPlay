@@ -5,23 +5,16 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.Servo;
+
 
 /**
  * Control subsystem for controlling arms and claws
  */
 public class Control extends Subsystem {
     private DcMotorEx extendBar;
-
-    public Control(Telemetry telemetry, HardwareMap hardwareMap, ElapsedTime timer) {
-        super(telemetry, hardwareMap, timer);
-        // this.extendBar = extendBar;
-    }
-
-    public void Extend4Bar(BarState position) {
-        this.extendBar.setTargetPosition(position.position);
-        this.extendBar.setPower(position.power);
-        this.extendBar.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-    }
+    private Servo flipServo;
+    private Servo clawServo;
 
     public enum BarState {
         HIGH(0, 0.5), //TODO: calibrate constants
@@ -37,4 +30,26 @@ public class Control extends Subsystem {
         }
     }
 
+    public Control(Telemetry telemetry, HardwareMap hardwareMap, ElapsedTime timer) {
+        super(telemetry, hardwareMap, timer);
+        // this.extendBar = extendBar;
+    }
+
+    public void extend4Bar(BarState position) {
+        this.turn4Bar(position);
+    }
+
+    private void turn4Bar(BarState position) {
+        this.extendBar.setTargetPosition(position.position);
+        this.extendBar.setPower(position.power);
+        this.extendBar.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+
+    private void turnFlipServo(double position) {
+        this.flipServo.setPosition(position);
+    }
+
+    private void turnClawServo(double position) {
+        this.clawServo.setPosition(position);
+    }
 }
