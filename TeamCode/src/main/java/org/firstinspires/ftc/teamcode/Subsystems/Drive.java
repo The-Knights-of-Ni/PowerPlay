@@ -122,7 +122,6 @@ public class Drive extends Subsystem {
      * @param frontRight  The front right motor
      * @param rearLeft    The rear left motor
      * @param rearRight   The rear right motor
-     * @param imu         The imu
      * @param telemetry   The telemetry
      * @param hardwareMap The hardware map for getting the motors
      * @param timer       The timer for the elapsed time
@@ -1179,7 +1178,7 @@ public class Drive extends Subsystem {
      * @param motorRRForward: rear right motor is forward
      * @param Kp:             coefficient Kp
      * @param Ki:             coefficient Ki
-     * @param Kd:             coefficient Kd by Andrew Chiang on 1/28/2020
+     * @param Kd:             coefficient Kd
      */
     public void allMotorPIDControl(
             int tickCount,
