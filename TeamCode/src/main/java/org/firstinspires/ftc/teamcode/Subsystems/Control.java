@@ -37,6 +37,17 @@ public class Control extends Subsystem {
 
     public void extend4Bar(BarState position) {
         this.turn4Bar(position);
+        switch (position) {
+            case LOW:
+                this.turnFlipServo(0);
+                break;
+            case MIDDLE:
+                this.turnFlipServo(0);
+                break;
+            case HIGH:
+                this.turnFlipServo(0);
+                break;
+        }
     }
 
     private void turn4Bar(BarState position) {
