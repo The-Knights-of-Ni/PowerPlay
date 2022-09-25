@@ -99,19 +99,14 @@ public class ConeColorPipeline extends OpenCvPipeline {
         boolean cyan = false;
 
         if(Core.sumElems(threshBrown).val[0] / rectCrop.area() / 255 > 0) {
-
+            coneColor = ConeColor.BROWN;
         }
         if(Core.sumElems(threshGreen).val[0] / rectCrop.area() / 255 > 0) {
-
+            coneColor = ConeColor.GREEN;
         }
         if(Core.sumElems(threshCyan).val[0] / rectCrop.area() / 255 > 0) {
-
+            coneColor = ConeColor.CYAN;
         }
-
-        if (brown) { coneColor = ConeColor.BROWN; }
-        if (green) { coneColor = ConeColor.BROWN; }
-        if (cyan)  { coneColor = ConeColor.BROWN; }
-
         return crop;
     }
 
