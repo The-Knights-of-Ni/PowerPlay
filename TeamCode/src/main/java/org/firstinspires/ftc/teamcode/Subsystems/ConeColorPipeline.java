@@ -60,7 +60,7 @@ public class ConeColorPipeline extends OpenCvPipeline {
      * Scalar}'s are used for colors). We compare the marker color with the alliance color on each of
      * the rectangles, if the marker color is on none or multiple of them, it is marked as {@link
      * ConeColor#OTHER}, if otherwise, the respective Location it is in is returned via a
-     * {@link ConeColor} variable called {@link #markerLocation}
+     * {@link ConeColor} variable called {@link #coneColor}
      *
      * @param input A Mask (the class is called {@link Mat})
      * @return The marker location
