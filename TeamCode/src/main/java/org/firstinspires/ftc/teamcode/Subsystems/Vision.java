@@ -139,8 +139,8 @@ public class Vision extends Subsystem {
      *
      * @return Where the marker is
      */
-    public ConeColorPipeline coneColorPipelineRun() {
+    public ConeColorPipeline.ConeColor coneColorPipelineRun() {
         // Return the marker location
-        return pipeline.coneColorPipeline();
+        return pipeline.getConeColor();
     }
 }

@@ -90,22 +90,14 @@ public class ConeColorPipeline extends OpenCvPipeline {
         Core.inRange(crop, ConeColor.GREEN.lowHSV, ConeColor.GREEN.highHSV, threshGreen);
         Core.inRange(crop, ConeColor.CYAN.lowHSV, ConeColor.CYAN.highHSV, threshCyan);
 
-
-        double left_x = 0.375 * CAMERA_WIDTH;
-        double right_x = 0.625 * CAMERA_WIDTH;
-
-        boolean brown = false;
-        boolean green = false;
-        boolean cyan = false;
-
         if(Core.sumElems(threshBrown).val[0] / rectCrop.area() / 255 > 0) {
             coneColor = ConeColor.BROWN;
-        }
-        if(Core.sumElems(threshGreen).val[0] / rectCrop.area() / 255 > 0) {
+        } else if(Core.sumElems(threshGreen).val[0] / rectCrop.area() / 255 > 0) {
             coneColor = ConeColor.GREEN;
-        }
-        if(Core.sumElems(threshCyan).val[0] / rectCrop.area() / 255 > 0) {
+        } else if(Core.sumElems(threshCyan).val[0] / rectCrop.area() / 255 > 0) {
             coneColor = ConeColor.CYAN;
+        } else {
+            coneColor = ConeColor.OTHER;
         }
         return crop;
     }
@@ -116,7 +108,7 @@ public class ConeColorPipeline extends OpenCvPipeline {
      * @return Where the marker is.
      * @see ConeColor
      */
-    public ConeColorPipeline coneColorPipeline() {
-        return this;
+    public ConeColor getConeColor() {
+        return coneColor;
     }
 }
