@@ -23,15 +23,16 @@ import java.util.List;
 public class ConeColorPipeline extends OpenCvPipeline {
     private final AllianceColor allianceColor;
     private final int CAMERA_WIDTH;
+    private final int CAMERA_HEIGHT;
     private ConeColor coneColor = ConeColor.OTHER;
 
     public enum ConeColor {
         GREEN(new Scalar(1,1,1), new Scalar(1,1,1)), //TODO: Calibrate HSV values for colors
         CYAN(new Scalar(2,2,2), new Scalar(2,2,2)),
         BROWN(new Scalar(3,3,3), new Scalar(3,3,3)),
-        OTHER(new Scalar(0,0,0), new Scalar(0,0,0));
-        private final Scalar lowHSV;
-        private final Scalar highHSV;
+        OTHER(new Scalar(0,0,0), new Scalar(0,0,0)); //leave OTHER as is
+        public final Scalar lowHSV;
+        public final Scalar highHSV;
         ConeColor(Scalar lowHSV, Scalar highHSV) { this.highHSV = highHSV; this.lowHSV = lowHSV;}
     }
 
@@ -42,9 +43,10 @@ public class ConeColorPipeline extends OpenCvPipeline {
      * @see Telemetry
      * @see AllianceColor
      */
-    public ConeColorPipeline(AllianceColor allianceColor, int width) {
+    public ConeColorPipeline(AllianceColor allianceColor, int width, int height) {
         this.allianceColor = allianceColor;
         this.CAMERA_WIDTH = width;
+        this.CAMERA_HEIGHT = height;
     }
 
     /**
@@ -80,11 +82,14 @@ public class ConeColorPipeline extends OpenCvPipeline {
             return input;
         }
 
-        Scalar lowHSV = new Scalar(20, 100, 100);
-        Scalar highHSV = new Scalar(30, 255, 255);
-        Mat thresh = new Mat();
+        Mat threshBrown = new Mat();
+        Mat threshGreen = new Mat();
+        Mat threshCyan = new Mat();
 
-        Core.inRange(crop, lowHSV, highHSV, thresh);
+        Core.inRange(crop, ConeColor.BROWN.lowHSV, ConeColor.BROWN.highHSV, threshBrown);
+        Core.inRange(crop, ConeColor.GREEN.lowHSV, ConeColor.GREEN.highHSV, threshGreen);
+        Core.inRange(crop, ConeColor.CYAN.lowHSV, ConeColor.CYAN.highHSV, threshCyan);
+
 
         double left_x = 0.375 * CAMERA_WIDTH;
         double right_x = 0.625 * CAMERA_WIDTH;
@@ -93,8 +98,18 @@ public class ConeColorPipeline extends OpenCvPipeline {
         boolean green = false;
         boolean cyan = false;
 
-        if (brown) { coneColor = ConeColor.BROWN; };
-        if (green) { coneColor = ConeColor.BROWN; };
+        if(Core.sumElems(threshBrown).val[0] / rectCrop.area() / 255 > 0) {
+
+        }
+        if(Core.sumElems(threshGreen).val[0] / rectCrop.area() / 255 > 0) {
+
+        }
+        if(Core.sumElems(threshCyan).val[0] / rectCrop.area() / 255 > 0) {
+
+        }
+
+        if (brown) { coneColor = ConeColor.BROWN; }
+        if (green) { coneColor = ConeColor.BROWN; }
         if (cyan)  { coneColor = ConeColor.BROWN; }
 
         return crop;
