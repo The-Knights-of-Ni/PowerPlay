@@ -1,10 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.os.Build;
 import android.util.Log;
 
-import com.arcrobotics.ftclib.hardware.motors.CRServo;
 import com.qualcomm.hardware.lynx.LynxModule;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -117,6 +116,7 @@ public class Robot {
      */
     public Robot(HardwareMap hardwareMap, Telemetry telemetry, ElapsedTime timer, AllianceColor allianceColor, Gamepad gamepad1, Gamepad gamepad2, boolean visionEnabled) {
         Log.i("init", "started");
+        Log.v("init", "version: " + Build.VERSION.RELEASE);
         this.hardwareMap = hardwareMap;
         this.timer = timer;
         this.allianceColor = allianceColor;
