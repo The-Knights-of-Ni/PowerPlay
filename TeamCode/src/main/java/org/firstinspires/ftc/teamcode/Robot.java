@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.util.Log;
+
 import com.arcrobotics.ftclib.hardware.motors.CRServo;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -108,15 +110,13 @@ public class Robot {
     private final double joystickDeadZone = 0.1;
     private final Gamepad gamepad1;
     private final Gamepad gamepad2;
-    private final LinearOpMode opMode;
 
     /**
-     * @param opMode        The op mode
      * @param timer         The elapsed time
      * @param allianceColor the alliance color
      */
-    public Robot(LinearOpMode opMode, HardwareMap hardwareMap, Telemetry telemetry, ElapsedTime timer, AllianceColor allianceColor, Gamepad gamepad1, Gamepad gamepad2, boolean visionEnabled) {
-        this.opMode = opMode;
+    public Robot(HardwareMap hardwareMap, Telemetry telemetry, ElapsedTime timer, AllianceColor allianceColor, Gamepad gamepad1, Gamepad gamepad2, boolean visionEnabled) {
+        Log.i("init", "started");
         this.hardwareMap = hardwareMap;
         this.timer = timer;
         this.allianceColor = allianceColor;
@@ -133,6 +133,7 @@ public class Robot {
         frontRightDriveMotor = (DcMotorEx) hardwareMap.dcMotor.get("fr");
         rearLeftDriveMotor = (DcMotorEx) hardwareMap.dcMotor.get("bl");
         rearRightDriveMotor = (DcMotorEx) hardwareMap.dcMotor.get("br");
+        Log.i("init", "motor init finished");
 
         frontRightDriveMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         rearRightDriveMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -148,15 +149,21 @@ public class Robot {
 
     public void subsystemInit()
     {
-        telemetryBroadcast("Status", " drive initializing...");
+        Log.d("init", "Drive subsystem init started");
         drive = new Drive(frontLeftDriveMotor, frontRightDriveMotor, rearLeftDriveMotor, rearRightDriveMotor, telemetry, hardwareMap, timer);
+        Log.i("init", "Drive subsystem init finished");
 
-        telemetryBroadcast("Status", " control initializing...");
+        Log.d("init", "Control subsystem init started");
         control = new Control(telemetry, hardwareMap, timer);
+        Log.i("init", "Control subsystem init finished");
 
         if(visionEnabled) {
-            telemetryBroadcast("Status", " vision initializing...");
+            Log.d("init", "Vision subsystem init started");
             vision = new Vision(telemetry, hardwareMap, timer, allianceColor);
+            Log.i("init", "Vision subsystem init finished");
+        }
+        else {
+            Log.w("init", "Vision subsystem init skipped");
         }
         telemetryBroadcast("Status", " all subsystems inited");
     }
