@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.Robot;
-import org.firstinspires.ftc.teamcode.Subsystems.Control;
 import org.firstinspires.ftc.teamcode.Util.AllianceColor;
 
 import java.io.IOException;
@@ -85,7 +84,7 @@ public class Teleop extends LinearOpMode {
             else {
                 motorPowers = robot.drive.calcMotorPowers(robot.leftStickX * sensitivityLowPower, robot.leftStickY * sensitivityLowPower, robot.rightStickX * sensitivityLowPower);
             }
-            robot.drive.setDrivePowers(motorPowers);
+            robot.drive.setDrivePower(motorPowers);
 
             //Toggle drive power
             if (robot.yButton && !robot.isyButtonPressedPrev){

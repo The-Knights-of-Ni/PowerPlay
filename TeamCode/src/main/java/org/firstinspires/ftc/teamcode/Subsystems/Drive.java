@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -271,7 +270,7 @@ public class Drive extends Subsystem {
      * @param rightStickX right joystick x position for turning
      * @return A list with the motor powers
      */
-    public double[] calcMotorPowers(double leftStickX, double leftStickY, double rightStickX) {
+    public double[] calcMotorPowers(double leftStickX, double leftStickY, double rightStickX) { // split direction from controller into wheel powers
         double r = Math.hypot(leftStickX, leftStickY);
         double robotAngle = Math.atan2(leftStickY, leftStickX) - Math.PI / 4;
         double lrPower = r * Math.sin(robotAngle) + rightStickX;
@@ -298,7 +297,7 @@ public class Drive extends Subsystem {
      *
      * @param powers the powers to set each of the motors to
      */
-    public void setDrivePowers(double[] powers) {
+    public void setDrivePower(double[] powers) {
         frontLeft.setPower(powers[0]);
         frontRight.setPower(powers[1]);
         rearLeft.setPower(powers[2]);
