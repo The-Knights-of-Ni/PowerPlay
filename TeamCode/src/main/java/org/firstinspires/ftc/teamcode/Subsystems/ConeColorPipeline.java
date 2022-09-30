@@ -27,7 +27,7 @@ public class ConeColorPipeline extends OpenCvPipeline {
     private ConeColor coneColor = ConeColor.OTHER;
 
     public enum ConeColor {
-        GREEN(new Scalar(1,1,1), new Scalar(1,1,1)), //TODO: Calibrate HSV values for colors
+        GREEN(new Scalar(1,1,1), new Scalar(1,1,1)), //TODO:Calibrate color constants
         CYAN(new Scalar(2,2,2), new Scalar(2,2,2)),
         BROWN(new Scalar(3,3,3), new Scalar(3,3,3)),
         OTHER(new Scalar(0,0,0), new Scalar(0,0,0)); //leave OTHER as is
