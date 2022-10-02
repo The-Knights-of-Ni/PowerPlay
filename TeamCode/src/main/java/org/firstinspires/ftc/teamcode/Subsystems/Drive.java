@@ -1265,11 +1265,7 @@ public class Drive extends Subsystem {
                                 acculErrorFL * alpha
                                         + currentError * (currentTime - prevTimeFL); // integrate error
                         errorSlope = (currentError - prevErrorFL) / (currentTime - prevTimeFL); // error slope
-                        currentPower =
-                                currentTargetSpeedFL / maxSpeed[0]
-                                        - currentError * Kp
-                                        - acculErrorFL * Ki
-                                        - errorSlope * Kd; // apply PID correction
+                        currentPower = getCurrentPower(maxSpeed[0], Kp, Ki, Kd, acculErrorFL, currentError, currentTargetSpeedFL, errorSlope); // apply PID correction
                     } else { // at the first point, use Kp only
                         currentPower = currentTargetSpeedFL / maxSpeed[0] - currentError * Kp;
                     }
@@ -1308,10 +1304,7 @@ public class Drive extends Subsystem {
                                         + currentError * (currentTime - prevTimeFR); // integrate error
                         errorSlope = (currentError - prevErrorFR) / (currentTime - prevTimeFR); // error slope
                         currentPower =
-                                currentTargetSpeedFR / maxSpeed[1]
-                                        - currentError * Kp
-                                        - acculErrorFR * Ki
-                                        - errorSlope * Kd; // apply PID correction
+                                getCurrentPower(maxSpeed[1], Kp, Ki, Kd, acculErrorFR, currentError, currentTargetSpeedFR, errorSlope); // apply PID correction
                     } else { // at the first point, use Kp only
                         currentPower = currentTargetSpeedFR / maxSpeed[1] - currentError * Kp;
                     }
@@ -1349,11 +1342,7 @@ public class Drive extends Subsystem {
                                 acculErrorRL * alpha
                                         + currentError * (currentTime - prevTimeRL); // integrate error
                         errorSlope = (currentError - prevErrorRL) / (currentTime - prevTimeRL); // error slope
-                        currentPower =
-                                currentTargetSpeedRL / maxSpeed[2]
-                                        - currentError * Kp
-                                        - acculErrorRL * Ki
-                                        - errorSlope * Kd; // apply PID correction
+                        currentPower =getCurrentPower(maxSpeed[2], Kp, Ki, Kd, acculErrorRL, currentError, currentTargetSpeedRL, errorSlope); // apply PID correction
                     } else { // at the first point, use Kp only
                         currentPower = currentTargetSpeedRL / maxSpeed[2] - currentError * Kp;
                     }
@@ -1391,11 +1380,7 @@ public class Drive extends Subsystem {
                                 acculErrorRR * alpha
                                         + currentError * (currentTime - prevTimeRR); // integrate error
                         errorSlope = (currentError - prevErrorRR) / (currentTime - prevTimeRR); // error slope
-                        currentPower =
-                                currentTargetSpeedRR / maxSpeed[3]
-                                        - currentError * Kp
-                                        - acculErrorRR * Ki
-                                        - errorSlope * Kd; // apply PID correction
+                        currentPower = getCurrentPower(maxSpeed[3], Kp, Ki, Kd, acculErrorRR, currentError, currentTargetSpeedRR, errorSlope); // apply PID correction
                     } else { // at the first point, use Kp only
                         currentPower = currentTargetSpeedRR / maxSpeed[3] - currentError * Kp;
                     }
@@ -1447,6 +1432,13 @@ public class Drive extends Subsystem {
             Log.v("drive", "motorEnc: " + output);
             telemetry.update();
         }
+    }
+
+    private static double getCurrentPower(double maxSpeed, double Kp, double Ki, double Kd, double acculErrorFR, double currentError, double currentTargetSpeedFR, double errorSlope) {
+        return currentTargetSpeedFR / maxSpeed
+                - currentError * Kp
+                - acculErrorFR * Ki
+                - errorSlope * Kd;
     }
 
     /**
