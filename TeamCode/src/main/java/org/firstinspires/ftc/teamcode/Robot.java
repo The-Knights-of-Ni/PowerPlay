@@ -38,7 +38,6 @@ public class Robot {
      *
      * <p>-------------------- Expansion Hub 2 --------------------
      */
-
     /**
      * Sensors
      */
