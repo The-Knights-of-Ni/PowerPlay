@@ -110,15 +110,12 @@ public class Robot {
     private final double joystickDeadZone = 0.1;
     private final Gamepad gamepad1;
     private final Gamepad gamepad2;
-    private final LinearOpMode opMode;
 
     /**
-     * @param opMode        The op mode
      * @param timer         The elapsed time
      * @param allianceColor the alliance color
      */
-    public Robot(LinearOpMode opMode, HardwareMap hardwareMap, Telemetry telemetry, ElapsedTime timer, AllianceColor allianceColor, Gamepad gamepad1, Gamepad gamepad2, boolean visionEnabled) {
-        this.opMode = opMode;
+    public Robot(HardwareMap hardwareMap, Telemetry telemetry, ElapsedTime timer, AllianceColor allianceColor, Gamepad gamepad1, Gamepad gamepad2, boolean visionEnabled) {
         this.hardwareMap = hardwareMap;
         this.timer = timer;
         this.allianceColor = allianceColor;
