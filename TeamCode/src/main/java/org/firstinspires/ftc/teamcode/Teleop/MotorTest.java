@@ -18,7 +18,7 @@ public class MotorTest extends LinearOpMode {
     @Override
     public void runOpMode() {
         ElapsedTime timer = new ElapsedTime();
-        this.robot = new Robot(this, hardwareMap, telemetry, timer, AllianceColor.BLUE, gamepad1, gamepad2,
+        this.robot = new Robot(hardwareMap, telemetry, timer, AllianceColor.BLUE, gamepad1, gamepad2,
                 false);
         robot.drive.setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
