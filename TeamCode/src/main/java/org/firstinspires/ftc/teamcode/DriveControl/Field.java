@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.PurePursuit;
+package org.firstinspires.ftc.teamcode.DriveControl;
 
 import org.firstinspires.ftc.teamcode.Util.Coordinate;
 
@@ -10,16 +10,11 @@ import java.util.ArrayList;
 public class Field {
     private ArrayList<GameObject> gameObjects;
 
-    public Field() {
-        gameObjects = new ArrayList<>();
-    }
+    public final BoundingBox boundingBox;
 
-    public Field(ArrayList<GameObject> gameObjects) {
+    public Field(BoundingBox edges, ArrayList<GameObject> gameObjects) {
+        this.boundingBox = edges;
         this.gameObjects = gameObjects;
-    }
-
-    public void addObject(GameObject object) {
-        gameObjects.add(object);
     }
 
     /** Checks if the coordinate is occupied by an object
