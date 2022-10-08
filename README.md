@@ -24,4 +24,4 @@ Create branches for individual components in the code. Do not commit directly to
 
 
 # Docs
-A notion documentation page will be up soon.
+~~A notion documentation page will be up soon.~~
