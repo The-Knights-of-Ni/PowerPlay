@@ -1341,7 +1341,7 @@ public class Drive extends Subsystem {
                                 acculErrorRL * alpha
                                         + currentError * (currentTime - prevTimeRL); // integrate error
                         errorSlope = (currentError - prevErrorRL) / (currentTime - prevTimeRL); // error slope
-                        currentPower =getCurrentPower(maxSpeed[2], Kp, Ki, Kd, acculErrorRL, currentError, currentTargetSpeedRL, errorSlope); // apply PID correction
+                        currentPower = getCurrentPower(maxSpeed[2], Kp, Ki, Kd, acculErrorRL, currentError, currentTargetSpeedRL, errorSlope); // apply PID correction
                     } else { // at the first point, use Kp only
                         currentPower = currentTargetSpeedRL / maxSpeed[2] - currentError * Kp;
                     }
