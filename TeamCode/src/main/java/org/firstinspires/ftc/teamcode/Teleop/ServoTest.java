@@ -20,7 +20,7 @@ public class ServoTest extends LinearOpMode {
         telemetry.update();
         timer = new ElapsedTime();
 
-        this.robot =  new Robot(hardwareMap, telemetry, timer, AllianceColor.BLUE, gamepad1, gamepad2,false);
+        this.robot =  new Robot(this, hardwareMap, telemetry, timer, AllianceColor.BLUE, gamepad1, gamepad2,false);
 
         robot.telemetryBroadcast("wait for start", "");
     }
