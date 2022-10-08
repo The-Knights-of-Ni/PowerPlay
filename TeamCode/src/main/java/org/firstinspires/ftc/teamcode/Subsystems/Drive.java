@@ -255,18 +255,6 @@ public class Drive extends Subsystem {
     }
 
     /**
-     * Turns with the specified power
-     *
-     * @param power The power to turn by.
-     */
-    public void turn(double power) {
-        frontLeft.setPower(-power);
-        frontRight.setPower(power);
-        rearLeft.setPower(-power);
-        rearRight.setPower(power);
-    }
-
-    /**
      * Calculates the motor powers when given the position o the left and right sticks
      *
      * @param leftStickX  left joystick x position
@@ -275,12 +263,18 @@ public class Drive extends Subsystem {
      * @return A list with the motor powers
      */
     public double[] calcMotorPowers(double leftStickX, double leftStickY, double rightStickX) { // split direction from controller into wheel powers
+        // Get displacement of joystick for the power
         double r = Math.hypot(leftStickX, leftStickY);
+        // Get angle of the joystick from the positive x axis shifted by PI/4 clockwise
+        // PI/4 shift is for strafing
         double robotAngle = Math.atan2(leftStickY, leftStickX) - Math.PI / 4;
+        // The second terms of each of these statements is for turning in place
+        // The other stuff is funky strafing + movement
         double lrPower = r * Math.sin(robotAngle) + rightStickX;
         double lfPower = r * Math.cos(robotAngle) + rightStickX;
         double rrPower = r * Math.cos(robotAngle) - rightStickX;
         double rfPower = r * Math.sin(robotAngle) - rightStickX;
+        // Return the calculated powers
         return new double[]{lfPower, rfPower, lrPower, rrPower};
     }
 
@@ -309,72 +303,7 @@ public class Drive extends Subsystem {
     }
 
     /**
-     * Set the full power
-     *
-     * @param fullPower full power boolean
-     */
-    public void setDriveFullPower(boolean fullPower) {
-        driveFullPower = fullPower;
-    }
-
-    /**
-     * Set the target position
-     *
-     * @param targetPosition the target position
-     */
-    public void setTargetPosition(int targetPosition) {
-        frontLeft.setTargetPosition(targetPosition);
-        frontRight.setTargetPosition(targetPosition);
-        rearLeft.setTargetPosition(targetPosition);
-        rearRight.setTargetPosition(targetPosition);
-    }
-
-    /**
-     * Get the current positions of all the motors
-     *
-     * @return the list of all the positions of the drive motors
-     */
-    public int[] getCurrentPositions() {
-        return new int[]{
-                frontLeft.getCurrentPosition() - encoderOffsetFL,
-                frontRight.getCurrentPosition() - encoderOffsetFR,
-                rearLeft.getCurrentPosition() - encoderOffsetRL,
-                rearRight.getCurrentPosition() - encoderOffsetRR
-        };
-    }
-
-    public int[] getDriveMotorEncoders() {
-        return new int[]{
-                frontLeft.getCurrentPosition(),
-                frontRight.getCurrentPosition(),
-                rearLeft.getCurrentPosition(),
-                rearRight.getCurrentPosition()
-        };
-    }
-
-    /**
-     * Resets the motor encoders for the drivetrain motors.
-     */
-    public void resetDriveMotorEncoders() {
-        encoderOffsetFL = frontLeft.getCurrentPosition();
-        encoderOffsetFR = frontRight.getCurrentPosition();
-        encoderOffsetRL = rearLeft.getCurrentPosition();
-        encoderOffsetRR = rearRight.getCurrentPosition();
-    }
-
-    /**
-     * Positive encoder values correspond to rightward robot movement
-     */
-    public void strafe(int targetPosition) {
-        frontLeft.setTargetPosition(targetPosition);
-        frontRight.setTargetPosition(-targetPosition);
-        rearLeft.setTargetPosition(-targetPosition);
-        rearRight.setTargetPosition(targetPosition);
-    }
-
-    /**
      * Turns the robot by the specified angle, ticks and angles are equivalent. Use this method to turn the robot instead
-     * of {@link #turnByTick(double, double)}
      *
      * @param angle The angle to turn by. Positive corresponds to counterclockwise
      */
@@ -415,178 +344,6 @@ public class Drive extends Subsystem {
         robotCurrentAngle += angle;
         telemetry.addData("turnRobot", "turn to %7.2f degrees", robotCurrentAngle);
         telemetry.update();
-    }
-
-    /**
-     * Turns the robot by tick. Use {@link #turnByAngle(double)}
-     *
-     * @param power the motor power
-     * @param angle the angle in ticks
-     */
-    public void turnByTick(double power, double angle) {
-        setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontLeft.setTargetPosition(0);
-        frontRight.setTargetPosition(0);
-        rearLeft.setTargetPosition(0);
-        rearRight.setTargetPosition(0);
-
-        setRunMode(DcMotor.RunMode.RUN_TO_POSITION);
-        if (driveFullPower) {
-            setDrivePower(1.0);
-        } else {
-            setDrivePower(power);
-        }
-        // convert from degrees to motor counts
-        int tickCount = (int) (angle * COUNTS_PER_DEGREE);
-        frontLeft.setTargetPosition(-tickCount);
-        frontRight.setTargetPosition(tickCount);
-        rearLeft.setTargetPosition(-tickCount);
-        rearRight.setTargetPosition(tickCount);
-        startTime = timer.nanoseconds();
-        while (frontLeft.isBusy() && frontRight.isBusy() && rearLeft.isBusy() && rearRight.isBusy()) {
-            logDriveEncoders();
-            checkAndStopMotors();
-        }
-        stop();
-        logDriveEncoders();
-    }
-
-    /**
-     * Turns the robot by the specified angle.
-     *
-     * @param degrees The angle to turn by.
-     */
-    public void turnRobot(double degrees) {
-        this.turnByAngle(degrees);
-        //        robotCurrentPosX += ROBOT_HALF_LENGTH *
-        // (Math.cos((robotCurrentAngle+degrees)*Math.PI/180.0)
-        //                - Math.cos(robotCurrentAngle*Math.PI/180.0));
-        //        robotCurrentPosY += ROBOT_HALF_LENGTH *
-        // (Math.sin((robotCurrentAngle+degrees)*Math.PI/180.0)
-        //                - Math.sin(robotCurrentAngle*Math.PI/180.0));
-        robotCurrentAngle += degrees;
-        // Display it for the driver.
-        Log.d("drive", "turn to " + robotCurrentAngle + " degrees");
-    }
-
-    /**
-     * 2D move to position
-     *
-     * @param power           motor power
-     * @param targetPositionX target x coordinate
-     * @param targetPositionY target y coordinate
-     */
-    public void moveToPos2D(double power, double targetPositionX, double targetPositionY) {
-        // move to X, Y position relative to the robot coordinate system
-        // the center of robot is 0,0
-        setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontLeft.setTargetPosition(0);
-        frontRight.setTargetPosition(0);
-        rearLeft.setTargetPosition(0);
-        rearRight.setTargetPosition(0);
-
-        setRunMode(DcMotor.RunMode.RUN_TO_POSITION);
-        // convert from inches to motor counts
-        // correct for X and Y motion asymmetry
-        double distanceCountX, distanceCountY;
-        distanceCountX = targetPositionX * COUNTS_PER_MM * COUNTS_CORRECTION_X;
-        distanceCountY = targetPositionY * COUNTS_PER_MM * COUNTS_CORRECTION_Y;
-        if (driveFullPower) {
-            setPower2D(distanceCountX, distanceCountY, 1.0);
-        } else {
-            setPower2D(distanceCountX, distanceCountY, power);
-        }
-        setTargetPosition2D(distanceCountX, distanceCountY);
-        startTime = timer.nanoseconds();
-        while (frontLeft.isBusy() && frontRight.isBusy() && rearLeft.isBusy() && rearRight.isBusy()) {
-            logDriveEncoders();
-            checkAndStopMotors();
-        }
-        stop();
-        logDriveEncoders();
-    }
-
-    /**
-     * distribute power appropriately according to the direction of motion.
-     *
-     * @param targetPositionX The x target position
-     * @param targetPositionY The y target position
-     * @param motorPower      the motor power
-     */
-    public void setPower2D(double targetPositionX, double targetPositionY, double motorPower) {
-        double[] motorPowers = calcMotorPowers2D(targetPositionX, targetPositionY, motorPower);
-        rearLeft.setPower(motorPowers[0]);
-        frontLeft.setPower(motorPowers[1]);
-        rearRight.setPower(motorPowers[2]);
-        frontRight.setPower(motorPowers[3]);
-    }
-
-    /**
-     * set motor rotation targets appropriately according to the direction of motion.
-     *
-     * @param targetPositionX The x target position
-     * @param targetPositionY The y target position
-     */
-    public void setTargetPosition2D(double targetPositionX, double targetPositionY) {
-        //        frontLeft.setTargetPosition((int)  ((+ targetPositionX +
-        // targetPositionY)*Math.sqrt(2.0)));
-        //        frontRight.setTargetPosition((int) ((- targetPositionX +
-        // targetPositionY)*Math.sqrt(2.0)));
-        //        rearLeft.setTargetPosition((int)   ((- targetPositionX +
-        // targetPositionY)*Math.sqrt(2.0)));
-        //        rearRight.setTargetPosition((int)  ((+ targetPositionX +
-        // targetPositionY)*Math.sqrt(2.0)));
-        frontLeft.setTargetPosition((int) (targetPositionX + targetPositionY));
-        frontRight.setTargetPosition((int) (-targetPositionX + targetPositionY));
-        rearLeft.setTargetPosition((int) (-targetPositionX + targetPositionY));
-        rearRight.setTargetPosition((int) (targetPositionX + targetPositionY));
-    }
-
-    /**
-     * targetPositionX and targetPositionY determine the direction of movement
-     * motorPower determines the magnitude of motor power
-     *
-     * @param targetPositionX The target x position
-     * @param targetPositionY the target y position
-     * @param motorPower      the motor power
-     * @return a list with the motor powers
-     */
-    public double[] calcMotorPowers2D(double targetPositionX, double targetPositionY, double motorPower) {
-        double angleScale = Math.abs(targetPositionX) + Math.abs(targetPositionY);
-        double lrPower = motorPower * (-targetPositionX + targetPositionY) / angleScale;
-        double lfPower = motorPower * (targetPositionX + targetPositionY) / angleScale;
-        return new double[]{lrPower, lfPower, lfPower, lrPower}; // rrPower=lfPower and rfPower=lrPower
-    }
-
-    public void moveToPosABS(double targetPositionX, double targetPositionY) {
-        // move to (targetPositionX, targetPositionY) in absolute field coordinate
-        double deltaX = targetPositionX - robotCurrentPosX; // in absolute field coordinate
-        double deltaY = targetPositionY - robotCurrentPosY; // in absolute field coordinate
-        double distanceCountX, distanceCountY; // distance in motor count in robot coordinate
-        // rotate vector from field coordinate to robot coordinate
-        distanceCountX =
-                deltaX * Math.cos((robotCurrentAngle - 90.0) * Math.PI / 180.0)
-                        + deltaY * Math.sin((robotCurrentAngle - 90.0) * Math.PI / 180.0);
-        distanceCountY =
-                deltaX * Math.cos(robotCurrentAngle * Math.PI / 180.0)
-                        + deltaY * Math.sin(robotCurrentAngle * Math.PI / 180.0);
-        this.moveToPos2D(DRIVE_SPEED, distanceCountX, distanceCountY);
-        robotCurrentPosX = targetPositionX;
-        robotCurrentPosY = targetPositionY;
-        logMovement();
-    }
-
-    public void moveToPosREL(double targetPositionX, double targetPositionY) {
-        // move to (targetPositionX, targetPositionY) in relative robot coordinate
-        this.moveToPos2D(DRIVE_SPEED, targetPositionX, targetPositionY);
-        robotCurrentPosX +=
-                targetPositionY * Math.cos(robotCurrentAngle * Math.PI / 180.0)
-                        + targetPositionX * Math.cos((robotCurrentAngle - 90.0) * Math.PI / 180.0);
-        robotCurrentPosY +=
-                targetPositionY * Math.sin(robotCurrentAngle * Math.PI / 180.0)
-                        + targetPositionX * Math.sin((robotCurrentAngle - 90.0) * Math.PI / 180.0);
-        // Display it for the driver.
-        logMovement();
     }
 
     /**
@@ -1538,11 +1295,6 @@ public class Drive extends Subsystem {
         return targetSpeed;
     }
 
-
-    private void motorPIDControl() {
-
-    }
-
     public void moveVector(Vector2D v, double motorSpeed) {
         Vector2D origin = new Vector2D(0,0);
         Vector2D straight = new Vector2D(0, 1);
@@ -1550,7 +1302,7 @@ public class Drive extends Subsystem {
         double angle = Vector2D.angle(straight, v);
         int distanceTicks = (int) (distance * COUNTS_PER_MM * COUNTS_CORRECTION_X);
         int[] calcMotorDistances = {distanceTicks, distanceTicks, distanceTicks, distanceTicks};
-        double[] calcMotorPowers = calcMotorPowers2D(v.getX(), v.getY(), motorSpeed);
+        double[] calcMotorPowers = calcMotorPowers(v.getX() * motorSpeed, v.getY() * motorSpeed, 0);
         double[] maxSpeeds = {ANGULAR_V_MAX_NEVERREST_20,ANGULAR_V_MAX_NEVERREST_20,ANGULAR_V_MAX_NEVERREST_20,ANGULAR_V_MAX_NEVERREST_20};
         allMotorPIDControl(
                 calcMotorDistances,
