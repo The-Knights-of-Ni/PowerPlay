@@ -275,13 +275,19 @@ public class Drive extends Subsystem {
      * @param rightStickX right joystick x position for turning
      * @return A list with the motor powers
      */
-    public double[] calcMotorPowers(double leftStickX, double leftStickY, double rightStickX) {
+    public double[] calcMotorPowers(double leftStickX, double leftStickY, double rightStickX) { // split direction from controller into wheel powers
+        // Get displacement of joystick for the power
         double r = Math.hypot(leftStickX, leftStickY);
+        // Get angle of the joystick from the positive x axis shifted by PI/4 clockwise
+        // PI/4 shift is for strafing
         double robotAngle = Math.atan2(leftStickY, leftStickX) - Math.PI / 4;
+        // The second terms of each of these statements is for turning in place
+        // The other stuff is funky strafing + movement
         double lrPower = r * Math.sin(robotAngle) + rightStickX;
         double lfPower = r * Math.cos(robotAngle) + rightStickX;
         double rrPower = r * Math.cos(robotAngle) - rightStickX;
         double rfPower = r * Math.sin(robotAngle) - rightStickX;
+        // Return the calculated powers
         return new double[]{lfPower, rfPower, lrPower, rrPower};
     }
 
