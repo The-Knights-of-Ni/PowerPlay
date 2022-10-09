@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.DriveControl;
 
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 import org.firstinspires.ftc.teamcode.Util.Coordinate;
 import org.opencv.core.Core;
 
@@ -22,5 +23,11 @@ public class BoundingBox {
             return false;
         }
         else return (!(coordinate.x >= (absoluteBottomLeft.x + x))) && (!(coordinate.y >= (absoluteBottomLeft.y + y)));
+    }
+
+    public Vector2D distanceFrom(BoundingBox other) {
+        double xDistance = Math.abs(other.absoluteBottomLeft.x - absoluteBottomLeft.x);
+        double yDistance = Math.abs(other.absoluteBottomLeft.y - absoluteBottomLeft.y);
+        return new Vector2D(xDistance, yDistance);
     }
 }
