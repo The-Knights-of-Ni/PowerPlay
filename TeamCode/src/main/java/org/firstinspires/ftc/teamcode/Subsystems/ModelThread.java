@@ -5,13 +5,24 @@ import org.firstinspires.ftc.teamcode.DriveControl.BoundingBox;
 import org.firstinspires.ftc.teamcode.Util.Coordinate;
 import org.tensorflow.lite.Interpreter;
 
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
 public class ModelThread extends Thread {
     private VisionThreadData vtd = VisionThreadData.getVTD();
     private Interpreter modelInterpreter = new Interpreter(vtd.modelFile);
+    ReadWriteLock lock = new ReentrantReadWriteLock();
 
     @Override
     public void run() {
-        vtd.setDistance(calcDistanceFromBoundingBox(getBoundingBoxFromModel()));
+        lock.writeLock().tryLock();
+        try {
+            vtd.setDistance(calcDistanceFromBoundingBox(getBoundingBoxFromModel()));
+        } finally {
+            lock.writeLock().unlock();
+        }
     }
 
     private double calcDistanceFromBoundingBox(BoundingBox box) {
