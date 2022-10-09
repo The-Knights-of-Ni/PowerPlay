@@ -1295,18 +1295,22 @@ public class Drive extends Subsystem {
         return targetSpeed;
     }
 
+    public int[] calcMotorDistances(int ticks) {
+        return new int[]{ticks, ticks, ticks, ticks};
+    }
+
     public void moveVector(Vector2D v, double motorSpeed) {
         Vector2D origin = new Vector2D(0,0);
         Vector2D straight = new Vector2D(0, 1);
         double distance = v.distance(origin);
         double angle = Vector2D.angle(straight, v);
         int distanceTicks = (int) (distance * COUNTS_PER_MM * COUNTS_CORRECTION_X);
-        int[] calcMotorDistances = {distanceTicks, distanceTicks, distanceTicks, distanceTicks};
-        double[] calcMotorPowers = calcMotorPowers(v.getX() * motorSpeed, v.getY() * motorSpeed, 0);
+        int[] motorDistances = calcMotorDistances(distanceTicks);
+        double[] motorPowers = calcMotorPowers(v.getX() * motorSpeed, v.getY() * motorSpeed, 0);
         double[] maxSpeeds = {ANGULAR_V_MAX_NEVERREST_20,ANGULAR_V_MAX_NEVERREST_20,ANGULAR_V_MAX_NEVERREST_20,ANGULAR_V_MAX_NEVERREST_20};
         allMotorPIDControl(
-                calcMotorDistances,
-                calcMotorPowers,
+                motorDistances,
+                motorPowers,
                 maxSpeeds,
                 motorRampTime,
                 motorKp,
