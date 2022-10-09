@@ -3,12 +3,11 @@ package org.firstinspires.ftc.teamcode.Subsystems;
 
 import org.firstinspires.ftc.teamcode.DriveControl.BoundingBox;
 import org.firstinspires.ftc.teamcode.Util.Coordinate;
+import org.firstinspires.ftc.teamcode.Util.ExceptionHandler;
 import org.tensorflow.lite.Interpreter;
-
-import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+
 
 public class ModelThread extends Thread {
     private VisionThreadData vtd = VisionThreadData.getVTD();
@@ -17,6 +16,7 @@ public class ModelThread extends Thread {
 
     @Override
     public void run() {
+        Thread.currentThread().setUncaughtExceptionHandler(new ExceptionHandler());
         lock.writeLock().tryLock();
         try {
             vtd.setDistance(calcDistanceFromBoundingBox(getBoundingBoxFromModel()));
