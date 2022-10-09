@@ -17,6 +17,8 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGR
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
 
+import java.io.File;
+
 /**
  * The Vision Subsystem
  *
@@ -24,8 +26,6 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.
  * @see <a href="https://github.com/OpenFTC/EasyOpenCV">EasyOpenCV</a>
  */
 public class Vision extends Subsystem {
-    public double distance;
-    private static Vision theVision;
     public static final int CAMERA_WIDTH = 1920; // width of wanted camera resolution
     public static final int CAMERA_HEIGHT = 1080; // height of wanted camera resolution
     public static final int HORIZON = 100; // horizon value to tune
@@ -144,9 +144,5 @@ public class Vision extends Subsystem {
     public ConeColorPipeline.ConeColor detectConeColor() {
         // Return the marker location
         return pipeline.getConeColor();
-    }
-
-    public static Vision getVision() {
-        return theVision;
     }
 }
