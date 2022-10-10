@@ -28,7 +28,7 @@ public class ModelThread extends Thread {
             }
         }
         else {
-            Log.e("vision", "unable to acquire lock");
+            Log.e("vision", "thread unable to acquire lock");
         }
     }
 
