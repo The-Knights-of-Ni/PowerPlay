@@ -11,6 +11,13 @@ public class BoundingBox {
 
     public Coordinate absoluteBottomLeft;
 
+    /**
+     * The bounding box generates a box to represent an objects position.
+     * @param xc The length of the box in the x direction
+     * @param yc The length of the box in the y direction
+     * @param zc the height of the box
+     * @param position The bottom left corner of the box's position, this grounds the box to a position
+     */
     public BoundingBox(double xc, double yc, double zc, Coordinate position) {
         x = xc;
         y = yc;
