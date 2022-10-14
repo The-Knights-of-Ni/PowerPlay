@@ -15,7 +15,7 @@ public class ThreadExceptionHandler implements UncaughtExceptionHandler {
         Log.e("main", "Caught Exception on Thread " + t.getId() + " " + t.getClass().getName() + "\nThread shutting down", e);
         t.interrupt();
         if (t.isAlive()) {
-            t.stop();
+            t.interrupt();
         }
     }
 }

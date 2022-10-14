@@ -42,10 +42,10 @@ public class Control extends Subsystem {
                 this.turnFlipServo(0);
                 break;
             case MIDDLE:
-                this.turnFlipServo(0);
+                this.turnFlipServo(1);
                 break;
             case HIGH:
-                this.turnFlipServo(0);
+                this.turnFlipServo(2);
                 break;
         }
     }

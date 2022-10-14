@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.Util;
 import org.apache.commons.math3.exception.DimensionMismatchException;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
-public class Coordinate extends Vector2D {
+public class Vector extends Vector2D {
     /**
      * Simple constructor.
      * Build a vector from its coordinates
@@ -13,7 +13,7 @@ public class Coordinate extends Vector2D {
      * @see #getX()
      * @see #getY()
      */
-    public Coordinate(double x, double y) {
+    public Vector(double x, double y) {
         super(x, y);
     }
 
@@ -25,7 +25,7 @@ public class Coordinate extends Vector2D {
      * @throws DimensionMismatchException if array does not have 2 elements
      * @see #toArray()
      */
-    public Coordinate(double[] v) throws DimensionMismatchException {
+    public Vector(double[] v) throws DimensionMismatchException {
         super(v);
     }
 
@@ -37,7 +37,7 @@ public class Coordinate extends Vector2D {
      * @param a scale factor
      * @param u base (unscaled) vector
      */
-    public Coordinate(double a, Vector2D u) {
+    public Vector(double a, Vector2D u) {
         super(a, u);
     }
 
@@ -51,7 +51,7 @@ public class Coordinate extends Vector2D {
      * @param a2 second scale factor
      * @param u2 second base (unscaled) vector
      */
-    public Coordinate(double a1, Vector2D u1, double a2, Vector2D u2) {
+    public Vector(double a1, Vector2D u1, double a2, Vector2D u2) {
         super(a1, u1, a2, u2);
     }
 
@@ -67,7 +67,7 @@ public class Coordinate extends Vector2D {
      * @param a3 third scale factor
      * @param u3 third base (unscaled) vector
      */
-    public Coordinate(double a1, Vector2D u1, double a2, Vector2D u2, double a3, Vector2D u3) {
+    public Vector(double a1, Vector2D u1, double a2, Vector2D u2, double a3, Vector2D u3) {
         super(a1, u1, a2, u2, a3, u3);
     }
 
@@ -85,7 +85,7 @@ public class Coordinate extends Vector2D {
      * @param a4 fourth scale factor
      * @param u4 fourth base (unscaled) vector
      */
-    public Coordinate(double a1, Vector2D u1, double a2, Vector2D u2, double a3, Vector2D u3, double a4, Vector2D u4) {
+    public Vector(double a1, Vector2D u1, double a2, Vector2D u2, double a3, Vector2D u3, double a4, Vector2D u4) {
         super(a1, u1, a2, u2, a3, u3, a4, u4);
     }
 }

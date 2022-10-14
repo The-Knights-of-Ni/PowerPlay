@@ -2,10 +2,13 @@ package org.firstinspires.ftc.teamcode.Subsystems.Vision;
 
 
 import android.util.Log;
-import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
+import org.apache.commons.geometry.euclidean.twod.ConvexArea;
+import org.apache.commons.geometry.euclidean.twod.Vector2D;
+import org.apache.commons.geometry.euclidean.twod.path.LinePath;
+import org.apache.commons.numbers.core.Precision;
 import org.firstinspires.ftc.teamcode.DriveControl.BoundingBox;
-import org.firstinspires.ftc.teamcode.Util.Coordinate;
 import org.firstinspires.ftc.teamcode.Util.ThreadExceptionHandler;
+import org.firstinspires.ftc.teamcode.Util.Vector;
 import org.tensorflow.lite.Interpreter;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -30,11 +33,21 @@ public class ModelThread extends Thread {
         }
     }
 
-    private Vector2D calcDistanceFromBoundingBox(BoundingBox currentPosition, BoundingBox theoreticalPosition) {
-        return currentPosition.distanceFrom(theoreticalPosition);
+    private Vector calcDistanceFromBoundingBox(BoundingBox currentPosition, BoundingBox theoreticalPosition) {
+        return currentPosition.transformTo(theoreticalPosition);
     }
 
     private BoundingBox getBoundingBoxFromModel() {
-        return new BoundingBox(18d, 18d, 18d, new Coordinate(0, 0)); //TODO: Add code for obtaining usable bounding boxes from TF model, delete this filler when complete
+        Precision.DoubleEquivalence precision = Precision.doubleEquivalenceOfEpsilon(1e-6);
+
+        // create a connected sequence of line segments forming the unit square
+        LinePath path = LinePath.builder(precision)
+                .append(Vector2D.ZERO)
+                .append(Vector2D.Unit.PLUS_X)
+                .append(Vector2D.of(1, 1))
+                .append(Vector2D.Unit.PLUS_Y)
+                .build(true); // build the path, ending it with the starting point
+        ConvexArea shape = ConvexArea.convexPolygonFromPath(path);
+        return new BoundingBox(shape); //TODO: Add code for obtaining usable bounding boxes from TF model, delete this filler when complete
     }
 }

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.util.Log;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.hardware.lynx.LynxModule;
@@ -8,7 +9,7 @@ import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Subsystems.Control;
-import org.firstinspires.ftc.teamcode.Subsystems.Drive;
+import org.firstinspires.ftc.teamcode.Subsystems.Drive.Drive;
 import org.firstinspires.ftc.teamcode.Subsystems.Vision.Vision;
 import org.firstinspires.ftc.teamcode.Util.AllianceColor;
 
@@ -140,38 +141,23 @@ public class Robot {
         rearLeftDriveMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         rearRightDriveMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 
-        // Sensors
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-//        loadSensor = hardwareMap.get(DistanceSensor.class, "load");
-
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.calibrationDataFile =
-                "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        parameters.loggingEnabled = true;
-        parameters.loggingTag = "IMU";
-        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-
-        telemetryBroadcast("Status", " IMU initializing...");
-        imu.initialize(parameters);
-        telemetryBroadcast("Status", " IMU calibrating...");
-        // make sure the imu gyro is calibrated before continuing.
-        while (opMode.opModeIsActive() && !imu.isGyroCalibrated()) {
-            opMode.sleep(50);
-            opMode.idle();
-        }
-
         // Subsystems
         telemetryBroadcast("Status", " drive initializing...");
-        drive = new Drive(frontLeftDriveMotor, frontRightDriveMotor, rearLeftDriveMotor, rearRightDriveMotor, imu, telemetry, hardwareMap, timer);
-
+        Log.d("main", "drive initializing");
+        drive = new Drive(frontLeftDriveMotor, frontRightDriveMotor, rearLeftDriveMotor, rearRightDriveMotor, telemetry, hardwareMap, timer);
+        Log.i("main", "drive initialized");
         telemetryBroadcast("Status", " control initializing...");
+        Log.d("main", "control initializing");
         control = new Control(telemetry, hardwareMap, timer);
-
+        Log.i("main", "control initialized");
         if(visionEnabled) {
+            Log.d("main", "vision initializing");
             telemetryBroadcast("Status", " vision initializing...");
             vision = new Vision(telemetry, hardwareMap, timer, allianceColor);
+            Log.i("main", "vision initialized");
+        }
+        else {
+            Log.w("main", "vision not initialized");
         }
 
 
