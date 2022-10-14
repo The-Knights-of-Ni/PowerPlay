@@ -23,6 +23,7 @@ import org.firstinspires.ftc.teamcode.Util.AllianceColor;
  *
  * @see com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
  */
+
 @Autonomous(name = "Auto", group = "Concept")
 @Disabled
 public class Auto extends LinearOpMode {
@@ -45,7 +46,7 @@ public class Auto extends LinearOpMode {
     public void initAuto(AllianceColor allianceColor) {
         ElapsedTime timer = new ElapsedTime();
         try {
-            this.robot = new Robot(this, hardwareMap, telemetry, timer, allianceColor, gamepad1, gamepad2,
+            this.robot = new Robot(hardwareMap, telemetry, timer, allianceColor, gamepad1, gamepad2,
                     true);
             telemetry.addData("Waiting for start", "");
             telemetry.update();
@@ -53,6 +54,7 @@ public class Auto extends LinearOpMode {
             telemetry.addData("ERROR: ", "IO EXCEPTION", ioException);
             telemetry.update();
             Log.e("main", "fatal error IO EXCEPTION", ioException);
+
             stop();
         }
     }

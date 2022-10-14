@@ -24,8 +24,7 @@ public class Teleop extends LinearOpMode {
     private void initOpMode() throws IOException {
         // Initialize DC motor objects
         timer = new ElapsedTime();
-        this.robot =  new Robot(this, hardwareMap, telemetry, timer, AllianceColor.BLUE, gamepad1, gamepad2,false);
-
+        this.robot =  new Robot(hardwareMap, telemetry, timer, AllianceColor.BLUE, gamepad1, gamepad2,false);
         timeCurrent = timer.nanoseconds();
         timePre = timeCurrent;
 
@@ -54,10 +53,10 @@ public class Teleop extends LinearOpMode {
 
         ElapsedTime timer = new ElapsedTime();
 
+
         initDevices();
 
         waitForStart();
-
 
         if (isStopRequested()) {
             return;
@@ -66,6 +65,9 @@ public class Teleop extends LinearOpMode {
         telemetry.clearAll();
         timeCurrent = timer.nanoseconds();
         timePre = timeCurrent;
+
+        final double sensitivityHighPower = 1.0; // multiply inputs with this on high power mode
+        final double sensitivityLowPower = 0.5; // multiply inputs with this on non-high power mode
 
         while (opModeIsActive()) { // clearer nomenclature for variables
             robot.getGamePadInputs();
@@ -76,12 +78,12 @@ public class Teleop extends LinearOpMode {
 
             // Robot drive movement
             double[] motorPowers;
-            robotAngle = robot.imu.getAngularOrientation().firstAngle;
+
             if (driveHighPower) {
-                motorPowers = robot.drive.calcMotorPowers(robot.leftStickX, robot.leftStickY, robot.rightStickX);
+                motorPowers = robot.drive.calcMotorPowers(robot.leftStickX * sensitivityHighPower, robot.leftStickY * sensitivityHighPower, robot.rightStickX * sensitivityHighPower);
             }
             else {
-                motorPowers = robot.drive.calcMotorPowers(robot.leftStickX*0.5, robot.leftStickY*0.5, robot.rightStickX*0.5);
+                motorPowers = robot.drive.calcMotorPowers(robot.leftStickX * sensitivityLowPower, robot.leftStickY * sensitivityLowPower, robot.rightStickX * sensitivityLowPower);
             }
             robot.drive.setDrivePowers(motorPowers);
 

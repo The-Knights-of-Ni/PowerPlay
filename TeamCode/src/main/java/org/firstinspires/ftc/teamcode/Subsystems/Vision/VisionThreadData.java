@@ -20,7 +20,7 @@ public class VisionThreadData {
         return distance;
     }
 
-    public void setDistance(Vector2D distance) {
+    public void setDistance(Vector distance) {
         vtd.distance = distance;
     }
 }

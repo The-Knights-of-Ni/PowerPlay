@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Util.AllianceColor;
 
@@ -25,10 +26,5 @@ public class AutoCycleBlue extends Auto {
         robot.drive.moveForward(22*mmPerInch);
         // TODO: Insert Scoring code
         robot.drive.moveBackward(22*mmPerInch);
-
-//        Vector2D move_vector = new Vector2D(20, 20);
-//        initAuto(AllianceColor.BLUE);
-//        waitForStart();
-//        robot.drive.moveVector(move_vector, 1.0);
     }
 }

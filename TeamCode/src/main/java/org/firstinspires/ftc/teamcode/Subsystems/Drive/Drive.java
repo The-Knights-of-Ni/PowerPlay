@@ -146,6 +146,7 @@ public class Drive extends Subsystem {
 
     /**
      * Gets the left odometry
+     *
      * @return The left odometry
      */
     private int getOdometryCountL() {
@@ -155,6 +156,7 @@ public class Drive extends Subsystem {
 
     /**
      * Gets the back odometry
+     *
      * @return The back odometry
      */
     private int getOdometryCountB() {
@@ -164,6 +166,7 @@ public class Drive extends Subsystem {
 
     /**
      * Gets the right odometry
+     *
      * @return The right odometry
      */
     private int getOdometryCountR() {
@@ -666,6 +669,7 @@ public class Drive extends Subsystem {
 
     /**
      * Sets the motor pid coefficients
+     *
      * @param Kp
      * @param Ki
      * @param Kd
@@ -686,8 +690,9 @@ public class Drive extends Subsystem {
 
     /**
      * Gets the Motor PID Coefficients
+     *
      * @param motor The motor to calculate the PID Coefficients
-     * @param mode The Run Mode
+     * @param mode  The Run Mode
      * @return The PIDFCoefficients
      */
     public PIDFCoefficients getMotorPIDCoefficients(DcMotorEx motor, DcMotor.RunMode mode) {
@@ -706,8 +711,9 @@ public class Drive extends Subsystem {
 
     /**
      * Sets the pid coefficients
-     * @param motor The motor
-     * @param mode The run mode
+     *
+     * @param motor            The motor
+     * @param mode             The run mode
      * @param pidfCoefficients The pid coefficients.
      */
     public void setMotorPIDCoefficients(
@@ -768,13 +774,13 @@ public class Drive extends Subsystem {
         double RLSpeed = peakSpeed;
         double RRSpeed = peakSpeed;
         if (motorFLForward)
-            FLSpeed = - FLSpeed;
+            FLSpeed = -FLSpeed;
         if (motorFRForward)
-            FRSpeed = - FRSpeed;
+            FRSpeed = -FRSpeed;
         if (motorRLForward)
-            RLSpeed = - RLSpeed;
+            RLSpeed = -RLSpeed;
         if (motorRRForward)
-            RRSpeed = - RRSpeed;
+            RRSpeed = -RRSpeed;
         int[] tickCounts = {tickCount, tickCount, tickCount, tickCount};
         double[] speeds = {FLSpeed, FRSpeed, RLSpeed, RRSpeed};
         double[] maxSpeeds = {maxSpeed, maxSpeed, maxSpeed, maxSpeed};
@@ -784,13 +790,13 @@ public class Drive extends Subsystem {
     /**
      * PID motor control program to ensure all four motors are synchronized
      *
-     * @param tickCount:      absolute value of target tick count of each motor
-     * @param peakSpeed:      peak speed of motor rotation in tick per second
-     * @param maxSpeed:       max speed of motor rotation in tick per second
-     * @param rampTime:       motor speed ramp uptime/downtime in sec (the amount of time it takes for the motor to reach the desired speed)
-     * @param Kp:             coefficient Kp
-     * @param Ki:             coefficient Ki
-     * @param Kd:             coefficient Kd
+     * @param tickCount: absolute value of target tick count of each motor
+     * @param peakSpeed: peak speed of motor rotation in tick per second
+     * @param maxSpeed:  max speed of motor rotation in tick per second
+     * @param rampTime:  motor speed ramp uptime/downtime in sec (the amount of time it takes for the motor to reach the desired speed)
+     * @param Kp:        coefficient Kp
+     * @param Ki:        coefficient Ki
+     * @param Kd:        coefficient Kd
      */
     public void allMotorPIDControl(
             int[] tickCount,
@@ -869,8 +875,7 @@ public class Drive extends Subsystem {
                 }
                 if (peakSpeed[0] > 0) {
                     actualTickCountFL = tickCount[0];
-                }
-                else {
+                } else {
                     actualTickCountFL = -tickCount[0];
                 }
                 if (currentCountFL >= actualTickCountFL) {
@@ -907,8 +912,7 @@ public class Drive extends Subsystem {
                 if (peakSpeed[1] > 0) {
 
                     actualTickCountFR = tickCount[1];
-                }
-                else {
+                } else {
                     actualTickCountFR = -tickCount[1];
                 }
                 if (currentCountFR >= actualTickCountFR) {
@@ -945,16 +949,14 @@ public class Drive extends Subsystem {
                 }
                 if (peakSpeed[2] > 0) {
                     actualTickCountRL = tickCount[2];
-                }
-                else {
+                } else {
                     actualTickCountRL = -tickCount[2];
                 }
                 if (currentCountRL >= actualTickCountRL) {
                     isMotorRLDone = true;
                     isMotorRLNotMoving = true;
                     rearLeft.setPower(0.0);
-                }
-                else {
+                } else {
                     currentError = currentCountRL - targetCountRL;
                     if (initialized) { // after the first point, the previous data is valid
                         acculErrorRL =
@@ -983,8 +985,7 @@ public class Drive extends Subsystem {
                 }
                 if (peakSpeed[3] > 0) {
                     actualTickCountRR = tickCount[3];
-                }
-                else {
+                } else {
                     actualTickCountRR = -tickCount[3];
                 }
                 currentError = currentCountRR - targetCountRR;
@@ -1061,9 +1062,10 @@ public class Drive extends Subsystem {
 
     /**
      * Gets the target tick count
-     * @param tickCount The tick count
-     * @param speed The speed
-     * @param rampTime The ramp time
+     *
+     * @param tickCount   The tick count
+     * @param speed       The speed
+     * @param rampTime    The ramp time
      * @param elapsedTime The total elapsed time
      * @return The tick count
      */
@@ -1113,9 +1115,10 @@ public class Drive extends Subsystem {
 
     /**
      * Gets the targets speed
-     * @param tickCount the tick count
-     * @param speed the speed
-     * @param rampTime the ramp time
+     *
+     * @param tickCount   the tick count
+     * @param speed       the speed
+     * @param rampTime    the ramp time
      * @param elapsedTime the total elapsed time
      * @return the target speed
      */
@@ -1159,18 +1162,19 @@ public class Drive extends Subsystem {
 
     /**
      * Moves to the position specified by the vector.
-     * @param v The position to move to
+     *
+     * @param v          The position to move to
      * @param motorSpeed the peak motor speed to pass to the PID
      */
     public void moveVector(Vector v, double motorSpeed) {
-        Vector origin = new Vector(0,0);
+        Vector origin = new Vector(0, 0);
         Vector straight = new Vector(0, 1);
         double distance = v.distance(origin);
         double angle = Vector.angle(straight, v);
         int distanceTicks = (int) (distance * COUNTS_PER_MM * COUNTS_CORRECTION_X);
         int[] calcMotorDistances = {distanceTicks, distanceTicks, distanceTicks, distanceTicks};
         double[] calcMotorPowers = calcMotorPowers(v.getX() * motorSpeed, v.getY() * motorSpeed, 0);
-        double[] maxSpeeds = {ANGULAR_V_MAX_NEVERREST_20,ANGULAR_V_MAX_NEVERREST_20,ANGULAR_V_MAX_NEVERREST_20,ANGULAR_V_MAX_NEVERREST_20};
+        double[] maxSpeeds = {ANGULAR_V_MAX_NEVERREST_20, ANGULAR_V_MAX_NEVERREST_20, ANGULAR_V_MAX_NEVERREST_20, ANGULAR_V_MAX_NEVERREST_20};
         allMotorPIDControl(
                 calcMotorDistances,
                 calcMotorPowers,

@@ -78,7 +78,7 @@
 
     <!-- ======================================================================================= -->
 
-    <!-- Logitech HD Webcam C310, Calibrated by by Robert Atkinson, 2018.05.30 using 3DF Zephyr -->
+    <!-- Logitech HD Webcam C310, Calibrated by Robert Atkinson, 2018.05.30 using 3DF Zephyr -->
     <!-- <Camera vid="Logitech" pid="0x081B">
         <Calibration
             size="640 480"
