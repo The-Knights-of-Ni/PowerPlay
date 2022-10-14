@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.Robot;
-import org.firstinspires.ftc.teamcode.Subsystems.Control;
 import org.firstinspires.ftc.teamcode.Util.AllianceColor;
 
 import java.io.IOException;
@@ -35,9 +34,6 @@ public class ServoTest extends LinearOpMode {
         waitForStart();
         while(opModeIsActive()) {
             robot.getGamePadInputs();
-
-//            robot.markerSlide.setPosition(0.425);
-//            robot.markerHook.setPosition(0.375);
         }
     }
 

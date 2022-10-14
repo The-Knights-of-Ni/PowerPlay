@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.Robot;
-import org.firstinspires.ftc.teamcode.Subsystems.Control;
 import org.firstinspires.ftc.teamcode.Util.AllianceColor;
 
 import java.io.IOException;
@@ -55,9 +54,10 @@ public class Teleop extends LinearOpMode {
 
         ElapsedTime timer = new ElapsedTime();
 
+        initDevices();
+
         waitForStart();
 
-        initDevices();
 
         if (isStopRequested()) {
             return;

@@ -31,8 +31,10 @@ public class Vision extends Subsystem {
     public static final int HORIZON = 100; // horizon value to tune
     public static final String WEBCAM_NAME =
             "Webcam 1"; // insert webcam name from configuration if using webcam
-    public static final String VUFORIA_KEY =
-            "ATDGULf/////AAABmRRGSyLSbUY4lPoqBYjklpYqC4y9J7bCk42kjgYS5KtgpKL8FbpEDQTovzZG8thxB01dClvthxkSuSyCkaZi+JiD5Pu0cMVre3gDwRvwRXA7V9kpoYyMIPMVX/yBTGaW8McUaK9UeQUaFSepsTcKjX/itMtcy7nl1k84JChE4i8whbinHWDpaNwb5qcJsXlQwJhE8JE7t8NMxMm31AgzqjVf/7HwprTRfrxjTjVx5v2rp+wgLeeLTE/xk1JnL3fZMG6yyxPHgokWlIYEBZ5gBX+WJfgA+TDsdSPY/MnBp5Z7QxQsO9WJA59o/UzyEo/9BkbvYJZfknZqeoZWrJoN9jk9sivFh0wIPsH+JjZNFsPw"; // TODO: Get new VUFORIA KEY
+    public static final String VUFORIA_KEY = "AdaaiLz/////AAABmY48m0KCh0LSrL2edcDLhdMoRzt30ceXdmqa4QAa4krhLO2RXrW8IHU" +
+            "MXYoMmg9Jgb9rrD9KMlG/VpOmlMvKA5EEahmlY0Gf6AXH5PIoaVTIcaK6U4PtRBEKIUZ+x6qOhZsLW8j3nI3Rha1NQNxbwV5CAgzODPK" +
+            "G8udq8VrXMnd2LBr46BQvxhZSmLLhJETGg6XKf563hbzGEg+6RO2oXwy10c0tax2vWgjFC4hRMiRf9HK8a7CYCnk7QG15syHv8ksuKBY" +
+            "kG4YOIRfIMaxrq6B1KT709/PFFtdfBLYAYiKfdpu7Wmt6zGO1+dx003WBBDV80OjWRye05i0WcreTxmbGqbknMLxYm7ATIYNetDsG";
     // Since ImageTarget trackable use mm to specify their dimensions, we must use mm for all the
     // physical dimension.
     // Define constants
