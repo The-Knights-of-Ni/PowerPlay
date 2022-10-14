@@ -186,10 +186,6 @@ public class Drive extends Subsystem {
         getOdometryCountR();
     }
 
-    public double getAngularVMaxNeverrest20() {
-        return ANGULAR_V_MAX_NEVERREST_20;
-    }
-
     /**
      * Stops all drive motors
      */
@@ -230,36 +226,11 @@ public class Drive extends Subsystem {
         rearRight.setMode(mode);
     }
 
-    /**
-     * Initialize MaxVelocity of drive motors
-     */
-    public void initMaxVelocity() {
-        frontLeft.setVelocity(ANGULAR_V_MAX_NEVERREST_20);
-        frontRight.setVelocity(ANGULAR_V_MAX_NEVERREST_20);
-        rearLeft.setVelocity(ANGULAR_V_MAX_NEVERREST_20);
-        rearRight.setVelocity(ANGULAR_V_MAX_NEVERREST_20);
-    }
-
-    /**
-     * Sets all drive motors to specified zero power behavior
-     */
     private void setZeroPowerBehavior(DcMotor.ZeroPowerBehavior mode) {
         frontLeft.setZeroPowerBehavior(mode);
         frontRight.setZeroPowerBehavior(mode);
         rearLeft.setZeroPowerBehavior(mode);
         rearRight.setZeroPowerBehavior(mode);
-    }
-
-    /**
-     * Turns with the specified power
-     *
-     * @param power The power to turn by.
-     */
-    public void turn(double power) {
-        frontLeft.setPower(-power);
-        frontRight.setPower(power);
-        rearLeft.setPower(-power);
-        rearRight.setPower(power);
     }
 
     /**
@@ -302,15 +273,6 @@ public class Drive extends Subsystem {
         frontRight.setPower(powers[1]);
         rearLeft.setPower(powers[2]);
         rearRight.setPower(powers[3]);
-    }
-
-    /**
-     * Set the full power
-     *
-     * @param fullPower full power boolean
-     */
-    public void setDriveFullPower(boolean fullPower) {
-        driveFullPower = fullPower;
     }
 
     /**
@@ -413,60 +375,6 @@ public class Drive extends Subsystem {
 //        telemetry.addData("turnRobot", "turn to %7.2f degrees", robotCurrentAngle);
 //        telemetry.update();
     }
-
-    /**
-     * Turns the robot by tick. Use {@link #turnByAngle(double)}
-     *
-     * @param power the motor power
-     * @param angle the angle in ticks
-     */
-    public void turnByTick(double power, double angle) {
-        setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontLeft.setTargetPosition(0);
-        frontRight.setTargetPosition(0);
-        rearLeft.setTargetPosition(0);
-        rearRight.setTargetPosition(0);
-
-        setRunMode(DcMotor.RunMode.RUN_TO_POSITION);
-        if (driveFullPower) {
-            setDrivePower(1.0);
-        } else {
-            setDrivePower(power);
-        }
-        // convert from degrees to motor counts
-        int tickCount = (int) (angle * COUNTS_PER_DEGREE);
-        frontLeft.setTargetPosition(-tickCount);
-        frontRight.setTargetPosition(tickCount);
-        rearLeft.setTargetPosition(-tickCount);
-        rearRight.setTargetPosition(tickCount);
-        startTime = timer.nanoseconds();
-        while (frontLeft.isBusy() && frontRight.isBusy() && rearLeft.isBusy() && rearRight.isBusy()) {
-            logDriveEncoders();
-            checkAndStopMotors();
-        }
-        stop();
-        logDriveEncoders();
-    }
-
-    /**
-     * Turns the robot by the specified angle.
-     *
-     * @param degrees The angle to turn by.
-     */
-    public void turnRobot(double degrees) {
-        this.turnByAngle(degrees);
-        //        robotCurrentPosX += ROBOT_HALF_LENGTH *
-        // (Math.cos((robotCurrentAngle+degrees)*Math.PI/180.0)
-        //                - Math.cos(robotCurrentAngle*Math.PI/180.0));
-        //        robotCurrentPosY += ROBOT_HALF_LENGTH *
-        // (Math.sin((robotCurrentAngle+degrees)*Math.PI/180.0)
-        //                - Math.sin(robotCurrentAngle*Math.PI/180.0));
-        robotCurrentAngle += degrees;
-        // Display it for the driver.
-        telemetry.addData("turnRobot", "turn to %7.2f degrees", robotCurrentAngle);
-        telemetry.update();
-    }
-
     /**
      * 2D move to position
      *
@@ -593,17 +501,6 @@ public class Drive extends Subsystem {
         telemetry.update();
         //        sleep(100);
     }
-
-    /**
-     * Moves the robot forward by the specified distance with the default speed with odometry.
-     *
-     * @param distance The distance to move forward by, in millimeters, use the mmPerInch constant if you want to use
-     *                 inches.
-     */
-    public void moveForwardOdometry(double distance) {
-        moveForwardOdometry(distance, DRIVE_SPEED_Y);
-    }
-
     /**
      * Moves the robot forward by the specified distance with the specified speed with odometry.
      *
@@ -699,16 +596,6 @@ public class Drive extends Subsystem {
 //        telemetry.addData(
 //                "moveForward", "move to %7.2f, %7.2f", robotCurrentPosX, robotCurrentPosY);
 //        telemetry.update();
-    }
-
-    /**
-     * Moves the robot backwards by the specified distance with the default speed with odometry.
-     *
-     * @param distance The distance to move backward by, in millimeters, use the mmPerInch constant if you want to use
-     *                 inches.
-     */
-    public void moveBackwardOdometry(double distance) {
-        moveBackwardOdometry(distance, DRIVE_SPEED_Y);
     }
 
     /**
@@ -809,16 +696,6 @@ public class Drive extends Subsystem {
     }
 
     /**
-     * Strafes the robot left by the specified distance with the default speed with odometry.
-     *
-     * @param distance The distance to strafe left by, in millimeters, use the mmPerInch constant if you want to use
-     *                 inches.
-     */
-    public void moveLeftOdometry(double distance) {
-        moveLeftOdometry(distance, DRIVE_SPEED_X);
-    }
-
-    /**
      * Strafes the robot left by the specified distance with the specified speed with odometry.
      *
      * @param distance   The distance to strafe left by
@@ -916,17 +793,6 @@ public class Drive extends Subsystem {
         telemetry.update();
         //        sleep(100);
     }
-
-    /**
-     * Strafes the robot right by the specified distance with the default speed with odometry.
-     *
-     * @param distance The distance to strafe right by, in millimeters, use the mmPerInch constant if you want to use
-     *                 inches.
-     */
-    public void moveRightOdometry(double distance) {
-        moveRightOdometry(distance, DRIVE_SPEED_X);
-    }
-
     /**
      * Strafes the robot right by the specified distance with the specified speed with odometry.
      *
@@ -1029,7 +895,7 @@ public class Drive extends Subsystem {
     /**
      * Print the motor PID coefficients to telemetry
      */
-    public void printMotorPIDCoefficients() {
+    public void printMotorPIDCoefficients() { //Debug method (keep in case necessary)
         PIDFCoefficients pidfCoefficients;
         pidfCoefficients = getMotorPIDCoefficients(frontLeft, DcMotor.RunMode.RUN_TO_POSITION);
         telemetry.addData(
