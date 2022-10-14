@@ -25,12 +25,10 @@ public class ModelThread extends Thread {
         if (lock.writeLock().tryLock()) {
             try {
                 vtd.setDistance(calcDistanceFromBoundingBox(getBoundingBoxFromModel(), vtd.theoreticalPosition));
-            }
-            finally {
+            } finally {
                 lock.writeLock().unlock();
             }
-        }
-        else {
+        } else {
             Log.e("vision", "unable to acquire lock");
         }
     }
