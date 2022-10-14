@@ -21,6 +21,6 @@ public class VisionThreadData {
     }
 
     public void setDistance(Vector2D distance) {
-        VisionThreadData.distance = distance;
+        vtd.distance = distance;
     }
 }
