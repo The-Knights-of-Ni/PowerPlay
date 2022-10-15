@@ -1172,7 +1172,7 @@ public class Drive extends Subsystem {
         double distance = v.distance(new Vector(0, 0));
         double angle = Vector.angle(new Vector(1,0), v) - 45;
         int[] calcMotorDistancesTicks;
-        if(distance * Math.cos(angle) < 0) {
+        if(distance * Math.cos(angle * DEGREES_TO_RADIANS) < 0) {
             calcMotorDistancesTicks = new int[]{(int)((distance * Math.sin(angle * DEGREES_TO_RADIANS)) * COUNTS_PER_MM * COUNTS_CORRECTION_Y), (int)((distance * Math.cos(angle * DEGREES_TO_RADIANS)) * COUNTS_PER_MM * COUNTS_CORRECTION_X),
                     (int)((distance * Math.cos(angle * DEGREES_TO_RADIANS)) * COUNTS_PER_MM * COUNTS_CORRECTION_X), (int)((distance * Math.sin(angle * DEGREES_TO_RADIANS)) * COUNTS_PER_MM * COUNTS_CORRECTION_Y)};
         } else {
