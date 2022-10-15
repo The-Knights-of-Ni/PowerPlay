@@ -1498,16 +1498,14 @@ public class Drive extends Subsystem {
      */
     public void moveVector(Vector v, double motorSpeed) {
         double distance = v.distance(new Vector(0, 0));
-        double angle = Vector.angle(new Vector(1,0), v) - (Math.PI / 4);
-        int[] calcMotorDistancesTicks;
-        if(distance * Math.cos(angle) < 0) {
-            calcMotorDistancesTicks = new int[]{(int)((distance * Math.sin(angle)) * COUNTS_PER_MM * COUNTS_CORRECTION_Y), (int)((distance * Math.cos(angle)) * COUNTS_PER_MM * COUNTS_CORRECTION_X),
-                    (int)((distance * Math.cos(angle)) * COUNTS_PER_MM * COUNTS_CORRECTION_X), (int)((distance * Math.sin(angle)) * COUNTS_PER_MM * COUNTS_CORRECTION_Y)};
-        } else {
-            calcMotorDistancesTicks = new int[]{(int)((distance * Math.cos(angle)) * COUNTS_PER_MM * COUNTS_CORRECTION_X), (int)((distance * Math.sin(angle)) * COUNTS_PER_MM * COUNTS_CORRECTION_Y),
-                    (int)((distance * Math.sin(angle)) * COUNTS_PER_MM * COUNTS_CORRECTION_Y), (int)((distance * Math.cos(angle)) * COUNTS_PER_MM * COUNTS_CORRECTION_X)};
-        }
-        double[] calcMotorPowers = calcMotorPowers(v.getX() * motorSpeed, v.getY() * motorSpeed, 0);
+        double angle = Vector.angle(new Vector(0,1), v) - (Math.PI / 4);
+        int[] calcMotorDistancesTicks = new int[4];
+        // Order is: FL, FR, RL, RR
+        calcMotorDistancesTicks[0] = (int)((distance * Math.cos(angle)) * COUNTS_PER_MM * COUNTS_CORRECTION_Y);
+        calcMotorDistancesTicks[1] = (int)((distance * Math.sin(angle)) * COUNTS_PER_MM * COUNTS_CORRECTION_X);
+        calcMotorDistancesTicks[2] = (int)((distance * Math.sin(angle)) * COUNTS_PER_MM * COUNTS_CORRECTION_X);
+        calcMotorDistancesTicks[3] = (int)((distance * Math.cos(angle)) * COUNTS_PER_MM * COUNTS_CORRECTION_Y);
+        double[] calcMotorPowers = calcMotorPowers((v.getX() / distance) * motorSpeed, (v.getY() / distance) * motorSpeed, 0);
         double[] maxSpeeds = new double[4]; Arrays.fill(maxSpeeds, ANGULAR_V_MAX_NEVERREST_20);
         allMotorPIDControl(
                 calcMotorDistancesTicks,
