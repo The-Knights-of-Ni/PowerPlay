@@ -1167,16 +1167,20 @@ public class Drive extends Subsystem {
      * @param motorSpeed the peak motor speed to pass to the PID
      */
     public void moveVector(Vector v, double motorSpeed) {
-        Vector origin = new Vector(0, 0);
-        Vector straight = new Vector(0, 1);
-        double distance = v.distance(origin);
-        double angle = Vector.angle(straight, v);
-        int distanceTicks = (int) (distance * COUNTS_PER_MM * COUNTS_CORRECTION_X);
-        int[] calcMotorDistances = {distanceTicks, distanceTicks, distanceTicks, distanceTicks};
+        double distance = v.distance(new Vector(0, 0));
+        double angle = Vector.angle(new Vector(1,0), v);
+        int[] calcMotorDistancesTicks;
+        if(distance * Math.cos(angle) < 0) {
+            calcMotorDistancesTicks = new int[]{(int)((distance * Math.sin(angle)) * COUNTS_PER_MM * COUNTS_CORRECTION_Y), (int)((distance * Math.cos(angle)) * COUNTS_PER_MM * COUNTS_CORRECTION_Y),
+                    (int)((distance * Math.cos(angle)) * COUNTS_PER_MM * COUNTS_CORRECTION_Y), (int)((distance * Math.sin(angle)) * COUNTS_PER_MM * COUNTS_CORRECTION_Y)};
+        } else {
+            calcMotorDistancesTicks = new int[]{(int)((distance * Math.cos(angle)) * COUNTS_PER_MM * COUNTS_CORRECTION_Y), (int)((distance * Math.sin(angle)) * COUNTS_PER_MM * COUNTS_CORRECTION_Y),
+                    (int)((distance * Math.sin(angle)) * COUNTS_PER_MM * COUNTS_CORRECTION_Y), (int)((distance * Math.cos(angle)) * COUNTS_PER_MM * COUNTS_CORRECTION_Y)};
+        }
         double[] calcMotorPowers = calcMotorPowers(v.getX() * motorSpeed, v.getY() * motorSpeed, 0);
         double[] maxSpeeds = {ANGULAR_V_MAX_NEVERREST_20, ANGULAR_V_MAX_NEVERREST_20, ANGULAR_V_MAX_NEVERREST_20, ANGULAR_V_MAX_NEVERREST_20};
         allMotorPIDControl(
-                calcMotorDistances,
+                calcMotorDistancesTicks,
                 calcMotorPowers,
                 maxSpeeds,
                 motorRampTime,
