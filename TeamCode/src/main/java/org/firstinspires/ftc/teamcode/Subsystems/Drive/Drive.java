@@ -63,6 +63,7 @@ public class Drive extends Subsystem {
     private static final double motorKi = 0.02;
     private static final double motorKd = 0.0003;
     private static final double motorRampTime = 0.3;
+    private static final double DEGREES_TO_RADIANS = Math.PI/180;
     /**
      * DC Motor front left
      */
@@ -1168,14 +1169,14 @@ public class Drive extends Subsystem {
      */
     public void moveVector(Vector v, double motorSpeed) {
         double distance = v.distance(new Vector(0, 0));
-        double angle = Vector.angle(new Vector(1,0), v);
+        double angle = Vector.angle(new Vector(1,0), v) + 45;
         int[] calcMotorDistancesTicks;
         if(distance * Math.cos(angle) < 0) {
-            calcMotorDistancesTicks = new int[]{(int)((distance * Math.sin(angle)) * COUNTS_PER_MM * COUNTS_CORRECTION_Y), (int)((distance * Math.cos(angle)) * COUNTS_PER_MM * COUNTS_CORRECTION_X),
-                    (int)((distance * Math.cos(angle)) * COUNTS_PER_MM * COUNTS_CORRECTION_X), (int)((distance * Math.sin(angle)) * COUNTS_PER_MM * COUNTS_CORRECTION_Y)};
+            calcMotorDistancesTicks = new int[]{(int)((distance * Math.sin(angle * DEGREES_TO_RADIANS)) * COUNTS_PER_MM * COUNTS_CORRECTION_Y), (int)((distance * Math.cos(angle * DEGREES_TO_RADIANS)) * COUNTS_PER_MM * COUNTS_CORRECTION_X),
+                    (int)((distance * Math.cos(angle * DEGREES_TO_RADIANS)) * COUNTS_PER_MM * COUNTS_CORRECTION_X), (int)((distance * Math.sin(angle * DEGREES_TO_RADIANS)) * COUNTS_PER_MM * COUNTS_CORRECTION_Y)};
         } else {
-            calcMotorDistancesTicks = new int[]{(int)((distance * Math.cos(angle)) * COUNTS_PER_MM * COUNTS_CORRECTION_X), (int)((distance * Math.sin(angle)) * COUNTS_PER_MM * COUNTS_CORRECTION_Y),
-                    (int)((distance * Math.sin(angle)) * COUNTS_PER_MM * COUNTS_CORRECTION_Y), (int)((distance * Math.cos(angle)) * COUNTS_PER_MM * COUNTS_CORRECTION_X)};
+            calcMotorDistancesTicks = new int[]{(int)((distance * Math.cos(angle * DEGREES_TO_RADIANS)) * COUNTS_PER_MM * COUNTS_CORRECTION_X), (int)((distance * Math.sin(angle * DEGREES_TO_RADIANS)) * COUNTS_PER_MM * COUNTS_CORRECTION_Y),
+                    (int)((distance * Math.sin(angle * DEGREES_TO_RADIANS)) * COUNTS_PER_MM * COUNTS_CORRECTION_Y), (int)((distance * Math.cos(angle * DEGREES_TO_RADIANS)) * COUNTS_PER_MM * COUNTS_CORRECTION_X)};
         }
         double[] calcMotorPowers = calcMotorPowers(v.getX() * motorSpeed, v.getY() * motorSpeed, 0);
         double[] maxSpeeds = {ANGULAR_V_MAX_NEVERREST_20, ANGULAR_V_MAX_NEVERREST_20, ANGULAR_V_MAX_NEVERREST_20, ANGULAR_V_MAX_NEVERREST_20};
