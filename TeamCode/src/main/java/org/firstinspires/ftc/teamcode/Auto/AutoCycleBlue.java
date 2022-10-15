@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Util.AllianceColor;
 
-@Autonomous(name = "Auto Cycle Blue", group = "Concept")
+@Autonomous(name = "Auto Cycle Blue")
 public class AutoCycleBlue extends Auto {
     /**
      * Override of runOpMode()

@@ -47,7 +47,7 @@ public class Auto extends LinearOpMode {
         ElapsedTime timer = new ElapsedTime();
         try {
             this.robot = new Robot(hardwareMap, telemetry, timer, allianceColor, gamepad1, gamepad2,
-                    true);
+                    false);
             telemetry.addData("Waiting for start", "");
             telemetry.update();
         } catch (Exception ioException) {
