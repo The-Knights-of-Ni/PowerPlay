@@ -1498,7 +1498,7 @@ public class Drive extends Subsystem {
      */
     public void moveVector(Vector v, double motorSpeed) {
         double distance = v.distance(new Vector(0, 0));
-        double angle = Vector.angle(new Vector(1,0), v) - 45;
+        double angle = Vector.angle(new Vector(1,0), v) - (Math.PI / 4);
         int[] calcMotorDistancesTicks;
         if(distance * Math.cos(angle * DEGREES_TO_RADIANS) < 0) {
             calcMotorDistancesTicks = new int[]{(int)((distance * Math.sin(angle * DEGREES_TO_RADIANS)) * COUNTS_PER_MM * COUNTS_CORRECTION_Y), (int)((distance * Math.cos(angle * DEGREES_TO_RADIANS)) * COUNTS_PER_MM * COUNTS_CORRECTION_X),
