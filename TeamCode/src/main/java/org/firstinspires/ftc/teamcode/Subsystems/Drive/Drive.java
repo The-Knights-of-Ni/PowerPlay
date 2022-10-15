@@ -7,6 +7,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Subsystems.Subsystem;
 import org.firstinspires.ftc.teamcode.Util.Vector;
 
+import java.util.Arrays;
 import java.util.Locale;
 
 /**
@@ -1179,7 +1180,7 @@ public class Drive extends Subsystem {
                     (int)((distance * Math.sin(angle * DEGREES_TO_RADIANS)) * COUNTS_PER_MM * COUNTS_CORRECTION_Y), (int)((distance * Math.cos(angle * DEGREES_TO_RADIANS)) * COUNTS_PER_MM * COUNTS_CORRECTION_X)};
         }
         double[] calcMotorPowers = calcMotorPowers(v.getX() * motorSpeed, v.getY() * motorSpeed, 0);
-        double[] maxSpeeds = {ANGULAR_V_MAX_NEVERREST_20, ANGULAR_V_MAX_NEVERREST_20, ANGULAR_V_MAX_NEVERREST_20, ANGULAR_V_MAX_NEVERREST_20};
+        double[] maxSpeeds = new double[4]; Arrays.fill(maxSpeeds, ANGULAR_V_MAX_NEVERREST_20);
         allMotorPIDControl(
                 calcMotorDistancesTicks,
                 calcMotorPowers,
