@@ -1170,7 +1170,6 @@ public class Drive extends Subsystem {
         double prevTimeRR = 0.0;
         boolean initialized = false; // disable Ki and Kd terms in first iteration
         int currentCountFL, currentCountFR, currentCountRL, currentCountRR, targetCountFL, targetCountFR, targetCountRL, targetCountRR;
-        int actualTickCountFL, actualTickCountFR, actualTickCountRL, actualTickCountRR;
         int prevCountFL = 0;
         int prevCountFR = 0;
         int prevCountRL = 0;
@@ -1182,8 +1181,10 @@ public class Drive extends Subsystem {
         double startTime = ((double) timer.nanoseconds()) * 1.0e-9;
         double currentTime = 0.0;
         double errorSlope = 0.0;
+        // PID loop
         while (((!isMotorFLDone) || (!isMotorFRDone) || (!isMotorRLDone) || (!isMotorRRDone))
                 && (!isTimeOutExceeded)) {
+            // Front left motor control
             if (!isMotorFLDone) {
                 currentCountFL = frontLeft.getCurrentPosition(); // get current motor tick
 
@@ -1200,37 +1201,41 @@ public class Drive extends Subsystem {
                                 peakSpeed[0],
                                 rampTime,
                                 currentTime); // get the target speed on the speed profile
-                if (initialized) { // check if the motor is rotating
+                if (initialized) { // check if the motor is rotating first time runing
+                    // Check if moving
                     isMotorFLNotMoving = Math.abs(currentCountFL - prevCountFL) < timeOutThreshold;
                 }
-                if (peakSpeed[0] > 0) {
-                    actualTickCountFL = tickCount[0];
-                } else {
-                    actualTickCountFL = -tickCount[0];
-                }
-                if (currentCountFL >= actualTickCountFL) {
+                if (Math.abs(currentCountFL) >= Math.abs(tickCount[0])) {
                     isMotorFLDone = true;
                     isMotorFLNotMoving = true;
                     frontLeft.setPower(0.0);
                 } else {
                     currentError = currentCountFL - targetCountFL;
                     if (initialized) { // after the first point, the previous data is valid
+                        // Calculate le I term
                         acculErrorFL =
                                 acculErrorFL * alpha
                                         + currentError * (currentTime - prevTimeFL); // integrate error
+                        // Calculate le D term
                         errorSlope = (currentError - prevErrorFL) / (currentTime - prevTimeFL); // error slope
+                        // Calculate le P + I + D
                         currentPower = getCurrentPower(maxSpeed[0], Kp, Ki, Kd, acculErrorFL, currentError, currentTargetSpeedFL, errorSlope); // apply PID correction
                     } else { // at the first point, use Kp only
+                        // Only the first point when we can't do I or D
                         currentPower = currentTargetSpeedFL / maxSpeed[0] - currentError * Kp;
                     }
+                    // Cap the powers at 0 and 1
                     if (currentPower > 1.0) currentPower = 1.0;
                     if (currentPower < 0.0) currentPower = 0.0;
+                    // Set power of motor
                     frontLeft.setPower(currentPower);
                 }
+                // Track previous errors
                 prevErrorFL = currentError;
                 prevTimeFL = currentTime;
                 prevCountFL = currentCountFL;
             }
+            // Front right motor control
             if (!isMotorFRDone) {
                 currentCountFR = frontRight.getCurrentPosition();
                 currentTime = ((double) timer.nanoseconds()) * 1.0e-9 - startTime;
@@ -1239,50 +1244,47 @@ public class Drive extends Subsystem {
                 if (initialized) { // check if the motor is rotating
                     isMotorFRNotMoving = Math.abs(currentCountFR - prevCountFR) < timeOutThreshold;
                 }
-                if (peakSpeed[1] > 0) {
-
-                    actualTickCountFR = tickCount[1];
-                } else {
-                    actualTickCountFR = -tickCount[1];
-                }
-                if (currentCountFR >= actualTickCountFR) {
+                if (Math.abs(currentCountFR) >= Math.abs(tickCount[1])) {
                     isMotorFRDone = true;
                     isMotorFRNotMoving = true;
                     frontRight.setPower(0.0);
                 } else {
                     currentError = currentCountFR - targetCountFR;
                     if (initialized) { // after the first point, the previous data is valid
+                        // Calculate le I
                         acculErrorFR =
                                 acculErrorFR * alpha
                                         + currentError * (currentTime - prevTimeFR); // integrate error
+                        // Calculate le D
                         errorSlope = (currentError - prevErrorFR) / (currentTime - prevTimeFR); // error slope
+                        // Calculate le P + I + D
                         currentPower =
                                 getCurrentPower(maxSpeed[1], Kp, Ki, Kd, acculErrorFR, currentError, currentTargetSpeedFR, errorSlope); // apply PID correction
                     } else { // at the first point, use Kp only
+                        // Calculate only P at the first run
                         currentPower = currentTargetSpeedFR / maxSpeed[1] - currentError * Kp;
                     }
+                    // Cap the powers at 0 and 1
                     if (currentPower > 1.0) currentPower = 1.0;
                     if (currentPower < 0.0) currentPower = 0.0;
+                    // Set power of motor
                     frontRight.setPower(currentPower);
                 }
+                // Track previous errors
                 prevErrorFR = currentError;
                 prevTimeFR = currentTime;
                 prevCountFR = currentCountFR;
             }
+            // Rear left motor control
             if (!isMotorRLDone) {
-                currentCountRL = rearLeft.getCurrentPosition();
-                currentTime = ((double) timer.nanoseconds()) * 1.0e-9 - startTime;
-                targetCountRL = getTargetTickCount(tickCount[2], peakSpeed[2], rampTime, currentTime);
+                currentCountRL = rearLeft.getCurrentPosition(); // Get current motor tick
+                currentTime = ((double) timer.nanoseconds()) * 1.0e-9 - startTime; // Get current time
+                targetCountRL = getTargetTickCount(tickCount[2], peakSpeed[2], rampTime, currentTime); // Get the target count
                 currentTargetSpeedRL = getTargetSpeed(tickCount[2], peakSpeed[2], rampTime, currentTime);
                 if (initialized) { // check if the motor is rotating
                     isMotorRLNotMoving = Math.abs(currentCountRL - prevCountRL) < timeOutThreshold;
                 }
-                if (peakSpeed[2] > 0) {
-                    actualTickCountRL = tickCount[2];
-                } else {
-                    actualTickCountRL = -tickCount[2];
-                }
-                if (currentCountRL >= actualTickCountRL) {
+                if (Math.abs(currentCountRL) >= Math.abs(tickCount[2])) {
                     isMotorRLDone = true;
                     isMotorRLNotMoving = true;
                     rearLeft.setPower(0.0);
@@ -1305,6 +1307,7 @@ public class Drive extends Subsystem {
                 prevTimeRL = currentTime;
                 prevCountRL = currentCountRL;
             }
+            // Rear right motor control
             if (!isMotorRRDone) {
                 currentCountRR = rearRight.getCurrentPosition();
                 currentTime = ((double) timer.nanoseconds()) * 1.0e-9 - startTime;
@@ -1313,13 +1316,8 @@ public class Drive extends Subsystem {
                 if (initialized) { // check if the motor is rotating
                     isMotorRRNotMoving = Math.abs(currentCountRR - prevCountRR) < timeOutThreshold;
                 }
-                if (peakSpeed[3] > 0) {
-                    actualTickCountRR = tickCount[3];
-                } else {
-                    actualTickCountRR = -tickCount[3];
-                }
                 currentError = currentCountRR - targetCountRR;
-                if (currentCountRR >= actualTickCountRR) {
+                if (Math.abs(currentCountRR) >= Math.abs(tickCount[3])) {
                     isMotorRRDone = true;
                     isMotorRRNotMoving = true;
                     currentPower = 0.0;
@@ -1342,6 +1340,7 @@ public class Drive extends Subsystem {
                 prevTimeRR = currentTime;
                 prevCountRR = currentCountRR;
             }
+            // Watch for timeout
             initialized = true; // enable Ki and Kd terms
             if (isMotorFLNotMoving && isMotorFRNotMoving && isMotorRLNotMoving && isMotorRRNotMoving) {
                 if (isTimeOutStarted) {
