@@ -81,6 +81,7 @@ public class Drive extends Subsystem {
      * DC Motor rear right
      */
     public final DcMotorEx rearRight;
+    private final ElapsedTime timer;
     // use motor encoder for odometry
     /**
      * Odometry Left
@@ -130,10 +131,9 @@ public class Drive extends Subsystem {
      * @param hardwareMap The hardware map for getting the motors
      * @param timer       The timer for the elapsed time
      */
-    public Drive(DcMotorEx frontLeft, DcMotorEx frontRight, DcMotorEx rearLeft, DcMotorEx rearRight, Telemetry telemetry,
-                 HardwareMap hardwareMap,
-                 ElapsedTime timer) {
-        super(telemetry, hardwareMap, timer);
+    public Drive(DcMotorEx frontLeft, DcMotorEx frontRight, DcMotorEx rearLeft, DcMotorEx rearRight, Telemetry telemetry, ElapsedTime elapsedTime) {
+        super(telemetry);
+        this.timer = elapsedTime;
         this.frontLeft = frontLeft;
         this.frontRight = frontRight;
         this.rearLeft = rearLeft;

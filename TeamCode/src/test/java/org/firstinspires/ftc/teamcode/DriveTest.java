@@ -1,0 +1,29 @@
+package org.firstinspires.ftc.teamcode;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
+import org.firstinspires.ftc.teamcode.Subsystems.Drive.Drive;
+import org.junit.jupiter.api.Test;
+
+class DriveTest {
+
+    @Test
+    void testCalcMotorPower2D() {
+        MockDcMotorEx mockFL = new MockDcMotorEx(DcMotor.RunMode.RUN_USING_ENCODER);
+        MockDcMotorEx mockFR = new MockDcMotorEx(DcMotor.RunMode.RUN_USING_ENCODER);
+        MockDcMotorEx mockRL = new MockDcMotorEx(DcMotor.RunMode.RUN_USING_ENCODER);
+        MockDcMotorEx mockRR = new MockDcMotorEx(DcMotor.RunMode.RUN_USING_ENCODER);
+        ElapsedTime timer = new ElapsedTime();
+        MockTelemetry telemetry = new MockTelemetry();
+        Drive drive = new Drive(mockFL, mockFR, mockRL, mockRR, telemetry, timer);
+        assertEquals(0.5, drive.calcMotorPowers(0, 1, 0)[0], 0.5);
+        assertEquals(0.5, drive.calcMotorPowers(0, 1, 0)[1], 0.5);
+        assertEquals(0.5, drive.calcMotorPowers(0, 1, 0)[2], 0.5);
+        assertEquals(0.5, drive.calcMotorPowers(0, 1, 0)[3], 0.5);
+
+    }
+
+}
+

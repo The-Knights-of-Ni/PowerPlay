@@ -10,8 +10,6 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public abstract class Subsystem {
     // protected instead of private because of inheritance
     protected final Telemetry telemetry;
-    protected final ElapsedTime timer;
-    protected final HardwareMap hardwareMap;
 
     /**
      * inits with telemetry, the hardware map, and the timer.
@@ -19,9 +17,7 @@ public abstract class Subsystem {
      * @param hardwareMap The hardware map
      * @param timer The elapsed timer
      */
-    public Subsystem(Telemetry telemetry, HardwareMap hardwareMap, ElapsedTime timer) {
+    public Subsystem(Telemetry telemetry) {
         this.telemetry = telemetry;
-        this.hardwareMap = hardwareMap;
-        this.timer = timer;
     }
 }

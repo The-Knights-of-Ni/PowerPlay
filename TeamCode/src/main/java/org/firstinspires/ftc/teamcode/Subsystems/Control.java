@@ -30,8 +30,8 @@ public class Control extends Subsystem {
         }
     }
 
-    public Control(Telemetry telemetry, HardwareMap hardwareMap, ElapsedTime timer) {
-        super(telemetry, hardwareMap, timer);
+    public Control(Telemetry telemetry) {
+        super(telemetry);
         // this.extendBar = extendBar;
     }
 

@@ -147,16 +147,16 @@ public class Robot {
     public void subsystemInit()
     {
         Log.d("init", "Drive subsystem init started");
-        drive = new Drive(frontLeftDriveMotor, frontRightDriveMotor, rearLeftDriveMotor, rearRightDriveMotor, telemetry, hardwareMap, timer);
+        drive = new Drive(frontLeftDriveMotor, frontRightDriveMotor, rearLeftDriveMotor, rearRightDriveMotor, telemetry, timer);
         Log.i("init", "Drive subsystem init finished");
 
         Log.d("init", "Control subsystem init started");
-        control = new Control(telemetry, hardwareMap, timer);
+        control = new Control(telemetry);
         Log.i("init", "Control subsystem init finished");
 
         if(visionEnabled) {
             Log.d("init", "Vision subsystem init started");
-            vision = new Vision(telemetry, hardwareMap, timer, allianceColor);
+            vision = new Vision(telemetry, hardwareMap, allianceColor);
             Log.i("init", "Vision subsystem init finished");
         }
         else {
