@@ -1519,4 +1519,8 @@ public class Drive extends Subsystem {
         robotCurrentPosY += distance * Math.sin((robotCurrentAngle + angle) * Math.PI / 180.0);
         logMovement();
     }
+
+    public void moveVector(Vector v) {
+        moveVector(v, DRIVE_SPEED);
+    }
 }
