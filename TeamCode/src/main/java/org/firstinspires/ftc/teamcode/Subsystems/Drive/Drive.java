@@ -891,7 +891,7 @@ public class Drive extends Subsystem {
                     }
                     // Cap the powers at 0 and 1
                     if (currentPower > 1.0) currentPower = 1.0;
-                    if (currentPower < 0.0) currentPower = 0.0;
+                    if (currentPower < -1.0) currentPower = -1.0;
                     // Set power of motor
                     frontLeft.setPower(currentPower);
                 }
@@ -931,7 +931,7 @@ public class Drive extends Subsystem {
                     }
                     // Cap the powers at 0 and 1
                     if (currentPower > 1.0) currentPower = 1.0;
-                    if (currentPower < 0.0) currentPower = 0.0;
+                    if (currentPower < -1.0) currentPower = -1.0;
                     // Set power of motor
                     frontRight.setPower(currentPower);
                 }
@@ -965,7 +965,7 @@ public class Drive extends Subsystem {
                         currentPower = currentTargetSpeedRL / maxSpeed[2] - currentError * Kp;
                     }
                     if (currentPower > 1.0) currentPower = 1.0;
-                    if (currentPower < 0.0) currentPower = 0.0;
+                    if (currentPower < -1.0) currentPower = -1.0;
                     rearLeft.setPower(currentPower);
                 }
                 prevErrorRL = currentError;
@@ -998,7 +998,7 @@ public class Drive extends Subsystem {
                         currentPower = currentTargetSpeedRR / maxSpeed[3] - currentError * Kp;
                     }
                     if (currentPower > 1.0) currentPower = 1.0;
-                    if (currentPower < 0.0) currentPower = 0.0;
+                    if (currentPower < -1.0) currentPower = -1.0;
                     rearRight.setPower(currentPower);
                 }
                 prevErrorRR = currentError;
