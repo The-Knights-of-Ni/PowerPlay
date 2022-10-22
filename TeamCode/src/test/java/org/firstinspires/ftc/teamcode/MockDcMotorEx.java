@@ -9,18 +9,20 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
 public class MockDcMotorEx implements DcMotorEx {
-
     RunMode currentRunMode;
     double currentPower;
-
     boolean motorEnabled;
     Direction currentDirection;
+    int targetPosition;
+    ZeroPowerBehavior powerBehavior;
 
     public MockDcMotorEx(RunMode runMode) {
         currentRunMode = runMode;
         currentPower = 0;
         motorEnabled = true;
         currentDirection = Direction.FORWARD;
+        targetPosition = 0;
+        powerBehavior = ZeroPowerBehavior.BRAKE;
     }
     @Override
     public void setMotorEnable() {
@@ -139,12 +141,12 @@ public class MockDcMotorEx implements DcMotorEx {
 
     @Override
     public void setZeroPowerBehavior(ZeroPowerBehavior zeroPowerBehavior) {
-
+        powerBehavior = zeroPowerBehavior;
     }
 
     @Override
     public ZeroPowerBehavior getZeroPowerBehavior() {
-        return null;
+        return powerBehavior;
     }
 
     @Override
@@ -159,12 +161,12 @@ public class MockDcMotorEx implements DcMotorEx {
 
     @Override
     public void setTargetPosition(int position) {
-
+        targetPosition = position;
     }
 
     @Override
     public int getTargetPosition() {
-        return 0;
+        return targetPosition;
     }
 
     @Override
