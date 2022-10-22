@@ -11,15 +11,19 @@ import org.junit.jupiter.api.Test;
 
 class DriveTest {
 
-    @Test
-    void testCalcMotorPower2D() {
+    Drive init() {
         MockDcMotorEx mockFL = new MockDcMotorEx(DcMotor.RunMode.RUN_USING_ENCODER);
         MockDcMotorEx mockFR = new MockDcMotorEx(DcMotor.RunMode.RUN_USING_ENCODER);
         MockDcMotorEx mockRL = new MockDcMotorEx(DcMotor.RunMode.RUN_USING_ENCODER);
         MockDcMotorEx mockRR = new MockDcMotorEx(DcMotor.RunMode.RUN_USING_ENCODER);
         ElapsedTime timer = new ElapsedTime();
         MockTelemetry telemetry = new MockTelemetry();
-        Drive drive = new Drive(mockFL, mockFR, mockRL, mockRR, telemetry, timer);
+        return new Drive(mockFL, mockFR, mockRL, mockRR, telemetry, timer);
+    }
+
+    @Test
+    void testCalcMotorPower2D() {
+        Drive drive = init();
         assertEquals(0.5, drive.calcMotorPowers(0, 1, 0)[0], 0.5);
         assertEquals(0.5, drive.calcMotorPowers(0, 1, 0)[1], 0.5);
         assertEquals(0.5, drive.calcMotorPowers(0, 1, 0)[2], 0.5);
@@ -32,18 +36,21 @@ class DriveTest {
 
     @Test
     void testMoveVector2D() {
-        MockDcMotorEx mockFL = new MockDcMotorEx(DcMotor.RunMode.RUN_USING_ENCODER);
-        MockDcMotorEx mockFR = new MockDcMotorEx(DcMotor.RunMode.RUN_USING_ENCODER);
-        MockDcMotorEx mockRL = new MockDcMotorEx(DcMotor.RunMode.RUN_USING_ENCODER);
-        MockDcMotorEx mockRR = new MockDcMotorEx(DcMotor.RunMode.RUN_USING_ENCODER);
-        ElapsedTime timer = new ElapsedTime();
-        MockTelemetry telemetry = new MockTelemetry();
-        Drive drive = new Drive(mockFL, mockFR, mockRL, mockRR, telemetry, timer);
+        Drive drive = init();
         drive.moveVector(new Vector(1000,1000));
-        assertEquals(0, drive.frontLeft.getPower(), 0.0001);
-        assertEquals(0, drive.frontRight.getPower(), 0.0001);
-        assertEquals(0, drive.rearLeft.getPower(), 0.0001);
-        assertEquals(0, drive.rearRight.getPower(), 0.0001);
+        assertNotEquals(0, drive.frontLeft.getPower());
+        assertNotEquals(0, drive.frontRight.getPower());
+        assertNotEquals(0, drive.rearLeft.getPower());
+        assertNotEquals(0, drive.rearRight.getPower());
+    }
+
+    @Test
+    void testMoveForward() {
+        Drive drive = init();
+        drive.moveForward(1000);
+        assertNotEquals(0, drive.frontLeft.getPower());
+        assertNotEquals(0, drive.frontRight.getPower());
+        assertNotEquals(0, drive.rearLeft.getPower());
+        assertNotEquals(0, drive.rearRight.getPower());
     }
 }
-
