@@ -179,27 +179,27 @@ public class MockDcMotorEx implements DcMotorEx {
 
     @Override
     public void setMode(RunMode mode) {
-
+        currentRunMode = mode;
     }
 
     @Override
     public RunMode getMode() {
-        return null;
+        return currentRunMode;
     }
 
     @Override
     public void setDirection(Direction direction) {
-
+        currentDirection = direction;
     }
 
     @Override
     public Direction getDirection() {
-        return null;
+        return currentDirection;
     }
 
     @Override
     public void setPower(double power) {
-        if (power <=1 && power>=1) {
+        if (power <= 1.0 && power >= -1.0) {
             currentPower = power;
         }
         else {

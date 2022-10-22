@@ -142,8 +142,13 @@ public class Drive extends Subsystem {
     }
 
     private void logMovement() {
-        Log.i("drive", "Robot X: " + robotCurrentPosX + " Robot Y: " + robotCurrentPosY + " Robot Turn: " +
-                robotCurrentAngle);
+        try {
+            Log.i("drive", "Robot X: " + robotCurrentPosX + " Robot Y: " + robotCurrentPosY + " Robot Turn: " +
+                    robotCurrentAngle);
+        }
+        catch (RuntimeException ignored) {
+
+        }
     }
 
     /**
@@ -1378,7 +1383,12 @@ public class Drive extends Subsystem {
                             isTimeOutStarted ? "Y" : "N",
                             timeOutStartedTime * 1000.0,
                             isTimeOutExceeded ? "Y" : "N");
-            Log.v("drive", "motorEnc: " + output);
+            try {
+                Log.v("drive", "motorEnc: " + output);
+            }
+            catch (RuntimeException ignored) {
+
+            }
         }
     }
 

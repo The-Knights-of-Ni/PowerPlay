@@ -32,7 +32,6 @@ public class Control extends Subsystem {
 
     public Control(Telemetry telemetry) {
         super(telemetry);
-        // this.extendBar = extendBar;
     }
 
     public void extend4Bar(BarState position) {
