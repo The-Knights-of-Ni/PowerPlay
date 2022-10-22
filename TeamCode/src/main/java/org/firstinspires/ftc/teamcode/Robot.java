@@ -1,22 +1,20 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.arcrobotics.ftclib.hardware.motors.CRServo;
-import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import android.util.Log;
 import com.qualcomm.hardware.lynx.LynxModule;
-import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import android.os.Build;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Subsystems.Control;
-import org.firstinspires.ftc.teamcode.Subsystems.Drive;
-import org.firstinspires.ftc.teamcode.Subsystems.Vision;
+import org.firstinspires.ftc.teamcode.Subsystems.Drive.Drive;
+import org.firstinspires.ftc.teamcode.Subsystems.Vision.Vision;
 import org.firstinspires.ftc.teamcode.Util.AllianceColor;
 
 import java.util.List;
 
 public class Robot {
-    public String name = "PowerPlay 2023";
+    public final String name = "PowerPlay 2023";
     public final ElapsedTime timer;
     // DC Motors
     public DcMotorEx frontLeftDriveMotor;
@@ -34,16 +32,6 @@ public class Robot {
     public int odRCount = 0;
     public int odBCount = 0;
     public int odLCount = 0;
-    /**
-     * Control Hub
-     *
-     * <p>-------------------- Expansion Hub 2 --------------------
-     */
-
-    /**
-     * Sensors
-     */
-    public DistanceSensor loadSensor;
     /**
      * Declare game pad objects
      */
@@ -107,7 +95,7 @@ public class Robot {
     private final boolean visionEnabled;
     private final HardwareMap hardwareMap;
     private final Telemetry telemetry;
-    private final double joystickDeadZone = 0.1;
+    private static final double joystickDeadZone = 0.1;
     private final Gamepad gamepad1;
     private final Gamepad gamepad2;
 
@@ -116,6 +104,8 @@ public class Robot {
      * @param allianceColor the alliance color
      */
     public Robot(HardwareMap hardwareMap, Telemetry telemetry, ElapsedTime timer, AllianceColor allianceColor, Gamepad gamepad1, Gamepad gamepad2, boolean visionEnabled) {
+        Log.i("init", "started");
+        Log.v("init", "version: " + Build.VERSION.RELEASE);
         this.hardwareMap = hardwareMap;
         this.timer = timer;
         this.allianceColor = allianceColor;
@@ -127,11 +117,19 @@ public class Robot {
     }
 
     public void init() {
-        // DC Motors
+        motorInit();
+        Log.i("init", "motor init finished");
+
+        telemetry.setDisplayFormat(Telemetry.DisplayFormat.HTML);
+        subsystemInit();
+    }
+
+    private void motorInit() {
         frontLeftDriveMotor = (DcMotorEx) hardwareMap.dcMotor.get("fl");
         frontRightDriveMotor = (DcMotorEx) hardwareMap.dcMotor.get("fr");
         rearLeftDriveMotor = (DcMotorEx) hardwareMap.dcMotor.get("bl");
         rearRightDriveMotor = (DcMotorEx) hardwareMap.dcMotor.get("br");
+
 
         frontRightDriveMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         rearRightDriveMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -140,22 +138,25 @@ public class Robot {
         frontRightDriveMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         rearLeftDriveMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         rearRightDriveMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-
-        // Subsystems
-        subsystemInit();
     }
 
     public void subsystemInit()
     {
-        telemetryBroadcast("Status", " drive initializing...");
-        drive = new Drive(frontLeftDriveMotor, frontRightDriveMotor, rearLeftDriveMotor, rearRightDriveMotor, telemetry, hardwareMap, timer);
+        Log.d("init", "Drive subsystem init started");
+        drive = new Drive(frontLeftDriveMotor, frontRightDriveMotor, rearLeftDriveMotor, rearRightDriveMotor, telemetry, timer);
+        Log.i("init", "Drive subsystem init finished");
 
-        telemetryBroadcast("Status", " control initializing...");
-        control = new Control(telemetry, hardwareMap, timer);
+        Log.d("init", "Control subsystem init started");
+        control = new Control(telemetry);
+        Log.i("init", "Control subsystem init finished");
 
         if(visionEnabled) {
-            telemetryBroadcast("Status", " vision initializing...");
-            vision = new Vision(telemetry, hardwareMap, timer, allianceColor);
+            Log.d("init", "Vision subsystem init started");
+            vision = new Vision(telemetry, hardwareMap, allianceColor);
+            Log.i("init", "Vision subsystem init finished");
+        }
+        else {
+            Log.w("init", "Vision subsystem init skipped");
         }
         telemetryBroadcast("Status", " all subsystems inited");
     }
@@ -237,5 +238,4 @@ public class Robot {
         telemetry.addData(caption, value);
         telemetry.update();
     }
-
 }

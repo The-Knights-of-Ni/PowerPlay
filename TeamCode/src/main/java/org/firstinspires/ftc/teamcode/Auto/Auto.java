@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Auto;
 
+import android.util.Log;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -23,7 +24,8 @@ import org.firstinspires.ftc.teamcode.Util.AllianceColor;
  * @see com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
  */
 
-
+@Autonomous(name = "Auto", group = "Concept")
+@Disabled
 public class Auto extends LinearOpMode {
 
     /**
@@ -50,6 +52,8 @@ public class Auto extends LinearOpMode {
         } catch (Exception ioException) {
             telemetry.addData("ERROR: ", "IO EXCEPTION", ioException);
             telemetry.update();
+            Log.e("main", "fatal error IO EXCEPTION", ioException);
+
             stop();
         }
     }

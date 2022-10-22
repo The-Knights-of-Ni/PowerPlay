@@ -25,7 +25,6 @@ public class Teleop extends LinearOpMode {
         // Initialize DC motor objects
         timer = new ElapsedTime();
         this.robot =  new Robot(hardwareMap, telemetry, timer, AllianceColor.BLUE, gamepad1, gamepad2,false);
-
         timeCurrent = timer.nanoseconds();
         timePre = timeCurrent;
 
@@ -54,9 +53,10 @@ public class Teleop extends LinearOpMode {
 
         ElapsedTime timer = new ElapsedTime();
 
-        waitForStart();
 
         initDevices();
+
+        waitForStart();
 
         if (isStopRequested()) {
             return;
@@ -78,13 +78,14 @@ public class Teleop extends LinearOpMode {
 
             // Robot drive movement
             double[] motorPowers;
+
             if (driveHighPower) {
                 motorPowers = robot.drive.calcMotorPowers(robot.leftStickX * sensitivityHighPower, robot.leftStickY * sensitivityHighPower, robot.rightStickX * sensitivityHighPower);
             }
             else {
                 motorPowers = robot.drive.calcMotorPowers(robot.leftStickX * sensitivityLowPower, robot.leftStickY * sensitivityLowPower, robot.rightStickX * sensitivityLowPower);
             }
-            robot.drive.setDrivePower(motorPowers);
+            robot.drive.setDrivePowers(motorPowers);
 
             //Toggle drive power
             if (robot.yButton && !robot.isyButtonPressedPrev){
