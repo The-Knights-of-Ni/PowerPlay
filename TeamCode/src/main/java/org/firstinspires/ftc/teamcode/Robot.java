@@ -92,7 +92,7 @@ public class Robot {
     public Control control;
     public Vision vision;
     private final AllianceColor allianceColor;
-    private final boolean visionEnabled = true;
+    private final boolean visionEnabled;
     private final HardwareMap hardwareMap;
     private final Telemetry telemetry;
     private static final double joystickDeadZone = 0.1;
