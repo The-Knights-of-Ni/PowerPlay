@@ -140,6 +140,10 @@ public class Drive extends Subsystem {
         setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
+    /**
+     * Logs the current robot position via Log.i
+     * @see Log
+     */
     private void logMovement() {
         try {
             Log.i("drive", "Robot X: " + robotCurrentPosX + " Robot Y: " + robotCurrentPosY + " Robot Turn: " +
@@ -203,7 +207,7 @@ public class Drive extends Subsystem {
     }
 
     /**
-     * Stops all drive motors
+     * Stops all drive motors by setting the powers to 0
      */
     public void stop() {
         frontLeft.setPower(0);
@@ -287,7 +291,7 @@ public class Drive extends Subsystem {
     }
 
     /**
-     * Sets the drive power
+     * Sets the drive power to every motor
      *
      * @param power the power to set the motors to
      */
@@ -348,6 +352,9 @@ public class Drive extends Subsystem {
         telemetry.update();
     }
 
+    /**
+     * Corrects the angle of the robot, to prevent the robot from being turned in the wrong position.
+     */
     private void correctAngleOdometry() {
         updateOdometry();
         telemetry.addData(
