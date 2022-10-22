@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.DriveControl;
 
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 import org.firstinspires.ftc.teamcode.Util.Coordinate;
+import org.firstinspires.ftc.teamcode.Util.Vector;
 
 import java.util.ArrayList;
 
@@ -18,7 +20,8 @@ public class Path {
         isMoving = false;
     }
 
-    public void getVectorForPosition(Coordinate coordinate) {
-
+    public Vector getVectorForPosition(Coordinate coordinate) {
+        return new Vector(Math.abs(coordinate.getX() - waypoints.get(targetWaypoint).coordinate.getX()),
+                Math.abs(coordinate.getY() - waypoints.get(targetWaypoint).coordinate.getY()));
     }
 }
