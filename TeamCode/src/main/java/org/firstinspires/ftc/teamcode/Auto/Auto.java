@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.Robot;
+import org.firstinspires.ftc.teamcode.Subsystems.Vision.Vision;
 import org.firstinspires.ftc.teamcode.Util.AllianceColor;
 
 /**
@@ -36,7 +37,7 @@ public class Auto extends LinearOpMode {
      * The robot class in the op mode
      */
     public Robot robot;
-
+    public Vision vision;
 
     /**
      * Inits the robot class and sets the robot as the newly inited robot.
@@ -47,6 +48,7 @@ public class Auto extends LinearOpMode {
         try {
             this.robot = new Robot(hardwareMap, telemetry, timer, allianceColor, gamepad1, gamepad2,
                     false);
+            this.vision = new Vision(telemetry, hardwareMap, allianceColor);
             telemetry.addData("Waiting for start", "");
             telemetry.update();
         } catch (Exception ioException) {
