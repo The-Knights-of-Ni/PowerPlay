@@ -882,7 +882,7 @@ public class Drive extends Subsystem {
                                 acculErrorFL * alpha
                                         + currentError * (currentTime - prevTimeFL); // integrate error
                         // Calculate le D term
-                        errorSlope = (currentError - prevErrorFL) / (currentTime - prevTimeFL); // error slope
+                            errorSlope = (currentError - prevErrorFL) / (currentTime - prevTimeFL); // error slope
                         // Calculate le P + I + D
                         currentPower = getCurrentPower(maxSpeed[0], Kp, Ki, Kd, acculErrorFL, currentError, currentTargetSpeedFL, errorSlope); // apply PID correction
                     } else { // at the first point, use Kp only
@@ -1190,6 +1190,6 @@ public class Drive extends Subsystem {
     }
 
     public void moveVector(Vector v) {
-        moveVector(v, DRIVE_SPEED);
+        moveVector(v, ANGULAR_V_MAX_NEVERREST_20);
     }
 }
