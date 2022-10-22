@@ -423,18 +423,7 @@ public class Drive extends Subsystem {
      */
     public void moveForward(double distance, double motorSpeed) {
         // this.moveToPos2D(motorSpeed, 0.0, distance);
-        allMotorPIDControl(
-                (int) (distance * COUNTS_PER_MM * COUNTS_CORRECTION_Y),
-                motorSpeed * ANGULAR_V_MAX_NEVERREST_20,
-                ANGULAR_V_MAX_NEVERREST_20,
-                motorRampTime,
-                true,
-                true,
-                true,
-                true,
-                motorKp,
-                motorKi,
-                motorKd);
+        moveVector(new Vector(0, distance), motorSpeed);
         robotCurrentPosX += distance * Math.cos(robotCurrentAngle * Math.PI / 180.0);
         robotCurrentPosY += distance * Math.sin(robotCurrentAngle * Math.PI / 180.0);
         logMovement();
@@ -486,18 +475,7 @@ public class Drive extends Subsystem {
      */
     public void moveBackward(double distance, double motorSpeed) {
         //        this.moveToPos2D(motorSpeed, 0.0, -distance);
-        allMotorPIDControl(
-                (int) (distance * COUNTS_PER_MM * COUNTS_CORRECTION_Y),
-                motorSpeed * ANGULAR_V_MAX_NEVERREST_20,
-                ANGULAR_V_MAX_NEVERREST_20,
-                motorRampTime,
-                false,
-                false,
-                false,
-                false,
-                motorKp,
-                motorKi,
-                motorKd);
+        moveVector(new Vector(0, -distance), motorSpeed);
         robotCurrentPosX += distance * Math.cos((robotCurrentAngle + 180.0) * Math.PI / 180.0);
         robotCurrentPosY += distance * Math.sin((robotCurrentAngle + 180.0) * Math.PI / 180.0);
         logMovement();
@@ -549,18 +527,7 @@ public class Drive extends Subsystem {
      * @param motorSpeed The speed, a value between 0 and 1
      */
     public void moveLeft(double distance, double motorSpeed) {
-        allMotorPIDControl(
-                (int) (distance * COUNTS_PER_MM * COUNTS_CORRECTION_X),
-                motorSpeed * ANGULAR_V_MAX_NEVERREST_20,
-                ANGULAR_V_MAX_NEVERREST_20,
-                motorRampTime,
-                false,
-                true,
-                true,
-                false,
-                motorKp,
-                motorKi,
-                motorKd);
+        moveVector(new Vector(-distance, 0), motorSpeed);
         robotCurrentPosX += distance * Math.cos((robotCurrentAngle + 90.0) * Math.PI / 180.0);
         robotCurrentPosY += distance * Math.sin((robotCurrentAngle + 90.0) * Math.PI / 180.0);
         logMovement();
@@ -612,18 +579,7 @@ public class Drive extends Subsystem {
      * @param motorSpeed The speed, a value between 0 and 1
      */
     public void moveRight(double distance, double motorSpeed) {
-        allMotorPIDControl(
-                (int) (distance * COUNTS_PER_MM * COUNTS_CORRECTION_X),
-                motorSpeed * ANGULAR_V_MAX_NEVERREST_20,
-                ANGULAR_V_MAX_NEVERREST_20,
-                motorRampTime,
-                true,
-                false,
-                false,
-                true,
-                motorKp,
-                motorKi,
-                motorKd);
+        moveVector(new Vector(distance, 0), motorSpeed);
         robotCurrentPosX += distance * Math.cos((robotCurrentAngle - 90.0) * Math.PI / 180.0);
         robotCurrentPosY += distance * Math.sin((robotCurrentAngle - 90.0) * Math.PI / 180.0);
         logMovement();
@@ -768,25 +724,6 @@ public class Drive extends Subsystem {
                         currentTimeRR,
                         currentCountRR);
         Log.d("drive", output);
-    }
-
-    public void allMotorPIDControl(
-            int tickCount,
-            double peakSpeed,
-            double maxSpeed,
-            double rampTime,
-            boolean motorFLForward,
-            boolean motorFRForward,
-            boolean motorRLForward,
-            boolean motorRRForward,
-            double Kp,
-            double Ki,
-            double Kd) {
-        // Order is: FL, FR, RL, RR
-        int tickCounts[] = {motorFLForward ? tickCount : -tickCount, motorFRForward ? tickCount : -tickCount, motorRLForward ? tickCount : -tickCount, motorRRForward ? tickCount : -tickCount};
-        double peakSpeeds[] = {peakSpeed, peakSpeed, peakSpeed, peakSpeed};
-        double maxSpeeds[] = {maxSpeed, maxSpeed, maxSpeed, maxSpeed};
-        allMotorPIDControl(tickCounts, peakSpeeds, maxSpeeds, rampTime, Kp, Ki, Kd);
     }
 
     /**
