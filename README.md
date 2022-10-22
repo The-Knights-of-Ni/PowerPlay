@@ -12,10 +12,6 @@ Create branches for individual components in the code. Do not commit directly to
 
 **auto** - auto code
 
-**dev-pid** - pid development
-
-**gh-pages** - Github Pages *does not have actual code*
-
 **teleop** - teleop development
 
 **vision** - vision code
@@ -24,4 +20,5 @@ Create branches for individual components in the code. Do not commit directly to
 
 
 # Docs
-A notion documentation page will be up soon.
+* A notion documentation page exists.
+* There is javadoc for mostly things
