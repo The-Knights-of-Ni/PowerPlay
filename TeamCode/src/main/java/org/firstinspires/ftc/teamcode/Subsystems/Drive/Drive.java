@@ -744,7 +744,7 @@ public class Drive extends Subsystem {
     }
 
     /**
-     * Logs the drive encoder results to telemetry and the phone.
+     * Logs the drive encoder results to logcat
      */
     public void logDriveEncoders() {
         int currentCountFL = frontLeft.getCurrentPosition();
@@ -770,6 +770,20 @@ public class Drive extends Subsystem {
         Log.d("drive", output);
     }
 
+    /**
+     * PID controller for legacy functions
+     * @param tickCount how many ticks to move
+     * @param peakSpeed desired speed in ticks per second
+     * @param maxSpeed physical motor speed limit in ticks per second
+     * @param rampTime:  motor speed ramp uptime/downtime in sec (the amount of time it takes for the motor to reach the desired speed)
+     * @param motorFLForward FL motor direction
+     * @param motorFRForward FR motor direction
+     * @param motorRLForward RL motor direction
+     * @param motorRRForward RR motor direction
+     * @param Kp:        coefficient Kp
+     * @param Ki:        coefficient Ki
+     * @param Kd:        coefficient Kd
+     */
     public void allMotorPIDControl(
             int tickCount,
             double peakSpeed,
@@ -783,9 +797,9 @@ public class Drive extends Subsystem {
             double Ki,
             double Kd) {
         // Order is: FL, FR, RL, RR
-        int tickCounts[] = {motorFLForward ? tickCount : -tickCount, motorFRForward ? tickCount : -tickCount, motorRLForward ? tickCount : -tickCount, motorRRForward ? tickCount : -tickCount};
-        double peakSpeeds[] = {peakSpeed, peakSpeed, peakSpeed, peakSpeed};
-        double maxSpeeds[] = {maxSpeed, maxSpeed, maxSpeed, maxSpeed};
+        int[] tickCounts = {motorFLForward ? tickCount : -tickCount, motorFRForward ? tickCount : -tickCount, motorRLForward ? tickCount : -tickCount, motorRRForward ? tickCount : -tickCount};
+        double[] peakSpeeds = {peakSpeed, peakSpeed, peakSpeed, peakSpeed};
+        double[] maxSpeeds = {maxSpeed, maxSpeed, maxSpeed, maxSpeed};
         allMotorPIDControl(tickCounts, peakSpeeds, maxSpeeds, rampTime, Kp, Ki, Kd);
     }
 
@@ -892,8 +906,7 @@ public class Drive extends Subsystem {
                             errorSlope = (currentError - prevErrorFL) / (currentTime - prevTimeFL); // error slope
                         // Calculate le P + I + D
                         currentPower = getCurrentPower(maxSpeed[0], Kp, Ki, Kd, acculErrorFL, currentError, currentTargetSpeedFL, errorSlope); // apply PID correction
-                    } else { // at the first point, use Kp only
-                        // Only the first point when we can't do I or D
+                    } else { // at the first point, use Kp only at the first point when we can't do I or D
                         currentPower = currentTargetSpeedFL / maxSpeed[0] - currentError * Kp;
                     }
                     // Cap the powers at 0 and 1
