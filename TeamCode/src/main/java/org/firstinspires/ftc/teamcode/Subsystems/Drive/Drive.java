@@ -320,33 +320,7 @@ public class Drive extends Subsystem {
      * @param angle The angle to turn by. Positive corresponds to counterclockwise
      */
     public void turnByAngle(double angle) {
-        if (angle > 0.0) {
-            allMotorPIDControl(
-                    (int) (angle * COUNTS_PER_DEGREE),
-                    TURN_SPEED * ANGULAR_V_MAX_NEVERREST_20,
-                    ANGULAR_V_MAX_NEVERREST_20,
-                    motorRampTime,
-                    false,
-                    true,
-                    false,
-                    true,
-                    motorKp,
-                    motorKi,
-                    motorKd);
-        } else {
-            allMotorPIDControl(
-                    (int) (-angle * COUNTS_PER_DEGREE),
-                    TURN_SPEED * ANGULAR_V_MAX_NEVERREST_20,
-                    ANGULAR_V_MAX_NEVERREST_20,
-                    motorRampTime,
-                    true,
-                    false,
-                    true,
-                    false,
-                    motorKp,
-                    motorKi,
-                    motorKd);
-        }
+        moveVector(new Vector(0, 0), angle);
         robotCurrentAngle += angle;
         telemetry.addData("turnRobot", "turn to %7.2f degrees", robotCurrentAngle);
         telemetry.update();
@@ -1109,15 +1083,20 @@ public class Drive extends Subsystem {
      * @param v          The position to move to
      * @param motorSpeed the peak motor speed to pass to the PID
      */
-    public void moveVector(Vector v, double angle, double motorSpeed) {
+    public void moveVector(Vector v, double turnAngle, double motorSpeed) {
         double distance = v.distance(new Vector(0, 0));
         double angle = Math.atan2(v.getY(), v.getX()) - (Math.PI / 4.);
         int[] calcMotorDistancesTicks = new int[4];
         // Order is: FL, FR, RL, RR
+
         calcMotorDistancesTicks[0] = (int)((distance * Math.cos(angle)) * COUNTS_PER_MM * COUNTS_CORRECTION_Y);
+        calcMotorDistancesTicks[0] -= (int)(turnAngle * COUNTS_PER_DEGREE);
         calcMotorDistancesTicks[1] = (int)((distance * Math.sin(angle)) * COUNTS_PER_MM * COUNTS_CORRECTION_X);
+        calcMotorDistancesTicks[1] += (int)(turnAngle * COUNTS_PER_DEGREE);
         calcMotorDistancesTicks[2] = (int)((distance * Math.sin(angle)) * COUNTS_PER_MM * COUNTS_CORRECTION_X);
+        calcMotorDistancesTicks[2] -= (int)(turnAngle * COUNTS_PER_DEGREE);
         calcMotorDistancesTicks[3] = (int)((distance * Math.cos(angle)) * COUNTS_PER_MM * COUNTS_CORRECTION_Y);
+        calcMotorDistancesTicks[3] += (int)(turnAngle * COUNTS_PER_DEGREE);
         double[] calcMotorPowers = calcMotorPowers((v.getX() / distance) * motorSpeed, (v.getY() / distance) * motorSpeed, 0);
         double[] maxSpeeds = new double[4]; Arrays.fill(maxSpeeds, ANGULAR_V_MAX_NEVERREST_20);
         allMotorPIDControl(
