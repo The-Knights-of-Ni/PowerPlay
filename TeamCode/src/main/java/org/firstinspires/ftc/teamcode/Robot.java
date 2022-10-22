@@ -124,13 +124,18 @@ public class Robot {
     }
 
     public void init() {
-        // DC Motors
+        motorInit();
+        Log.i("init", "motor init finished");
+
+        telemetry.setDisplayFormat(Telemetry.DisplayFormat.HTML);
+        subsystemInit();
+    }
+
+    private void motorInit() {
         frontLeftDriveMotor = (DcMotorEx) hardwareMap.dcMotor.get("fl");
         frontRightDriveMotor = (DcMotorEx) hardwareMap.dcMotor.get("fr");
         rearLeftDriveMotor = (DcMotorEx) hardwareMap.dcMotor.get("bl");
         rearRightDriveMotor = (DcMotorEx) hardwareMap.dcMotor.get("br");
-
-        Log.i("init", "motor init finished");
 
 
         frontRightDriveMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -140,8 +145,6 @@ public class Robot {
         frontRightDriveMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         rearLeftDriveMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         rearRightDriveMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-
-        subsystemInit();
     }
 
     public void subsystemInit()
