@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import android.util.Log;
 import com.qualcomm.hardware.lynx.LynxModule;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import android.os.Build;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -15,7 +14,7 @@ import org.firstinspires.ftc.teamcode.Util.AllianceColor;
 import java.util.List;
 
 public class Robot {
-    public String name = "PowerPlay 2023";
+    public final String name = "PowerPlay 2023";
     public final ElapsedTime timer;
     // DC Motors
     public DcMotorEx frontLeftDriveMotor;
@@ -33,12 +32,6 @@ public class Robot {
     public int odRCount = 0;
     public int odBCount = 0;
     public int odLCount = 0;
-    /**
-     * Control Hub
-     *
-     * <p>-------------------- Expansion Hub 2 --------------------
-     */
-
     /**
      * Declare game pad objects
      */

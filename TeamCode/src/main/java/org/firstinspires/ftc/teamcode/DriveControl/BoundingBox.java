@@ -9,7 +9,7 @@ import java.util.List;
 import org.firstinspires.ftc.teamcode.Util.Vector;
 
 public class BoundingBox {
-    public ConvexArea area;
+    public final ConvexArea area;
 
 
     /**

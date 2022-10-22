@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.Subsystems.Vision;
 
 import android.util.Log;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
@@ -66,7 +65,6 @@ public class Vision extends Subsystem {
      *
      * @param telemetry   Telemetry
      * @param hardwareMap the hardware map
-     * @param timer       how much time elapsed
      * @param allianceColor the alliance color
      */
     public Vision(
