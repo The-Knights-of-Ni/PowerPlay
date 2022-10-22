@@ -128,8 +128,7 @@ public class Drive extends Subsystem {
      * @param rearLeft    The rear left motor
      * @param rearRight   The rear right motor
      * @param telemetry   The telemetry
-     * @param hardwareMap The hardware map for getting the motors
-     * @param timer       The timer for the elapsed time
+     * @param elapsedTime       The timer for the elapsed time
      */
     public Drive(DcMotorEx frontLeft, DcMotorEx frontRight, DcMotorEx rearLeft, DcMotorEx rearRight, Telemetry telemetry, ElapsedTime elapsedTime) {
         super(telemetry);
