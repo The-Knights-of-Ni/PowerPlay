@@ -423,7 +423,7 @@ public class Drive extends Subsystem {
      */
     public void moveForward(double distance, double motorSpeed) {
         // this.moveToPos2D(motorSpeed, 0.0, distance);
-        moveVector(new Vector(0, distance), motorSpeed);
+        moveVector(new Vector(0, distance), 0, motorSpeed);
         robotCurrentPosX += distance * Math.cos(robotCurrentAngle * Math.PI / 180.0);
         robotCurrentPosY += distance * Math.sin(robotCurrentAngle * Math.PI / 180.0);
         logMovement();
@@ -475,7 +475,7 @@ public class Drive extends Subsystem {
      */
     public void moveBackward(double distance, double motorSpeed) {
         //        this.moveToPos2D(motorSpeed, 0.0, -distance);
-        moveVector(new Vector(0, -distance), motorSpeed);
+        moveVector(new Vector(0, -distance), 0, motorSpeed);
         robotCurrentPosX += distance * Math.cos((robotCurrentAngle + 180.0) * Math.PI / 180.0);
         robotCurrentPosY += distance * Math.sin((robotCurrentAngle + 180.0) * Math.PI / 180.0);
         logMovement();
@@ -527,7 +527,7 @@ public class Drive extends Subsystem {
      * @param motorSpeed The speed, a value between 0 and 1
      */
     public void moveLeft(double distance, double motorSpeed) {
-        moveVector(new Vector(-distance, 0), motorSpeed);
+        moveVector(new Vector(-distance, 0), 0, motorSpeed);
         robotCurrentPosX += distance * Math.cos((robotCurrentAngle + 90.0) * Math.PI / 180.0);
         robotCurrentPosY += distance * Math.sin((robotCurrentAngle + 90.0) * Math.PI / 180.0);
         logMovement();
@@ -579,7 +579,7 @@ public class Drive extends Subsystem {
      * @param motorSpeed The speed, a value between 0 and 1
      */
     public void moveRight(double distance, double motorSpeed) {
-        moveVector(new Vector(distance, 0), motorSpeed);
+        moveVector(new Vector(distance, 0), 0, motorSpeed);
         robotCurrentPosX += distance * Math.cos((robotCurrentAngle - 90.0) * Math.PI / 180.0);
         robotCurrentPosY += distance * Math.sin((robotCurrentAngle - 90.0) * Math.PI / 180.0);
         logMovement();
@@ -1109,7 +1109,7 @@ public class Drive extends Subsystem {
      * @param v          The position to move to
      * @param motorSpeed the peak motor speed to pass to the PID
      */
-    public void moveVector(Vector v, double motorSpeed) {
+    public void moveVector(Vector v, double angle, double motorSpeed) {
         double distance = v.distance(new Vector(0, 0));
         double angle = Math.atan2(v.getY(), v.getX()) - (Math.PI / 4.);
         int[] calcMotorDistancesTicks = new int[4];
@@ -1134,6 +1134,9 @@ public class Drive extends Subsystem {
     }
 
     public void moveVector(Vector v) {
-        moveVector(v, ANGULAR_V_MAX_NEVERREST_20);
+        moveVector(v, 0, ANGULAR_V_MAX_NEVERREST_20);
+    }
+    public void moveVector(Vector v, double angle) {
+        moveVector(v, angle, ANGULAR_V_MAX_NEVERREST_20);
     }
 }
