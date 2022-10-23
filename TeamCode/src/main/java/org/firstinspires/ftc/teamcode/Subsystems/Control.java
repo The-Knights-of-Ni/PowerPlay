@@ -29,7 +29,7 @@ public class Control extends Subsystem {
     }
 
     public Control(Telemetry telemetry) {
-        super(telemetry);
+        super(telemetry, "control");
     }
 
     public void extend4Bar(BarState position) {

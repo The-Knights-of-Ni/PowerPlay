@@ -15,6 +15,8 @@ import java.util.List;
 
 public class Robot {
     public final String name = "PowerPlay 2023";
+
+    public final String initLogTag = "init";
     public final ElapsedTime timer;
     // DC Motors
     public DcMotorEx frontLeftDriveMotor;
@@ -104,8 +106,8 @@ public class Robot {
      * @param allianceColor the alliance color
      */
     public Robot(HardwareMap hardwareMap, Telemetry telemetry, ElapsedTime timer, AllianceColor allianceColor, Gamepad gamepad1, Gamepad gamepad2, boolean visionEnabled) {
-        Log.i("init", "started");
-        Log.v("init", "version: " + Build.VERSION.RELEASE);
+        Log.i(initLogTag, "started");
+        Log.v(initLogTag, "version: " + Build.VERSION.RELEASE);
         this.hardwareMap = hardwareMap;
         this.timer = timer;
         this.allianceColor = allianceColor;
@@ -118,7 +120,7 @@ public class Robot {
 
     public void init() {
         motorInit();
-        Log.i("init", "motor init finished");
+        Log.i(initLogTag, "motor init finished");
 
         telemetry.setDisplayFormat(Telemetry.DisplayFormat.HTML);
         subsystemInit();
@@ -142,21 +144,21 @@ public class Robot {
 
     public void subsystemInit()
     {
-        Log.d("init", "Drive subsystem init started");
+        Log.d(initLogTag, "Drive subsystem init started");
         drive = new Drive(frontLeftDriveMotor, frontRightDriveMotor, rearLeftDriveMotor, rearRightDriveMotor, telemetry, timer);
-        Log.i("init", "Drive subsystem init finished");
+        Log.i(initLogTag, "Drive subsystem init finished");
 
-        Log.d("init", "Control subsystem init started");
+        Log.d(initLogTag, "Control subsystem init started");
         control = new Control(telemetry);
-        Log.i("init", "Control subsystem init finished");
+        Log.i(initLogTag, "Control subsystem init finished");
 
         if(visionEnabled) {
-            Log.d("init", "Vision subsystem init started");
+            Log.d(initLogTag, "Vision subsystem init started");
             vision = new Vision(telemetry, hardwareMap, allianceColor);
-            Log.i("init", "Vision subsystem init finished");
+            Log.i(initLogTag, "Vision subsystem init finished");
         }
         else {
-            Log.w("init", "Vision subsystem init skipped");
+            Log.w(initLogTag, "Vision subsystem init skipped");
         }
         telemetryBroadcast("Status", " all subsystems inited");
     }

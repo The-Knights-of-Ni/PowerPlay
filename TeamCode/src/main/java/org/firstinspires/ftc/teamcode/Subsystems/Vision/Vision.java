@@ -71,18 +71,11 @@ public class Vision extends Subsystem {
             Telemetry telemetry,
             HardwareMap hardwareMap,
             AllianceColor allianceColor) {
-        super(telemetry);
+        super(telemetry, "vision");
         this.hardwareMap = hardwareMap;
         this.allianceColor = allianceColor;
-        telemetry.addLine("Vision init started");
-        telemetry.update();
-
         // Create camera instances for the detection pipeline
         initDetectionPipeline();
-
-        // Telemetry
-        telemetry.addLine("Vision init complete");
-        telemetry.update();
     }
 
     private void initDetectionPipeline() {
@@ -107,13 +100,13 @@ public class Vision extends Subsystem {
                 new OpenCvCamera.AsyncCameraOpenListener() {
                     @Override
                     public void onOpened() { // Listener for when the camera first starts
-                        Log.i("vision", "Streaming");
+                        Log.i(TAG, "Streaming");
                         camera.startStreaming(CAMERA_WIDTH, CAMERA_HEIGHT, OpenCvCameraRotation.UPRIGHT);
                     }
 
                     @Override
                     public void onError(int errorCode) { // Listener to log if the camera stops abruptly
-                        Log.e("vision", "Error Streaming, aborting with error code: " + errorCode);
+                        Log.e(TAG, "Error Streaming, aborting with error code: " + errorCode);
                     }
                 });
     }
