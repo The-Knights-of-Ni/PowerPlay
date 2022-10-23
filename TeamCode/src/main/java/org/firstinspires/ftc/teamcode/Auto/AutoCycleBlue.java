@@ -19,8 +19,7 @@ public class AutoCycleBlue extends Auto {
     public void runOpMode() throws InterruptedException {
         initAuto(AllianceColor.BLUE);
         waitForStart();
-        robot.drive.moveVector(new Vector(48*mmPerInch, 24*mmPerInch));
-        robot.drive.turnByAngle(-90);
+        robot.drive.moveVector(new Vector(48*mmPerInch, 24*mmPerInch),-90);
         // TODO: Pick up Cone
         robot.drive.moveForward(22*mmPerInch);
         // TODO: Insert Scoring code
