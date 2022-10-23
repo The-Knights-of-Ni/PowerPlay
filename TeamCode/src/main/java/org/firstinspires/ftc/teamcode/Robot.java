@@ -106,8 +106,16 @@ public class Robot {
      * @param allianceColor the alliance color
      */
     public Robot(HardwareMap hardwareMap, Telemetry telemetry, ElapsedTime timer, AllianceColor allianceColor, Gamepad gamepad1, Gamepad gamepad2, boolean visionEnabled) {
+        telemetry.setDisplayFormat(Telemetry.DisplayFormat.HTML); // Allow usage of some HTML tags
+        telemetry.log().setDisplayOrder(Telemetry.Log.DisplayOrder.OLDEST_FIRST); // We show the log in oldest-to-newest order
+        telemetry.log().setCapacity(5); // We can control the number of lines shown in the log
         Log.i(initLogTag, "started");
-        Log.v(initLogTag, "version: " + Build.VERSION.RELEASE);
+        Log.v(initLogTag, "android version: " + Build.VERSION.RELEASE);
+        double batteryVoltage = getBatteryVoltage();
+        if (batteryVoltage<11) {
+            Log.w(initLogTag, "Battery Voltage Low");
+            telemetry.addData("Warning", "<b>Battery Voltage Low!</b>");
+        }
         this.hardwareMap = hardwareMap;
         this.timer = timer;
         this.allianceColor = allianceColor;
@@ -118,11 +126,21 @@ public class Robot {
         init();
     }
 
+
+    public double getBatteryVoltage() {
+        double result = Double.POSITIVE_INFINITY;
+        for (VoltageSensor sensor : hardwareMap.voltageSensor) {
+            double voltage = sensor.getVoltage();
+            if (voltage > 0) {
+                result = Math.min(result, voltage);
+            }
+        }
+        return result;
+    }
+
     public void init() {
         motorInit();
         Log.i(initLogTag, "motor init finished");
-
-        telemetry.setDisplayFormat(Telemetry.DisplayFormat.HTML);
         subsystemInit();
     }
 
