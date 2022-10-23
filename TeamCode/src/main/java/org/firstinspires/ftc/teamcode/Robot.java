@@ -140,8 +140,7 @@ public class Robot {
         rearRightDriveMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
     }
 
-    public void subsystemInit()
-    {
+    public void subsystemInit() {
         Log.d("init", "Drive subsystem init started");
         drive = new Drive(frontLeftDriveMotor, frontRightDriveMotor, rearLeftDriveMotor, rearRightDriveMotor, telemetry, timer);
         Log.i("init", "Drive subsystem init finished");
