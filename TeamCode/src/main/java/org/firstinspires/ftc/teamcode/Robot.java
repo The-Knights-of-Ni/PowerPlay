@@ -6,7 +6,7 @@ import android.os.Build;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.Subsystems.Control;
+import org.firstinspires.ftc.teamcode.Subsystems.Control.Control;
 import org.firstinspires.ftc.teamcode.Subsystems.Drive.Drive;
 import org.firstinspires.ftc.teamcode.Subsystems.Vision.Vision;
 import org.firstinspires.ftc.teamcode.Util.AllianceColor;
@@ -147,7 +147,7 @@ public class Robot {
         Log.i("init", "Drive subsystem init finished");
 
         Log.d("init", "Control subsystem init started");
-        control = new Control(telemetry);
+        // control = new Control(telemetry);
         Log.i("init", "Control subsystem init finished");
 
         if(visionEnabled) {
