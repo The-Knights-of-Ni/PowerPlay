@@ -19,6 +19,7 @@ public class AutoCycleBlue extends Auto {
     public void runOpMode() throws InterruptedException {
         initAuto(AllianceColor.BLUE);
         waitForStart();
+        telemetry.addData("cone color", robot.vision.detectConeColor());
         robot.drive.moveVector(new Vector(48*mmPerInch, 24*mmPerInch),-90);
         // TODO: Pick up Cone
         robot.drive.moveForward(22*mmPerInch);
