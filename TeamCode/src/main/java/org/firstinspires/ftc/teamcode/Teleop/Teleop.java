@@ -17,7 +17,6 @@ public class Teleop extends LinearOpMode {
     private Robot robot;
 
     private boolean driveHighPower = true;
-    private boolean scoreTop = true; //bottom is false
     private final int slowModePow = 5;
 
     private void initOpMode() throws IOException {
@@ -89,11 +88,6 @@ public class Teleop extends LinearOpMode {
             //Toggle drive power
             if (robot.yButton && !robot.isyButtonPressedPrev){
                 driveHighPower = !driveHighPower;
-            }
-            
-            //Toggle scoring level - toggle when with alliance
-            if (robot.bumperLeft && !robot.islBumperPressedPrev) {
-                scoreTop = !scoreTop;
             }
         }
     }
