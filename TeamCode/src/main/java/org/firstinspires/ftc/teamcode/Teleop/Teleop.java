@@ -15,7 +15,6 @@ public class Teleop extends LinearOpMode {
     double timePre;
     ElapsedTime timer;
     private Robot robot;
-    private double robotAngle;
 
     private boolean driveHighPower = true;
     private boolean scoreTop = true; //bottom is false
