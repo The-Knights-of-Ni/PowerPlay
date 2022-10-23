@@ -147,7 +147,7 @@ public class Robot {
         Log.i("init", "Drive subsystem init finished");
 
         Log.d("init", "Control subsystem init started");
-        // control = new Control(telemetry);
+        control = new Control(telemetry);
         Log.i("init", "Control subsystem init finished");
 
         if(visionEnabled) {

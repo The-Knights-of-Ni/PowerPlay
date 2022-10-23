@@ -37,6 +37,10 @@ public class Control extends Subsystem {
         this.clawServo = clawServo;
     }
 
+    public Control(Telemetry telemetry) { // TODO: Delete this
+        super(telemetry);
+    }
+
     public void extend4Bar(BarState position) {
         this.turn4Bar(position);
         switch (position) {
