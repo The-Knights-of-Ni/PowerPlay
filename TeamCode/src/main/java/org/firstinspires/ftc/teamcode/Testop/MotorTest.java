@@ -8,6 +8,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.Util.AllianceColor;
 
+import java.util.HashMap;
+
 @TeleOp(name = "Motor Position Test")
 public class MotorTest extends LinearOpMode {
     private Robot robot;
@@ -16,8 +18,9 @@ public class MotorTest extends LinearOpMode {
     @Override
     public void runOpMode() {
         ElapsedTime timer = new ElapsedTime();
-        this.robot = new Robot(hardwareMap, telemetry, timer, AllianceColor.BLUE, gamepad1, gamepad2,
-                false);
+        HashMap<String, Boolean> flags = new HashMap<String, Boolean>();
+        flags.put("vision", true);
+        this.robot = new Robot(hardwareMap, telemetry, timer, AllianceColor.BLUE, gamepad1, gamepad2, flags);
         robot.drive.setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         waitForStart();

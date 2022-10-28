@@ -49,7 +49,6 @@ public class Vision extends Subsystem {
     private OpenGLMatrix lastLocation;
     private VuforiaLocalizer vuforia;
 
-    private boolean targetVisible;
     private VectorF targetTranslation;
     private Orientation targetRotation;
 
@@ -57,6 +56,8 @@ public class Vision extends Subsystem {
     private OpenCvCamera camera;
 
     private int[] viewportContainerIds;
+
+    VisionCorrectionThread visionCorrectionThread;
 
     /**
      * Class instantiation
@@ -68,7 +69,8 @@ public class Vision extends Subsystem {
     public Vision(
             Telemetry telemetry,
             HardwareMap hardwareMap,
-            AllianceColor allianceColor) {
+            AllianceColor allianceColor,
+            boolean visionCorrectionEnabled) {
         super(telemetry);
         this.hardwareMap = hardwareMap;
         this.allianceColor = allianceColor;
@@ -81,6 +83,10 @@ public class Vision extends Subsystem {
         // Telemetry
         telemetry.addLine("Vision init complete");
         telemetry.update();
+        if (visionCorrectionEnabled) {
+            WebcamName webcamName = hardwareMap.get(WebcamName.class, WEBCAM_NAME);
+            visionCorrectionThread = new VisionCorrectionThread(webcamName);
+        }
     }
 
     private void initDetectionPipeline() {
