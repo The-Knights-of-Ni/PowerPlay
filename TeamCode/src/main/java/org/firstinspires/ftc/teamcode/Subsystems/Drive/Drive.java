@@ -705,38 +705,6 @@ public class Drive extends Subsystem {
     }
 
     /**
-     * PID controller for legacy functions
-     * @param tickCount how many ticks to move
-     * @param peakSpeed desired speed in ticks per second
-     * @param maxSpeed physical motor speed limit in ticks per second
-     * @param rampTime:  motor speed ramp uptime/downtime in sec (the amount of time it takes for the motor to reach the desired speed)
-     * @param motorFLForward FL motor direction
-     * @param motorFRForward FR motor direction
-     * @param motorRLForward RL motor direction
-     * @param motorRRForward RR motor direction
-     * @param Kp:        coefficient Kp
-     * @param Ki:        coefficient Ki
-     * @param Kd:        coefficient Kd
-     */
-    public void allMotorPIDControl(
-            int tickCount,
-            double peakSpeed,
-            double maxSpeed,
-            double rampTime,
-            boolean motorFLForward,
-            boolean motorFRForward,
-            boolean motorRLForward,
-            boolean motorRRForward,
-            double Kp,
-            double Ki,
-            double Kd) {
-        // Order is: FL, FR, RL, RR
-        int[] tickCounts = {motorFLForward ? tickCount : -tickCount, motorFRForward ? tickCount : -tickCount, motorRLForward ? tickCount : -tickCount, motorRRForward ? tickCount : -tickCount};
-        double[] peakSpeeds = {peakSpeed, peakSpeed, peakSpeed, peakSpeed};
-        double[] maxSpeeds = {maxSpeed, maxSpeed, maxSpeed, maxSpeed};
-        allMotorPIDControl(tickCounts, peakSpeeds, maxSpeeds, rampTime, Kp, Ki, Kd);
-    }
-    /**
      * PID motor control program to ensure all four motors are synchronized
      *
      * @param tickCount: absolute value of target tick count of each motor
@@ -1177,4 +1145,31 @@ public class Drive extends Subsystem {
     public double getRobotCurrentPosY() {
         return robotCurrentPosY;
     }
+
+    public void moveVectorOdometry(Vector v, double turnAngle, double motorSpeed) {
+        resetOdometry();
+        moveVector(v, turnAngle, motorSpeed);
+        correctAngleOdometry();
+        if (odometryCountB * ODOMETRY_mm_PER_COUNT > 25.0) {
+            moveLeft(odometryCountB * ODOMETRY_mm_PER_COUNT);
+        }
+        if (odometryCountB * ODOMETRY_mm_PER_COUNT < -25.0) {
+            moveRight(-odometryCountB * ODOMETRY_mm_PER_COUNT);
+        }
+        double offsetY = (((double) odometryCountR) + ((double) odometryCountL)) * 0.5;
+        if (offsetY * ODOMETRY_mm_PER_COUNT > 25.0) {
+            moveBackward(offsetY * ODOMETRY_mm_PER_COUNT);
+        }
+        if (offsetY * ODOMETRY_mm_PER_COUNT < -25.0) {
+            moveForward(-offsetY * ODOMETRY_mm_PER_COUNT);
+        }
+    }
+
+    public void moveVectorOdometry(Vector v) {
+        moveVectorOdometry(v, 0, ANGULAR_V_MAX_NEVERREST_20);
+    }
+    public void moveVectorOdometry(Vector v, double angle) {
+        moveVectorOdometry(v, angle, ANGULAR_V_MAX_NEVERREST_20);
+    }
+
 }
