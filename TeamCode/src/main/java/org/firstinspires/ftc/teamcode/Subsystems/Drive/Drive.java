@@ -409,7 +409,6 @@ public class Drive extends Subsystem {
      * @param motorSpeed The speed, a value between 0 and 1
      */
     public void moveForward(double distance, double motorSpeed) {
-        // this.moveToPos2D(motorSpeed, 0.0, distance);
         moveVector(new Vector(0, distance), 0, motorSpeed);
         logMovement();
     }
