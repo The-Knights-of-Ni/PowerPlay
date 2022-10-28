@@ -170,8 +170,8 @@ public class Robot {
 
         if (webEnabled) {
             Log.d("init", "Web subsystem init started");
-            web = new WebThread(7000);
-            web.start();
+            web = new WebThread(telemetry, 7000);
+            web.run();
             Log.i("init", "Web subsystem init finished");
         }
         else {

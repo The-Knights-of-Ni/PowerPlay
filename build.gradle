@@ -18,7 +18,7 @@ System.setProperty( "user.dir", project.projectDir.toString() )
 System.println("Configuration Started: PowerPlay")
 System.println("********************************")
 System.println("projectdir="+project.projectDir.toString())
-System.println("version="+project.version.toString())
+System.println("project version="+project.version.toString())
 System.println("gradle version="+gradle.gradleVersion)
 System.println("root project="+gradle.rootProject)
 

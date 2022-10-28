@@ -11,6 +11,8 @@ import io.javalin.openapi.plugin.swagger.SwaggerConfiguration;
 import io.javalin.openapi.plugin.swagger.SwaggerPlugin;
 import static io.javalin.apibuilder.ApiBuilder.*;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Subsystems.Subsystem;
 import org.firstinspires.ftc.teamcode.Util.WebLog;
 
 import java.io.IOException;
@@ -20,17 +22,19 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 
-public class WebThread extends Thread {
+public class WebThread extends Subsystem implements Runnable {
     WebThreadData wtd = WebThreadData.getWtd();
     Javalin app;
     int port;
 
-    public WebThread() {
+    public WebThread(Telemetry telemetry) {
+        super(telemetry);
         init();
         port = 7070;
     }
 
-    public WebThread(int port) {
+    public WebThread(Telemetry telemetry, int port) {
+        super(telemetry);
         init();
         this.port = port;
     }
