@@ -42,7 +42,7 @@ public class Auto extends LinearOpMode {
     public Vision vision;
 
     /**
-     * Inits the robot class and sets the robot as the newly inited robot.
+     * Initializes the robot class and sets the robot as the newly initialized robot.
      * @param allianceColor The alliance color
      */
     public void initAuto(AllianceColor allianceColor) {
