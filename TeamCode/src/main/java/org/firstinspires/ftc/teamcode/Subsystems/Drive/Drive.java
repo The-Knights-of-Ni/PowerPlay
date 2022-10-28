@@ -396,7 +396,6 @@ public class Drive extends Subsystem {
      * @param motorSpeed The speed, a value between 0 and 1
      */
     public void moveForward(double distance, double motorSpeed) {
-        // this.moveToPos2D(motorSpeed, 0.0, distance);
         moveVector(new Vector(0, distance), 0, motorSpeed);
         robotCurrentPosX += distance * Math.cos(robotCurrentAngle * Math.PI / 180.0);
         robotCurrentPosY += distance * Math.sin(robotCurrentAngle * Math.PI / 180.0);
@@ -448,7 +447,6 @@ public class Drive extends Subsystem {
      * @param motorSpeed The speed, a value between 0 and 1
      */
     public void moveBackward(double distance, double motorSpeed) {
-        //        this.moveToPos2D(motorSpeed, 0.0, -distance);
         moveVector(new Vector(0, -distance), 0, motorSpeed);
         robotCurrentPosX += distance * Math.cos((robotCurrentAngle + 180.0) * Math.PI / 180.0);
         robotCurrentPosY += distance * Math.sin((robotCurrentAngle + 180.0) * Math.PI / 180.0);

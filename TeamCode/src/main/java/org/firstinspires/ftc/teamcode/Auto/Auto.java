@@ -37,18 +37,16 @@ public class Auto extends LinearOpMode {
      * The robot class in the op mode
      */
     public Robot robot;
-    public Vision vision;
-
+    public ElapsedTime timer;
     /**
      * Inits the robot class and sets the robot as the newly inited robot.
      * @param allianceColor The alliance color
      */
     public void initAuto(AllianceColor allianceColor) {
-        ElapsedTime timer = new ElapsedTime();
+        timer = new ElapsedTime();
         try {
             this.robot = new Robot(hardwareMap, telemetry, timer, allianceColor, gamepad1, gamepad2,
                     true);
-            this.vision = new Vision(telemetry, hardwareMap, allianceColor);
             telemetry.addData("Waiting for start", "");
             telemetry.update();
         } catch (Exception ioException) {
