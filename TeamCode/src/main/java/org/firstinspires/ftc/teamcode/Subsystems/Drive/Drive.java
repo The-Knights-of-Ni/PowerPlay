@@ -140,7 +140,7 @@ public class Drive extends Subsystem {
      * @param elapsedTime       The timer for the elapsed time
      */
     public Drive(DcMotorEx frontLeft, DcMotorEx frontRight, DcMotorEx rearLeft, DcMotorEx rearRight, Telemetry telemetry, ElapsedTime elapsedTime) {
-        super(telemetry);
+        super(telemetry, "drive");
         this.timer = elapsedTime;
         this.frontLeft = frontLeft;
         this.frontRight = frontRight;
@@ -159,7 +159,7 @@ public class Drive extends Subsystem {
      */
     private void logMovement() {
         try {
-            Log.i("drive", "Robot X: " + robotCurrentPosX + " Robot Y: " + robotCurrentPosY + " Robot Turn: " +
+            Log.i(TAG, "Robot X: " + robotCurrentPosX + " Robot Y: " + robotCurrentPosY + " Robot Turn: " +
                     robotCurrentAngle);
         }
         catch (RuntimeException ignored) {
@@ -700,7 +700,7 @@ public class Drive extends Subsystem {
                         currentCountRL,
                         currentTimeRR,
                         currentCountRR);
-        Log.d("drive", output);
+        Log.d(TAG, output);
     }
 
     /**
@@ -964,7 +964,7 @@ public class Drive extends Subsystem {
                             timeOutStartedTime * 1000.0,
                             isTimeOutExceeded ? "Y" : "N");
             try {
-                Log.v("drive", "motorEnc: " + output);
+                Log.v(TAG, "motorEnc: " + output);
             }
             catch (RuntimeException ignored) {
 

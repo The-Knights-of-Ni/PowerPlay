@@ -32,13 +32,13 @@ public class Control extends Subsystem {
     }
 
     public Control(Telemetry telemetry, Servo flipServo, Servo clawServo) {
-        super(telemetry);
+        super(telemetry, "control");
         this.flipServo = flipServo;
         this.clawServo = clawServo;
     }
 
     public Control(Telemetry telemetry) { // TODO: Delete this
-        super(telemetry);
+        super(telemetry, "control");
     }
 
     public void extend4Bar(BarState position) {

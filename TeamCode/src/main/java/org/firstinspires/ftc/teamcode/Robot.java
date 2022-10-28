@@ -20,8 +20,10 @@ import java.util.List;
 
 public class Robot {
     public static final String name = "PowerPlay 2023";
+    public final String initLogTag = "init";
     public static final double length = 18;
     public static final double width = 18;
+
     public final ElapsedTime timer;
     // DC Motors
     public DcMotorEx frontLeftDriveMotor;
@@ -117,9 +119,16 @@ public class Robot {
      * @param allianceColor the alliance color
      */
     public Robot(@NonNull HardwareMap hardwareMap, @NonNull Telemetry telemetry, ElapsedTime timer,
-                 AllianceColor allianceColor, Gamepad gamepad1, Gamepad gamepad2, HashMap<String, Boolean> flags) {
-        Log.i("init", "started");
-        Log.v("init", "version: " + Build.VERSION.RELEASE);
+                 AllianceColor allianceColor, Gamepad gamepad1, Gamepad gamepad2, HashMap<String, Boolean> flags) {        telemetry.setDisplayFormat(Telemetry.DisplayFormat.HTML); // Allow usage of some HTML tags
+        telemetry.log().setDisplayOrder(Telemetry.Log.DisplayOrder.OLDEST_FIRST); // We show the log in oldest-to-newest order
+        telemetry.log().setCapacity(5); // We can control the number of lines shown in the log
+        Log.i(initLogTag, "started");
+        Log.v(initLogTag, "android version: " + Build.VERSION.RELEASE);
+        double batteryVoltage = getBatteryVoltage();
+        if (batteryVoltage<11) {
+            Log.w(initLogTag, "Battery Voltage Low");
+            telemetry.addData("Warning", "<b>Battery Voltage Low!</b>");
+        }
         this.hardwareMap = hardwareMap;
         this.timer = timer;
         this.allianceColor = allianceColor;
@@ -134,11 +143,21 @@ public class Robot {
         init();
     }
 
+
+    public double getBatteryVoltage() {
+        double result = Double.POSITIVE_INFINITY;
+        for (VoltageSensor sensor : hardwareMap.voltageSensor) {
+            double voltage = sensor.getVoltage();
+            if (voltage > 0) {
+                result = Math.min(result, voltage);
+            }
+        }
+        return result;
+    }
+
     public void init() {
         motorInit();
-        Log.i("init", "motor init finished");
-
-        telemetry.setDisplayFormat(Telemetry.DisplayFormat.HTML);
+        Log.i(initLogTag, "motor init finished");
         subsystemInit();
     }
 
@@ -158,14 +177,15 @@ public class Robot {
         rearRightDriveMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
     }
 
-    public void subsystemInit() {
-        Log.d("init", "Drive subsystem init started");
+    public void subsystemInit()
+    {
+        Log.d(initLogTag, "Drive subsystem init started");
         drive = new Drive(frontLeftDriveMotor, frontRightDriveMotor, rearLeftDriveMotor, rearRightDriveMotor, telemetry, timer);
-        Log.i("init", "Drive subsystem init finished");
+        Log.i(initLogTag, "Drive subsystem init finished");
 
-        Log.d("init", "Control subsystem init started");
+        Log.d(initLogTag, "Control subsystem init started");
         control = new Control(telemetry);
-        Log.i("init", "Control subsystem init finished");
+        Log.i(initLogTag, "Control subsystem init finished");
 
         if (webEnabled) {
             Log.d("init", "Web subsystem init started");
@@ -182,7 +202,7 @@ public class Robot {
             Log.i("init", "Vision subsystem init finished");
         }
         else {
-            Log.w("init", "Vision subsystem init skipped");
+            Log.w(initLogTag, "Vision subsystem init skipped");
         }
         telemetryBroadcast("Status", " all subsystems initialized");
     }
