@@ -3,8 +3,18 @@ package org.firstinspires.ftc.teamcode.Subsystems.Drive;
 import android.util.Log;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import org.apache.commons.geometry.euclidean.twod.ConvexArea;
+import org.apache.commons.geometry.euclidean.twod.Vector2D;
+import org.apache.commons.geometry.euclidean.twod.path.LinePath;
+import org.apache.commons.numbers.core.Precision;
+import org.checkerframework.checker.units.qual.C;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.DriveControl.BoundingBox;
+import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.Subsystems.Subsystem;
+import org.firstinspires.ftc.teamcode.Subsystems.Vision.VisionCorrectionThreadData;
+import org.firstinspires.ftc.teamcode.Subsystems.Web.WebThreadData;
+import org.firstinspires.ftc.teamcode.Util.Coordinate;
 import org.firstinspires.ftc.teamcode.Util.Vector;
 
 import java.util.Arrays;
@@ -32,7 +42,7 @@ public class Drive extends Subsystem {
     private static final double COUNTS_PER_MM =
             (MOTOR_TICK_PER_REV_YELLOW_JACKET_312 * DRIVE_GEAR_REDUCTION)
                     / (GOBUILDA_MECANUM_DIAMETER_MM * Math.PI);
-    private static final double WHEEL_DIAMETER_INCHES = 100.0 / 25.4; // For figuring circumference
+    private static final double WHEEL_DIAMETER_INCHES = 100.0 / 25.4; // For calculating circumference
     /**
      * Wheel Diameter MM
      */
@@ -43,7 +53,7 @@ public class Drive extends Subsystem {
     private static final double COUNTS_CORRECTION_Y = 0.9918;
     private static final double COUNTS_PER_DEGREE = 10; // 900 ticks per 90 degrees
     /**
-     * Default drive speed
+     * Default drive speeds
      */
     private static final double DRIVE_SPEED = 0.40;
     private static final double DRIVE_SPEED_X = 0.35;
@@ -52,14 +62,10 @@ public class Drive extends Subsystem {
      * Default turn speed
      */
     private static final double TURN_SPEED = 0.40;
-    private static final double ROBOT_INIT_POS_X = 15.0;
-    private static final double ROBOT_INIT_POS_Y = 15.0;
-    private static final double ROBOT_INIT_ANGLE = 45.0;
     /**
      * Number of millimeters per an Inch
      */
-    private static final double mmPerInch = 25.4;
-    private static boolean driveFullPower = false;
+    public static final double mmPerInch = 25.4;
     private static final double motorKp = 0.015;
     private static final double motorKi = 0.02;
     private static final double motorKd = 0.0003;
@@ -120,6 +126,9 @@ public class Drive extends Subsystem {
 
     private long startTime;
 
+    private VisionCorrectionThreadData vtd;
+    private WebThreadData wtd;
+
     /**
      * Initializes the drive subsystem
      *
@@ -138,6 +147,10 @@ public class Drive extends Subsystem {
         this.rearLeft = rearLeft;
         this.rearRight = rearRight;
         setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robotCurrentPosX = 0;
+        robotCurrentPosY = 0;
+        vtd = VisionCorrectionThreadData.getVTD();
+        wtd = WebThreadData.getWtd();
     }
 
     /**
@@ -396,10 +409,7 @@ public class Drive extends Subsystem {
      * @param motorSpeed The speed, a value between 0 and 1
      */
     public void moveForward(double distance, double motorSpeed) {
-        // this.moveToPos2D(motorSpeed, 0.0, distance);
         moveVector(new Vector(0, distance), 0, motorSpeed);
-        robotCurrentPosX += distance * Math.cos(robotCurrentAngle * Math.PI / 180.0);
-        robotCurrentPosY += distance * Math.sin(robotCurrentAngle * Math.PI / 180.0);
         logMovement();
     }
 
@@ -448,10 +458,7 @@ public class Drive extends Subsystem {
      * @param motorSpeed The speed, a value between 0 and 1
      */
     public void moveBackward(double distance, double motorSpeed) {
-        //        this.moveToPos2D(motorSpeed, 0.0, -distance);
         moveVector(new Vector(0, -distance), 0, motorSpeed);
-        robotCurrentPosX += distance * Math.cos((robotCurrentAngle + 180.0) * Math.PI / 180.0);
-        robotCurrentPosY += distance * Math.sin((robotCurrentAngle + 180.0) * Math.PI / 180.0);
         logMovement();
     }
 
@@ -502,8 +509,6 @@ public class Drive extends Subsystem {
      */
     public void moveLeft(double distance, double motorSpeed) {
         moveVector(new Vector(-distance, 0), 0, motorSpeed);
-        robotCurrentPosX += distance * Math.cos((robotCurrentAngle + 90.0) * Math.PI / 180.0);
-        robotCurrentPosY += distance * Math.sin((robotCurrentAngle + 90.0) * Math.PI / 180.0);
         logMovement();
     }
 
@@ -554,8 +559,6 @@ public class Drive extends Subsystem {
      */
     public void moveRight(double distance, double motorSpeed) {
         moveVector(new Vector(distance, 0), 0, motorSpeed);
-        robotCurrentPosX += distance * Math.cos((robotCurrentAngle - 90.0) * Math.PI / 180.0);
-        robotCurrentPosY += distance * Math.sin((robotCurrentAngle - 90.0) * Math.PI / 180.0);
         logMovement();
     }
 
@@ -700,38 +703,6 @@ public class Drive extends Subsystem {
         Log.d(TAG, output);
     }
 
-    /**
-     * PID controller for legacy functions
-     * @param tickCount how many ticks to move
-     * @param peakSpeed desired speed in ticks per second
-     * @param maxSpeed physical motor speed limit in ticks per second
-     * @param rampTime:  motor speed ramp uptime/downtime in sec (the amount of time it takes for the motor to reach the desired speed)
-     * @param motorFLForward FL motor direction
-     * @param motorFRForward FR motor direction
-     * @param motorRLForward RL motor direction
-     * @param motorRRForward RR motor direction
-     * @param Kp:        coefficient Kp
-     * @param Ki:        coefficient Ki
-     * @param Kd:        coefficient Kd
-     */
-    public void allMotorPIDControl(
-            int tickCount,
-            double peakSpeed,
-            double maxSpeed,
-            double rampTime,
-            boolean motorFLForward,
-            boolean motorFRForward,
-            boolean motorRLForward,
-            boolean motorRRForward,
-            double Kp,
-            double Ki,
-            double Kd) {
-        // Order is: FL, FR, RL, RR
-        int[] tickCounts = {motorFLForward ? tickCount : -tickCount, motorFRForward ? tickCount : -tickCount, motorRLForward ? tickCount : -tickCount, motorRRForward ? tickCount : -tickCount};
-        double[] peakSpeeds = {peakSpeed, peakSpeed, peakSpeed, peakSpeed};
-        double[] maxSpeeds = {maxSpeed, maxSpeed, maxSpeed, maxSpeed};
-        allMotorPIDControl(tickCounts, peakSpeeds, maxSpeeds, rampTime, Kp, Ki, Kd);
-    }
     /**
      * PID motor control program to ensure all four motors are synchronized
      *
@@ -1140,7 +1111,22 @@ public class Drive extends Subsystem {
                 motorKd);
         robotCurrentPosX += distance * Math.cos((robotCurrentAngle + angle) * Math.PI / 180.0);
         robotCurrentPosY += distance * Math.sin((robotCurrentAngle + angle) * Math.PI / 180.0);
+        vtd.setTheoreticalPosition(calcBoundingBoxOfRobot(robotCurrentPosX, robotCurrentPosY));
+        wtd.setPosition(new Coordinate(robotCurrentPosX, robotCurrentPosY));
         logMovement();
+    }
+
+    public static BoundingBox calcBoundingBoxOfRobot(double robotCurrentPosX, double robotCurrentPosY) {
+        Precision.DoubleEquivalence precision = Precision.doubleEquivalenceOfEpsilon(1e-6);
+        double xOff = Robot.length/2;
+        double yOff = Robot.width/2;
+        LinePath path = LinePath.builder(precision)
+                .append(Vector2D.of(robotCurrentPosX - xOff*mmPerInch, robotCurrentPosY - yOff*mmPerInch))
+                .append(Vector2D.of(robotCurrentPosX - xOff*mmPerInch, robotCurrentPosY + yOff*mmPerInch))
+                .append(Vector2D.of(robotCurrentPosX + xOff*mmPerInch, robotCurrentPosY + yOff*mmPerInch))
+                .append(Vector2D.of(robotCurrentPosX + xOff*mmPerInch, robotCurrentPosY - yOff*mmPerInch))
+                .build(true);
+        return new BoundingBox(ConvexArea.convexPolygonFromPath(path));
     }
 
     public void moveVector(Vector v) {
@@ -1149,4 +1135,40 @@ public class Drive extends Subsystem {
     public void moveVector(Vector v, double angle) {
         moveVector(v, angle, ANGULAR_V_MAX_NEVERREST_20);
     }
+
+
+    public double getRobotCurrentPosX() {
+        return robotCurrentPosX;
+    }
+
+    public double getRobotCurrentPosY() {
+        return robotCurrentPosY;
+    }
+
+    public void moveVectorOdometry(Vector v, double turnAngle, double motorSpeed) {
+        resetOdometry();
+        moveVector(v, turnAngle, motorSpeed);
+        correctAngleOdometry();
+        if (odometryCountB * ODOMETRY_mm_PER_COUNT > 25.0) {
+            moveLeft(odometryCountB * ODOMETRY_mm_PER_COUNT);
+        }
+        if (odometryCountB * ODOMETRY_mm_PER_COUNT < -25.0) {
+            moveRight(-odometryCountB * ODOMETRY_mm_PER_COUNT);
+        }
+        double offsetY = (((double) odometryCountR) + ((double) odometryCountL)) * 0.5;
+        if (offsetY * ODOMETRY_mm_PER_COUNT > 25.0) {
+            moveBackward(offsetY * ODOMETRY_mm_PER_COUNT);
+        }
+        if (offsetY * ODOMETRY_mm_PER_COUNT < -25.0) {
+            moveForward(-offsetY * ODOMETRY_mm_PER_COUNT);
+        }
+    }
+
+    public void moveVectorOdometry(Vector v) {
+        moveVectorOdometry(v, 0, ANGULAR_V_MAX_NEVERREST_20);
+    }
+    public void moveVectorOdometry(Vector v, double angle) {
+        moveVectorOdometry(v, angle, ANGULAR_V_MAX_NEVERREST_20);
+    }
+
 }

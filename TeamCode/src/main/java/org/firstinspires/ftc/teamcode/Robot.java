@@ -1,22 +1,29 @@
 package org.firstinspires.ftc.teamcode;
 
 import android.util.Log;
+import androidx.annotation.NonNull;
 import com.qualcomm.hardware.lynx.LynxModule;
 import android.os.Build;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.Subsystems.Control;
+import org.firstinspires.ftc.teamcode.Subsystems.Control.Control;
 import org.firstinspires.ftc.teamcode.Subsystems.Drive.Drive;
 import org.firstinspires.ftc.teamcode.Subsystems.Vision.Vision;
+import org.firstinspires.ftc.teamcode.Subsystems.Web.WebThread;
+import org.firstinspires.ftc.teamcode.Subsystems.Web.WebThreadData;
 import org.firstinspires.ftc.teamcode.Util.AllianceColor;
+import org.firstinspires.ftc.teamcode.Util.WebLog;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class Robot {
-    public final String name = "PowerPlay 2023";
-
+    public static final String name = "PowerPlay 2023";
     public final String initLogTag = "init";
+    public static final double length = 18;
+    public static final double width = 18;
+
     public final ElapsedTime timer;
     // DC Motors
     public DcMotorEx frontLeftDriveMotor;
@@ -93,8 +100,14 @@ public class Robot {
     public Drive drive;
     public Control control;
     public Vision vision;
+    public WebThread web;
     private final AllianceColor allianceColor;
     private final boolean visionEnabled;
+    private final boolean webEnabled;
+    private final boolean visionCorrectionEnabled;
+    private final boolean odometryEnabled;
+
+    private WebThreadData wtd;
     private final HardwareMap hardwareMap;
     private final Telemetry telemetry;
     private static final double joystickDeadZone = 0.1;
@@ -105,8 +118,8 @@ public class Robot {
      * @param timer         The elapsed time
      * @param allianceColor the alliance color
      */
-    public Robot(HardwareMap hardwareMap, Telemetry telemetry, ElapsedTime timer, AllianceColor allianceColor, Gamepad gamepad1, Gamepad gamepad2, boolean visionEnabled) {
-        telemetry.setDisplayFormat(Telemetry.DisplayFormat.HTML); // Allow usage of some HTML tags
+    public Robot(@NonNull HardwareMap hardwareMap, @NonNull Telemetry telemetry, ElapsedTime timer,
+                 AllianceColor allianceColor, Gamepad gamepad1, Gamepad gamepad2, HashMap<String, Boolean> flags) {        telemetry.setDisplayFormat(Telemetry.DisplayFormat.HTML); // Allow usage of some HTML tags
         telemetry.log().setDisplayOrder(Telemetry.Log.DisplayOrder.OLDEST_FIRST); // We show the log in oldest-to-newest order
         telemetry.log().setCapacity(5); // We can control the number of lines shown in the log
         Log.i(initLogTag, "started");
@@ -119,10 +132,14 @@ public class Robot {
         this.hardwareMap = hardwareMap;
         this.timer = timer;
         this.allianceColor = allianceColor;
-        this.visionEnabled = visionEnabled;
+        this.visionEnabled = flags.getOrDefault("vision", true);
+        this.webEnabled = flags.getOrDefault("web", false);
+        this.visionCorrectionEnabled = flags.getOrDefault("visionCorrection", false);
+        this.odometryEnabled = flags.getOrDefault("odometry", false);
         this.telemetry = telemetry;
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
+        this.wtd = WebThreadData.getWtd();
         init();
     }
 
@@ -170,15 +187,24 @@ public class Robot {
         control = new Control(telemetry);
         Log.i(initLogTag, "Control subsystem init finished");
 
-        if(visionEnabled) {
-            Log.d(initLogTag, "Vision subsystem init started");
-            vision = new Vision(telemetry, hardwareMap, allianceColor);
-            Log.i(initLogTag, "Vision subsystem init finished");
+        if (webEnabled) {
+            Log.d("init", "Web subsystem init started");
+            web = new WebThread(telemetry, 7000);
+            web.run();
+            Log.i("init", "Web subsystem init finished");
+        }
+        else {
+            Log.w("init", "Web subsystem init skipped");
+        }
+        if (visionEnabled) {
+            Log.d("init", "Vision subsystem init started");
+            vision = new Vision(telemetry, hardwareMap, allianceColor, visionCorrectionEnabled);
+            Log.i("init", "Vision subsystem init finished");
         }
         else {
             Log.w(initLogTag, "Vision subsystem init skipped");
         }
-        telemetryBroadcast("Status", " all subsystems inited");
+        telemetryBroadcast("Status", " all subsystems initialized");
     }
 
     public void getGamePadInputs() {
@@ -246,9 +272,9 @@ public class Robot {
         double joystickOutput;
         if (joystickInput > joystickDeadZone) {
             joystickOutput = (joystickInput - joystickDeadZone) / (1.0 - joystickDeadZone);
-        } else if (joystickInput > -joystickDeadZone) {
+        } else if (joystickInput > -joystickDeadZone) { // joystickInput is between -joystickDeadZone and joystickDeadZone
             joystickOutput = 0.0;
-        } else {
+        } else { // if joystickInput is less than -joystickDeadZone
             joystickOutput = (joystickInput + joystickDeadZone) / (1.0 - joystickDeadZone);
         }
         return joystickOutput;
@@ -257,5 +283,7 @@ public class Robot {
     public void telemetryBroadcast(String caption, String value) {
         telemetry.addData(caption, value);
         telemetry.update();
+        wtd.addLog(new WebLog(caption, value, WebLog.LogSeverity.INFO));
+        Log.i(caption, value);
     }
 }
