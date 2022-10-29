@@ -699,39 +699,6 @@ public class Drive extends Subsystem {
                         currentCountRR);
         Log.d("drive", output);
     }
-
-    /**
-     * PID controller for legacy functions
-     * @param tickCount how many ticks to move
-     * @param peakSpeed desired speed in ticks per second
-     * @param maxSpeed physical motor speed limit in ticks per second
-     * @param rampTime:  motor speed ramp uptime/downtime in sec (the amount of time it takes for the motor to reach the desired speed)
-     * @param motorFLForward FL motor direction
-     * @param motorFRForward FR motor direction
-     * @param motorRLForward RL motor direction
-     * @param motorRRForward RR motor direction
-     * @param Kp:        coefficient Kp
-     * @param Ki:        coefficient Ki
-     * @param Kd:        coefficient Kd
-     */
-    public void allMotorPIDControl(
-            int tickCount,
-            double peakSpeed,
-            double maxSpeed,
-            double rampTime,
-            boolean motorFLForward,
-            boolean motorFRForward,
-            boolean motorRLForward,
-            boolean motorRRForward,
-            double Kp,
-            double Ki,
-            double Kd) {
-        // Order is: FL, FR, RL, RR
-        int[] tickCounts = {motorFLForward ? tickCount : -tickCount, motorFRForward ? tickCount : -tickCount, motorRLForward ? tickCount : -tickCount, motorRRForward ? tickCount : -tickCount};
-        double[] peakSpeeds = {peakSpeed, peakSpeed, peakSpeed, peakSpeed};
-        double[] maxSpeeds = {maxSpeed, maxSpeed, maxSpeed, maxSpeed};
-        allMotorPIDControl(tickCounts, peakSpeeds, maxSpeeds, rampTime, Kp, Ki, Kd);
-    }
     /**
      * PID motor control program to ensure all four motors are synchronized
      *
