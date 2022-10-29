@@ -28,13 +28,13 @@ public class WebThread extends Subsystem implements Runnable {
     int port;
 
     public WebThread(Telemetry telemetry) {
-        super(telemetry);
+        super(telemetry, "web");
         init();
         port = 7070;
     }
 
     public WebThread(Telemetry telemetry, int port) {
-        super(telemetry);
+        super(telemetry, "web");
         init();
         this.port = port;
     }
