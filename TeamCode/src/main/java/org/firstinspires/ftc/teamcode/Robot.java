@@ -164,8 +164,8 @@ public class Robot {
     private void motorInit() {
         frontLeftDriveMotor = (DcMotorEx) hardwareMap.dcMotor.get("fl");
         frontRightDriveMotor = (DcMotorEx) hardwareMap.dcMotor.get("fr");
-        rearLeftDriveMotor = (DcMotorEx) hardwareMap.dcMotor.get("bl");
-        rearRightDriveMotor = (DcMotorEx) hardwareMap.dcMotor.get("br");
+        rearLeftDriveMotor = (DcMotorEx) hardwareMap.dcMotor.get("rl");
+        rearRightDriveMotor = (DcMotorEx) hardwareMap.dcMotor.get("rr");
 
 
         frontRightDriveMotor.setDirection(DcMotorSimple.Direction.REVERSE);
