@@ -49,7 +49,6 @@ public class Vision extends Subsystem {
     private OpenGLMatrix lastLocation;
     private VuforiaLocalizer vuforia;
 
-    private boolean targetVisible;
     private VectorF targetTranslation;
     private Orientation targetRotation;
 
@@ -58,7 +57,7 @@ public class Vision extends Subsystem {
 
     private int[] viewportContainerIds;
 
-    // Move stuff
+    VisionCorrectionThread visionCorrectionThread;
 
     /**
      * Class instantiation
@@ -70,19 +69,21 @@ public class Vision extends Subsystem {
     public Vision(
             Telemetry telemetry,
             HardwareMap hardwareMap,
-            AllianceColor allianceColor) {
-        super(telemetry);
+            AllianceColor allianceColor,
+            boolean visionCorrectionEnabled) {
+        super(telemetry, "vision");
         this.hardwareMap = hardwareMap;
         this.allianceColor = allianceColor;
-        telemetry.addLine("Vision init started");
-        telemetry.update();
-
         // Create camera instances for the detection pipeline
         initDetectionPipeline();
 
         // Telemetry
         telemetry.addLine("Vision init complete");
         telemetry.update();
+        if (visionCorrectionEnabled) {
+            WebcamName webcamName = hardwareMap.get(WebcamName.class, WEBCAM_NAME);
+            visionCorrectionThread = new VisionCorrectionThread(webcamName);
+        }
     }
 
     private void initDetectionPipeline() {
@@ -97,7 +98,7 @@ public class Vision extends Subsystem {
         camera =
                 OpenCvCameraFactory.getInstance()
                         .createWebcam(hardwareMap.get(WebcamName.class, WEBCAM_NAME), cameraMonitorViewId);
-
+        camera.setViewportRenderer(OpenCvCamera.ViewportRenderer.GPU_ACCELERATED);
         // Create a detection pipeline for detecting the position
         pipeline = new ConeColorPipeline(allianceColor, CAMERA_WIDTH, CAMERA_HEIGHT);
         camera.setPipeline(pipeline);
@@ -107,13 +108,13 @@ public class Vision extends Subsystem {
                 new OpenCvCamera.AsyncCameraOpenListener() {
                     @Override
                     public void onOpened() { // Listener for when the camera first starts
-                        Log.i("vision", "Streaming");
+                        Log.i(TAG, "Streaming");
                         camera.startStreaming(CAMERA_WIDTH, CAMERA_HEIGHT, OpenCvCameraRotation.UPRIGHT);
                     }
 
                     @Override
                     public void onError(int errorCode) { // Listener to log if the camera stops abruptly
-                        Log.e("vision", "Error Streaming, aborting with error code: " + errorCode);
+                        Log.e(TAG, "Error Streaming, aborting with error code: " + errorCode);
                     }
                 });
     }

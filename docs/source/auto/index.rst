@@ -9,7 +9,7 @@ The final part of the name (cycle, parK) is a reference to cycle for minerals or
 .. toctree::
    :maxdepth: 2
    :hidden:
-   :name: Code
+   :name: Auto
 
    auto_blue_primary_cycle
    auto_blue_primary_park

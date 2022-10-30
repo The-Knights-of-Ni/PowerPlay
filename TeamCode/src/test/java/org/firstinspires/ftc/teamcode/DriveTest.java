@@ -33,24 +33,4 @@ class DriveTest {
         assertNotEquals(0, drive.calcMotorPowers(0, 1, 0)[2]);
         assertNotEquals(0, drive.calcMotorPowers(0, 1, 0)[3]);
     }
-
-    @Test
-    void testMoveVector2D() {
-        Drive drive = init();
-        drive.moveVector(new Vector(1000,1000));
-        assertNotEquals(0, drive.frontLeft.getPower());
-        assertNotEquals(0, drive.frontRight.getPower());
-        assertNotEquals(0, drive.rearLeft.getPower());
-        assertNotEquals(0, drive.rearRight.getPower());
-    }
-
-    @Test
-    void testMoveForward() {
-        Drive drive = init();
-        drive.moveForward(1000);
-        assertNotEquals(0, drive.frontLeft.getPower());
-        assertNotEquals(0, drive.frontRight.getPower());
-        assertNotEquals(0, drive.rearLeft.getPower());
-        assertNotEquals(0, drive.rearRight.getPower());
-    }
 }
