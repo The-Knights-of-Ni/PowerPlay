@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.Util;
 
-import android.os.Build;
-
 import java.time.LocalDate;
 
 public class WebLog {

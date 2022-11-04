@@ -10,6 +10,7 @@ public class WebThreadData {
     private static final ArrayList<WebLog> logs = new ArrayList<>();
 
     private static Coordinate position = new Coordinate(0,0);
+    private static double angle = 0;
 
     public static WebThreadData getWtd() {
         return wtd;
@@ -29,5 +30,13 @@ public class WebThreadData {
 
     public void setPosition(Coordinate position) {
         wtd.position = position;
+    }
+
+    public static double getAngle() {
+        return angle;
+    }
+
+    public static void setAngle(double angle) {
+        wtd.angle = angle;
     }
 }

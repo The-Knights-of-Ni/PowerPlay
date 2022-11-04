@@ -7,7 +7,6 @@ import org.apache.commons.geometry.euclidean.twod.ConvexArea;
 import org.apache.commons.geometry.euclidean.twod.Vector2D;
 import org.apache.commons.geometry.euclidean.twod.path.LinePath;
 import org.apache.commons.numbers.core.Precision;
-import org.checkerframework.checker.units.qual.C;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.DriveControl.BoundingBox;
 import org.firstinspires.ftc.teamcode.Robot;
@@ -1112,8 +1111,10 @@ public class Drive extends Subsystem {
                 motorKd);
         robotCurrentPosX += distance * Math.cos((robotCurrentAngle + angle) * Math.PI / 180.0);
         robotCurrentPosY += distance * Math.sin((robotCurrentAngle + angle) * Math.PI / 180.0);
+        robotCurrentAngle += angle;
         vtd.setTheoreticalPosition(calcBoundingBoxOfRobot(robotCurrentPosX, robotCurrentPosY));
         wtd.setPosition(new Coordinate(robotCurrentPosX, robotCurrentPosY));
+        wtd.setAngle(robotCurrentAngle);
         logMovement();
     }
 
