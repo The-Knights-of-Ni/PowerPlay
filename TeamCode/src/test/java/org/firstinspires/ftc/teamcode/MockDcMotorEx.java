@@ -24,6 +24,16 @@ public class MockDcMotorEx implements DcMotorEx {
         targetPosition = 0;
         powerBehavior = ZeroPowerBehavior.BRAKE;
     }
+
+    public MockDcMotorEx() {
+        currentRunMode = RunMode.RUN_TO_POSITION;
+        currentPower = 0;
+        motorEnabled = true;
+        currentDirection = Direction.FORWARD;
+        targetPosition = 0;
+        powerBehavior = ZeroPowerBehavior.BRAKE;
+    }
+
     @Override
     public void setMotorEnable() {
         motorEnabled = true;
