@@ -124,11 +124,11 @@ public class Robot {
         telemetry.log().setCapacity(5); // We can control the number of lines shown in the log
         Log.i(initLogTag, "started");
         Log.v(initLogTag, "android version: " + Build.VERSION.RELEASE);
-        double batteryVoltage = getBatteryVoltage();
-        if (batteryVoltage<11) {
-            Log.w(initLogTag, "Battery Voltage Low");
-            telemetry.addData("Warning", "<b>Battery Voltage Low!</b>");
-        }
+//        double batteryVoltage = getBatteryVoltage();
+//        if (batteryVoltage<11) {
+//            Log.w(initLogTag, "Battery Voltage Low");
+//            telemetry.addData("Warning", "<b>Battery Voltage Low!</b>");
+//        }
         this.hardwareMap = hardwareMap;
         this.timer = timer;
         this.allianceColor = allianceColor;
@@ -180,7 +180,7 @@ public class Robot {
     public void subsystemInit()
     {
         Log.d(initLogTag, "Drive subsystem init started");
-        drive = new Drive(frontLeftDriveMotor, frontRightDriveMotor, rearLeftDriveMotor, rearRightDriveMotor, telemetry, timer);
+        drive = new Drive(frontLeftDriveMotor, frontRightDriveMotor, rearLeftDriveMotor, rearRightDriveMotor, telemetry, timer, visionCorrectionEnabled, webEnabled);
         Log.i(initLogTag, "Drive subsystem init finished");
 
         Log.d(initLogTag, "Control subsystem init started");
@@ -283,7 +283,8 @@ public class Robot {
     public void telemetryBroadcast(String caption, String value) {
         telemetry.addData(caption, value);
         telemetry.update();
-        wtd.addLog(new WebLog(caption, value, WebLog.LogSeverity.INFO));
+        if (webEnabled)
+            wtd.addLog(new WebLog(caption, value, WebLog.LogSeverity.INFO));
         Log.i(caption, value);
     }
 }

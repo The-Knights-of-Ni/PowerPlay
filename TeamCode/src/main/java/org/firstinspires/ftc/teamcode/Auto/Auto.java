@@ -48,8 +48,8 @@ public class Auto extends LinearOpMode {
         timer = new ElapsedTime();
         try {
             HashMap<String, Boolean> flags = new HashMap<>();
-            flags.put("vision", true);
-            flags.put("web", true);
+            flags.put("vision", false);
+            flags.put("web", false);
             this.robot = new Robot(hardwareMap, telemetry, timer, allianceColor, gamepad1, gamepad2, flags);
             telemetry.addData("Waiting for start", "");
             telemetry.update();
