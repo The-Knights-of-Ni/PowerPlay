@@ -48,10 +48,11 @@ public class Auto extends LinearOpMode {
         try {
             this.robot = new Robot(hardwareMap, telemetry, timer, allianceColor, gamepad1, gamepad2,
                     true);
-            this.vision = new Vision(telemetry, hardwareMap, allianceColor);
+            //this.vision = new Vision(telemetry, hardwareMap, allianceColor);
             telemetry.addData("Waiting for start", "");
             telemetry.update();
         } catch (Exception ioException) {
+//            telemetry.addData("ERROR: ", );
             telemetry.addData("ERROR: ", "IO EXCEPTION", ioException);
             telemetry.update();
             Log.e("main", "fatal error IO EXCEPTION", ioException);

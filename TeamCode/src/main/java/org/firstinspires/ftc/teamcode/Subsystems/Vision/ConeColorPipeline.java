@@ -27,9 +27,9 @@ public class ConeColorPipeline extends OpenCvPipeline {
     private ConeColor coneColor = ConeColor.OTHER;
 
     public enum ConeColor {
-        GREEN(new Scalar(1,1,1), new Scalar(1,1,1)), //TODO:Calibrate color constants
-        CYAN(new Scalar(2,2,2), new Scalar(2,2,2)),
-        BROWN(new Scalar(3,3,3), new Scalar(3,3,3)),
+        GREEN(new Scalar(70,74,12), new Scalar(111,171,138)), //TODO:Calibrate color constants
+        CYAN(new Scalar(104,97,24), new Scalar(127,152,136)),
+        BROWN(new Scalar(0,0,0), new Scalar(136,117,69)),
         OTHER(new Scalar(0,0,0), new Scalar(0,0,0)); //leave OTHER as is
         public final Scalar lowHSV;
         public final Scalar highHSV;
@@ -74,7 +74,7 @@ public class ConeColorPipeline extends OpenCvPipeline {
         Mat mask = new Mat();
         Imgproc.cvtColor(input, mask, Imgproc.COLOR_RGB2HSV);
 
-        Rect rectCrop = new Rect(0, 720, 1920, 360); //TODO: Calibrate crop constants if necessary
+        Rect rectCrop = new Rect(480, 270, 960, 540); //TODO: Calibrate crop constants if necessary
         Mat crop = new Mat(mask, rectCrop);
 
 
