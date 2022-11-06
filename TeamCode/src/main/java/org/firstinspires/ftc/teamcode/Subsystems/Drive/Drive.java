@@ -758,7 +758,14 @@ public class Drive extends Subsystem {
         double prevTimeRL = 0.0;
         double prevTimeRR = 0.0;
         boolean initialized = false; // disable Ki and Kd terms in first iteration
-        int currentCountFL, currentCountFR, currentCountRL, currentCountRR, targetCountFL, targetCountFR, targetCountRL, targetCountRR;
+        int currentCountFL = 0;
+        int currentCountFR = 0;
+        int currentCountRL = 0;
+        int currentCountRR = 0;
+        int targetCountFL = 0;
+        int targetCountFR = 0;
+        int targetCountRL = 0;
+        int targetCountRR = 0;
         int prevCountFL = 0;
         int prevCountFR = 0;
         int prevCountRL = 0;
@@ -943,29 +950,27 @@ public class Drive extends Subsystem {
                 isTimeOutStarted = false;
                 isTimeOutExceeded = false;
             }
-            String output =
-                    String.format(
-                            Locale.US,
-                            "FL %.1f, %d, FR %.1f %d, RL %.1f %d, RR %.1f %d %.1f %.3f %.1f %.3f %s %s %s %s %s %.1f %s",
-                            prevTimeFL * 1000.0,
-                            prevCountFL,
-                            prevTimeFR * 1000.0,
-                            prevCountFR,
-                            prevTimeRL * 1000.0,
-                            prevCountRL,
-                            prevTimeRR * 1000.0,
-                            prevCountRR,
-                            currentError,
-                            acculErrorRR,
-                            errorSlope,
-                            currentPower,
-                            isMotorFLNotMoving ? "Y" : "N",
-                            isMotorFRNotMoving ? "Y" : "N",
-                            isMotorRLNotMoving ? "Y" : "N",
-                            isMotorRRNotMoving ? "Y" : "N",
-                            isTimeOutStarted ? "Y" : "N",
-                            timeOutStartedTime * 1000.0,
-                            isTimeOutExceeded ? "Y" : "N");
+            String output = "";
+            try {
+                output = "Motor Status: " + isMotorFLDone + " " + isMotorFRDone + " " +
+                        isMotorRLDone + " " + isMotorRRDone + "\nTimeout Started: " + isTimeOutStarted
+                        + "\nTimeout Exceeded: " + isTimeOutExceeded + "\nTime out period: " +
+                        timeOutPeriod + "\nTime out started time: " + timeOutStartedTime +
+                        "\nTime out threshold: " + timeOutThreshold + "\nacculError: " + acculErrorFL + " "
+                        + acculErrorFR + " " + acculErrorRL + " " + acculErrorRR + "\nprevError: " + prevErrorFL + " "
+                        + prevErrorFR + " " + prevErrorRL + " " + prevErrorRR + "\ninitialized: " + initialized
+                        + "\ncurrentCount: " + currentCountFL + " " + currentCountFR + " " + currentCountRL + " " + currentCountRR
+                        + "\ntargetCount: " + targetCountFL + " " + targetCountFR + " " + targetCountRL + " " + targetCountRR;
+            }
+            catch (Exception ignored) {
+                output = "Motor Status: " + isMotorFLDone + " " + isMotorFRDone + " " +
+                        isMotorRLDone + " " + isMotorRRDone + "\nTimeout Started: " + isTimeOutStarted
+                        + "\nTimeout Exceeded: " + isTimeOutExceeded + "\nTime out period: " +
+                        timeOutPeriod + "\nTime out started time: " + timeOutStartedTime +
+                        "\nTime out threshold: " + timeOutThreshold + "\nacculError: " + acculErrorFL + " "
+                        + acculErrorFR + " " + acculErrorRL + " " + acculErrorRR + "\nprevError: " + prevErrorFL + " "
+                        + prevErrorFR + " " + prevErrorRL + " " + prevErrorRR + "\ninitialized: " + initialized;
+            }
             try {
                 Log.v(TAG, "motorEnc: " + output);
             }
@@ -996,41 +1001,42 @@ public class Drive extends Subsystem {
         double speedOffset =
                 speed * 0.15; // ramp up and ramp down with this speed offset so that there is no time the
         // speed is close to zero
-        double speedExcess = speed >= 0 ? speed - speedOffset : speed + speedOffset;
+        double speedExcess = speed - speedOffset;
 
-        if ((double) Math.abs(tickCount)
+        if ((double) tickCount
                 < rampTime
-                * (speed >= 0 ? speed + speedOffset : speed - speedOffset)) { // distance is shorter than a complete ramp up/ramp down cycle
+                * (speed
+                + speedOffset)) { // distance is shorter than a complete ramp up/ramp down cycle
             double halfTime =
-                    (Math.sqrt(speedOffset * speedOffset + 4.0 * (double) tickCount * Math.abs(speedExcess) / rampTime)
-                            - Math.abs(speedOffset))
+                    (Math.sqrt(speedOffset * speedOffset + 4.0 * (double) tickCount * speedExcess / rampTime)
+                            - speedOffset)
                             * rampTime
                             * 0.5
-                            / Math.abs(speedExcess);
+                            / speedExcess;
             if (elapsedTime < halfTime) { // during ramp up time
                 targetTick =
-                        (int)((0.5 * speedExcess * elapsedTime / rampTime + Math.abs(speedOffset) * elapsedTime));
+                        (int) ((0.5 * speedExcess * elapsedTime / rampTime + speedOffset) * elapsedTime);
             } else { // during ramp downtime
                 double remainTime = halfTime + halfTime - elapsedTime;
                 targetTick =
                         tickCount
-                                - (int)((0.5 * speedExcess * elapsedTime / rampTime + Math.abs(speedOffset) * elapsedTime));
+                                - ((int) ((0.5 * speedExcess * remainTime / rampTime + speedOffset) * remainTime));
             }
         } else { // distance is long enough to reach the cruise speed
             if (elapsedTime < rampTime) { // during ramp up time
                 targetTick =
-                        (int)((0.5 * speedExcess * elapsedTime / rampTime + Math.abs(speedOffset) * elapsedTime));
+                        (int) ((0.5 * speedExcess * elapsedTime / rampTime + speedOffset) * elapsedTime);
             } else if ((double) tickCount - speedOffset * rampTime
                     > speed * elapsedTime) { // during constant speed period
-                targetTick = (int) (speed * (elapsedTime - rampTime * 0.5) + 0.5 * rampTime * Math.abs(speedOffset));
+                targetTick = (int) (speed * (elapsedTime - rampTime * 0.5) + 0.5 * rampTime * speedOffset);
             } else { // during ramp downtime
-                double remainTime = ((double) Math.abs(tickCount) - Math.abs(speedOffset) * rampTime) / Math.abs(speed) + rampTime - elapsedTime;
+                double remainTime = ((double) tickCount - speedOffset * rampTime) / speed + rampTime - elapsedTime;
                 targetTick =
                         tickCount
                                 - ((int) ((0.5 * speedExcess * remainTime / rampTime + speedOffset) * remainTime));
             }
         }
-        if (Math.abs(targetTick) > Math.abs(tickCount)) { targetTick = tickCount; }
+        if (targetTick > tickCount) targetTick = tickCount;
         return targetTick;
     }
 
@@ -1048,33 +1054,33 @@ public class Drive extends Subsystem {
         double speedOffset =
                 speed * 0.15; // ramp up and ramp down with this speed offset so that there is no time the
         // speed is close to zero
-        double speedExcess = speed >= 0 ? speed - speedOffset : speed + speedOffset;
+        double speedExcess = speed - speedOffset;
 
-        if ((double) Math.abs(tickCount)
+        if ((double) tickCount
                 < rampTime
                 * (speed
                 + speedOffset)) { // distance is shorter than a complete ramp up/ramp down cycle
             double halfTime =
-                    (Math.sqrt(speedOffset * speedOffset + 4.0 * (double) tickCount * Math.abs(speedExcess) / rampTime)
-                            - Math.abs(speedOffset))
+                    (Math.sqrt(speedOffset * speedOffset + 4.0 * (double) tickCount * speedExcess / rampTime)
+                            - speedOffset)
                             * rampTime
                             * 0.5
-                            / Math.abs(speedExcess);
+                            / speedExcess;
             if (elapsedTime < halfTime) { // during ramp up time
-                targetSpeed = speedExcess * elapsedTime / rampTime + Math.abs(speedOffset);
+                targetSpeed = speedExcess * elapsedTime / rampTime + speedOffset;
             } else { // during ramp downtime
                 double remainTime = halfTime + halfTime - elapsedTime;
-                targetSpeed = speedExcess * remainTime / rampTime + Math.abs(speedOffset);
+                targetSpeed = speedExcess * remainTime / rampTime + speedOffset;
             }
         } else { // distance is long enough to reach the cruise speed
             if (elapsedTime < rampTime) { // during ramp up time
                 targetSpeed = speedExcess * elapsedTime / rampTime + speedOffset;
-            } else if ((double) tickCount - Math.abs(speedOffset) * rampTime
-                    > Math.abs(speed) * elapsedTime) { // during constant speed period
+            } else if ((double) tickCount - speedOffset * rampTime
+                    > speed * elapsedTime) { // during constant speed period
                 targetSpeed = speed;
             } else { // during ramp downtime
                 double remainTime = ((double) tickCount - speedOffset * rampTime) / speed + rampTime - elapsedTime;
-                targetSpeed = speedExcess * remainTime / rampTime + Math.abs(speedOffset);
+                targetSpeed = speedExcess * remainTime / rampTime + speedOffset;
             }
         }
         if (targetSpeed < speedOffset) targetSpeed = speedOffset;
@@ -1117,6 +1123,7 @@ public class Drive extends Subsystem {
             vtd.setTheoreticalPosition(calcBoundingBoxOfRobot(robotCurrentPosX, robotCurrentPosY));
         if (wtd != null)
         wtd.setPosition(new Coordinate(robotCurrentPosX, robotCurrentPosY));
+        stop();
         logMovement();
     }
 
