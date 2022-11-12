@@ -22,7 +22,7 @@ public class AutoCycleBlue extends Auto {
         timer.reset();
 //        telemetry.addData("cone color", robot.vision.detectConeColor());
         robot.drive.moveVector(new Vector(44*mmPerInch, 24*mmPerInch));
-        robot.drive.turnByAngle(-90);
+        //robot.drive.turnByAngle(-90);
         robot.drive.moveRight(12*mmPerInch);
         while (timer.seconds() < 20) {
             // TODO: Insert Intake code

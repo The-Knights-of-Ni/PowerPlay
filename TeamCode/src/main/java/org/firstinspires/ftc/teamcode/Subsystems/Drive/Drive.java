@@ -761,18 +761,25 @@ public class Drive extends Subsystem {
         double prevTimeRL = 0.0;
         double prevTimeRR = 0.0;
         boolean initialized = false; // disable Ki and Kd terms in first iteration
-        int currentCountFL, currentCountFR, currentCountRL, currentCountRR, targetCountFL, targetCountFR, targetCountRL, targetCountRR;
+        int currentCountFL = 0;
+        int currentCountFR = 0;
+        int currentCountRL = 0;
+        int currentCountRR = 0;
+        int targetCountFL = 0;
+        int targetCountFR = 0;
+        int targetCountRL = 0;
+        int targetCountRR = 0;
         int prevCountFL = 0;
         int prevCountFR = 0;
         int prevCountRL = 0;
         int prevCountRR = 0;
         double currentError = 0.0;
         double currentTargetSpeedFL, currentTargetSpeedFR, currentTargetSpeedRL, currentTargetSpeedRR;
-        double currentPower = 0.0;
+        double currentPower;
         double alpha = 0.95;
         double startTime = ((double) timer.nanoseconds()) * 1.0e-9;
         double currentTime = 0.0;
-        double errorSlope = 0.0;
+        double errorSlope;
         // PID loop
         while (((!isMotorFLDone) || (!isMotorFRDone) || (!isMotorRLDone) || (!isMotorRRDone))
                 && (!isTimeOutExceeded)) {
@@ -946,31 +953,29 @@ public class Drive extends Subsystem {
                 isTimeOutStarted = false;
                 isTimeOutExceeded = false;
             }
-            String output =
-                    String.format(
-                            Locale.US,
-                            "FL %.1f, %d, FR %.1f %d, RL %.1f %d, RR %.1f %d %.1f %.3f %.1f %.3f %s %s %s %s %s %.1f %s",
-                            prevTimeFL * 1000.0,
-                            prevCountFL,
-                            prevTimeFR * 1000.0,
-                            prevCountFR,
-                            prevTimeRL * 1000.0,
-                            prevCountRL,
-                            prevTimeRR * 1000.0,
-                            prevCountRR,
-                            currentError,
-                            acculErrorRR,
-                            errorSlope,
-                            currentPower,
-                            isMotorFLNotMoving ? "Y" : "N",
-                            isMotorFRNotMoving ? "Y" : "N",
-                            isMotorRLNotMoving ? "Y" : "N",
-                            isMotorRRNotMoving ? "Y" : "N",
-                            isTimeOutStarted ? "Y" : "N",
-                            timeOutStartedTime * 1000.0,
-                            isTimeOutExceeded ? "Y" : "N");
+            String output = "";
             try {
-                Log.v(TAG, "motorEnc: " + output);
+                output = "Motor Status: " + isMotorFLDone + " " + isMotorFRDone + " " +
+                        isMotorRLDone + " " + isMotorRRDone + "\nTimeout Started: " + isTimeOutStarted
+                        + "\nTimeout Exceeded: " + isTimeOutExceeded + "\nTime out period: " +
+                        timeOutPeriod + "\nTime out started time: " + timeOutStartedTime +
+                        "\nTime out threshold: " + timeOutThreshold + "\nacculError: " + acculErrorFL + " "
+                        + acculErrorFR + " " + acculErrorRL + " " + acculErrorRR + "\nprevError: " + prevErrorFL + " "
+                        + prevErrorFR + " " + prevErrorRL + " " + prevErrorRR + "\ninitialized: " + initialized
+                        + "\ncurrentCount: " + currentCountFL + " " + currentCountFR + " " + currentCountRL + " " + currentCountRR
+                        + "\ntargetCount: " + targetCountFL + " " + targetCountFR + " " + targetCountRL + " " + targetCountRR;
+            }
+            catch (Exception ignored) {
+                output = "Motor Status: " + isMotorFLDone + " " + isMotorFRDone + " " +
+                        isMotorRLDone + " " + isMotorRRDone + "\nTimeout Started: " + isTimeOutStarted
+                        + "\nTimeout Exceeded: " + isTimeOutExceeded + "\nTime out period: " +
+                        timeOutPeriod + "\nTime out started time: " + timeOutStartedTime +
+                        "\nTime out threshold: " + timeOutThreshold + "\nacculError: " + acculErrorFL + " "
+                        + acculErrorFR + " " + acculErrorRL + " " + acculErrorRR + "\nprevError: " + prevErrorFL + " "
+                        + prevErrorFR + " " + prevErrorRL + " " + prevErrorRR + "\ninitialized: " + initialized;
+            }
+            try {
+                Log.v(TAG, output);
             }
             catch (RuntimeException ignored) {
 
