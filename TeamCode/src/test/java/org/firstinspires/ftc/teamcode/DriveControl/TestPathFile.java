@@ -10,6 +10,22 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TestPathFile {
     @Test
+    void testGetCheckSum() throws Exception {
+        ArrayList<Byte> mockFile = new ArrayList<>();
+        mockFile.add((byte) 165);
+        mockFile.add((byte) 0);
+        mockFile.add((byte) 6);
+        mockFile.add((byte) 5);
+        byte check = PathFile.getCheckSum(mockFile);
+        mockFile.set(1, check);
+        int sum = 0;
+        for (byte b: mockFile) {
+            sum += b;
+        }
+        sum -= check;
+        assertEquals(check, (byte) sum%256);
+    }
+    @Test
     void testWrite() throws Exception {
         File file = new File(System.getProperty("user.dir") + "test.path");
         ArrayList<Waypoint> stops = new ArrayList<>();
