@@ -2,15 +2,6 @@ package org.firstinspires.ftc.teamcode.Subsystems.Web;
 
 import android.util.JsonWriter;
 
-import io.javalin.Javalin;
-import io.javalin.openapi.plugin.OpenApiConfiguration;
-import io.javalin.openapi.plugin.OpenApiPlugin;
-import io.javalin.openapi.plugin.redoc.ReDocConfiguration;
-import io.javalin.openapi.plugin.redoc.ReDocPlugin;
-import io.javalin.openapi.plugin.swagger.SwaggerConfiguration;
-import io.javalin.openapi.plugin.swagger.SwaggerPlugin;
-import static io.javalin.apibuilder.ApiBuilder.*;
-
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Subsystems.Subsystem;
 import org.firstinspires.ftc.teamcode.Util.WebLog;
@@ -24,7 +15,6 @@ import java.util.ArrayList;
 
 public class WebThread extends Subsystem implements Runnable {
     WebThreadData wtd = WebThreadData.getWtd();
-    Javalin app;
     int port;
 
     public WebThread(Telemetry telemetry) {
@@ -40,19 +30,14 @@ public class WebThread extends Subsystem implements Runnable {
     }
 
     private void init() {
-        app = Javalin.create(config -> {
-            OpenApiConfiguration openApiConfiguration = new OpenApiConfiguration();
-            openApiConfiguration.getInfo().setTitle("Web Subsystem OpenAPI");
-            config.plugins.register(new OpenApiPlugin(openApiConfiguration));
-            config.plugins.register(new SwaggerPlugin(new SwaggerConfiguration()));
-            config.plugins.register(new ReDocPlugin(new ReDocConfiguration()));
-        });
-        app.get("/logs", ctx -> ctx.result(getLogs()));
-        app.get("/", ctx -> ctx.result(
-                "{\n" +
-                "    \"version\": \"0.0.0\"" +
-                "\n}"));
-        app.get("/robot-position", ctx -> ctx.result(getRobotPosition()));
+//        app = Javalin.create(config -> {
+//        });
+//        app.get("/logs", ctx -> ctx.result(getLogs()));
+//        app.get("/", ctx -> ctx.result(
+//                "{\n" +
+//                "    \"version\": \"0.0.0\"" +
+//                "\n}"));
+//        app.get("/robot-position", ctx -> ctx.result(getRobotPosition()));
     }
 
 
@@ -115,6 +100,6 @@ public class WebThread extends Subsystem implements Runnable {
 
     @Override
     public void run() {
-        app.start(port);
+//        app.start(port);
     }
 }

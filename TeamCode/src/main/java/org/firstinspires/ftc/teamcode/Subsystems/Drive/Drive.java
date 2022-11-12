@@ -139,7 +139,7 @@ public class Drive extends Subsystem {
      * @param telemetry   The telemetry
      * @param elapsedTime       The timer for the elapsed time
      */
-    public Drive(DcMotorEx frontLeft, DcMotorEx frontRight, DcMotorEx rearLeft, DcMotorEx rearRight, Telemetry telemetry, ElapsedTime elapsedTime) {
+    public Drive(DcMotorEx frontLeft, DcMotorEx frontRight, DcMotorEx rearLeft, DcMotorEx rearRight, Telemetry telemetry, ElapsedTime elapsedTime, boolean updateVTD, boolean updateWeb) {
         super(telemetry, "drive");
         this.timer = elapsedTime;
         this.frontLeft = frontLeft;
@@ -149,7 +149,9 @@ public class Drive extends Subsystem {
         setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robotCurrentPosX = 0;
         robotCurrentPosY = 0;
+        if (updateVTD)
         vtd = VisionCorrectionThreadData.getVTD();
+        if (updateWeb)
         wtd = WebThreadData.getWtd();
     }
 
@@ -725,9 +727,9 @@ public class Drive extends Subsystem {
             double Kd) {
         stop();
         setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        setRunMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        setRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
         setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        setRunMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        setRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
         boolean isMotorFLDone = false;
         boolean isMotorFRDone = false;
         boolean isMotorRLDone = false;
@@ -756,7 +758,14 @@ public class Drive extends Subsystem {
         double prevTimeRL = 0.0;
         double prevTimeRR = 0.0;
         boolean initialized = false; // disable Ki and Kd terms in first iteration
-        int currentCountFL, currentCountFR, currentCountRL, currentCountRR, targetCountFL, targetCountFR, targetCountRL, targetCountRR;
+        int currentCountFL = 0;
+        int currentCountFR = 0;
+        int currentCountRL = 0;
+        int currentCountRR = 0;
+        int targetCountFL = 0;
+        int targetCountFR = 0;
+        int targetCountRL = 0;
+        int targetCountRR = 0;
         int prevCountFL = 0;
         int prevCountFR = 0;
         int prevCountRL = 0;
@@ -941,29 +950,27 @@ public class Drive extends Subsystem {
                 isTimeOutStarted = false;
                 isTimeOutExceeded = false;
             }
-            String output =
-                    String.format(
-                            Locale.US,
-                            "FL %.1f, %d, FR %.1f %d, RL %.1f %d, RR %.1f %d %.1f %.3f %.1f %.3f %s %s %s %s %s %.1f %s",
-                            prevTimeFL * 1000.0,
-                            prevCountFL,
-                            prevTimeFR * 1000.0,
-                            prevCountFR,
-                            prevTimeRL * 1000.0,
-                            prevCountRL,
-                            prevTimeRR * 1000.0,
-                            prevCountRR,
-                            currentError,
-                            acculErrorRR,
-                            errorSlope,
-                            currentPower,
-                            isMotorFLNotMoving ? "Y" : "N",
-                            isMotorFRNotMoving ? "Y" : "N",
-                            isMotorRLNotMoving ? "Y" : "N",
-                            isMotorRRNotMoving ? "Y" : "N",
-                            isTimeOutStarted ? "Y" : "N",
-                            timeOutStartedTime * 1000.0,
-                            isTimeOutExceeded ? "Y" : "N");
+            String output = "";
+            try {
+                output = "Motor Status: " + isMotorFLDone + " " + isMotorFRDone + " " +
+                        isMotorRLDone + " " + isMotorRRDone + "\nTimeout Started: " + isTimeOutStarted
+                        + "\nTimeout Exceeded: " + isTimeOutExceeded + "\nTime out period: " +
+                        timeOutPeriod + "\nTime out started time: " + timeOutStartedTime +
+                        "\nTime out threshold: " + timeOutThreshold + "\nacculError: " + acculErrorFL + " "
+                        + acculErrorFR + " " + acculErrorRL + " " + acculErrorRR + "\nprevError: " + prevErrorFL + " "
+                        + prevErrorFR + " " + prevErrorRL + " " + prevErrorRR + "\ninitialized: " + initialized
+                        + "\ncurrentCount: " + currentCountFL + " " + currentCountFR + " " + currentCountRL + " " + currentCountRR
+                        + "\ntargetCount: " + targetCountFL + " " + targetCountFR + " " + targetCountRL + " " + targetCountRR;
+            }
+            catch (Exception ignored) {
+                output = "Motor Status: " + isMotorFLDone + " " + isMotorFRDone + " " +
+                        isMotorRLDone + " " + isMotorRRDone + "\nTimeout Started: " + isTimeOutStarted
+                        + "\nTimeout Exceeded: " + isTimeOutExceeded + "\nTime out period: " +
+                        timeOutPeriod + "\nTime out started time: " + timeOutStartedTime +
+                        "\nTime out threshold: " + timeOutThreshold + "\nacculError: " + acculErrorFL + " "
+                        + acculErrorFR + " " + acculErrorRL + " " + acculErrorRR + "\nprevError: " + prevErrorFL + " "
+                        + prevErrorFR + " " + prevErrorRL + " " + prevErrorRR + "\ninitialized: " + initialized;
+            }
             try {
                 Log.v(TAG, "motorEnc: " + output);
             }
@@ -1112,8 +1119,11 @@ public class Drive extends Subsystem {
                 motorKd);
         robotCurrentPosX += distance * Math.cos((robotCurrentAngle + angle) * Math.PI / 180.0);
         robotCurrentPosY += distance * Math.sin((robotCurrentAngle + angle) * Math.PI / 180.0);
-        vtd.setTheoreticalPosition(calcBoundingBoxOfRobot(robotCurrentPosX, robotCurrentPosY));
+        if (vtd != null)
+            vtd.setTheoreticalPosition(calcBoundingBoxOfRobot(robotCurrentPosX, robotCurrentPosY));
+        if (wtd != null)
         wtd.setPosition(new Coordinate(robotCurrentPosX, robotCurrentPosY));
+        stop();
         logMovement();
     }
 

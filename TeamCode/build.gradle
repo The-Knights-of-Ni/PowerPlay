@@ -23,8 +23,6 @@ android {
 
 dependencies {
     implementation project(':FtcRobotController')
-    testImplementation 'org.projectlombok:lombok:1.18.24'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
     annotationProcessor files('lib/OpModeAnnotationProcessor.jar')
     implementation (group: 'org.openftc', name: 'easyopencv', version: '1.5.2')
     testImplementation (group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.8.2')
@@ -33,10 +31,6 @@ dependencies {
     implementation (group: 'org.ftclib.ftclib', name: 'vision', version: '2.0.1') // vision
     implementation (group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1')
     implementation(group: 'org.apache.commons', name: 'commons-geometry-euclidean', version: '1.0')
-    implementation(group: 'io.javalin', name: 'javalin-bundle', version: '5.1.2')
-    implementation(group: 'io.javalin.community.openapi', name: 'javalin-openapi-plugin', version: '5.1.1')
-    implementation(group: 'io.javalin.community.openapi', name: 'javalin-swagger-plugin', version: '5.1.1')
-    implementation(group: 'io.javalin.community.openapi', name: 'javalin-redoc-plugin', version: '5.1.1')
 }
 
 tasks.withType(Test) {
