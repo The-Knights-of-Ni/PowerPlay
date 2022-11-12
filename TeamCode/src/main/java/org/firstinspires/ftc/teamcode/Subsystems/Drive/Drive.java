@@ -128,9 +128,6 @@ public class Drive extends Subsystem {
 
     private VisionCorrectionThreadData vtd;
     private WebThreadData wtd;
-    private boolean visionCorrectionEnabled;
-    private boolean webEnabled;
-
 
     /**
      * Initializes the drive subsystem
@@ -142,20 +139,20 @@ public class Drive extends Subsystem {
      * @param telemetry   The telemetry
      * @param elapsedTime       The timer for the elapsed time
      */
-    public Drive(DcMotorEx frontLeft, DcMotorEx frontRight, DcMotorEx rearLeft, DcMotorEx rearRight, Telemetry telemetry, ElapsedTime elapsedTime, boolean visionCorrectionEnabled, boolean webEnabled) {
+    public Drive(DcMotorEx frontLeft, DcMotorEx frontRight, DcMotorEx rearLeft, DcMotorEx rearRight, Telemetry telemetry, ElapsedTime elapsedTime, boolean updateVTD, boolean updateWeb) {
         super(telemetry, "drive");
         this.timer = elapsedTime;
         this.frontLeft = frontLeft;
         this.frontRight = frontRight;
         this.rearLeft = rearLeft;
         this.rearRight = rearRight;
-        this.visionCorrectionEnabled = visionCorrectionEnabled;
-        this.webEnabled = webEnabled;
         setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robotCurrentPosX = 0;
         robotCurrentPosY = 0;
-        vtd = VisionCorrectionThreadData.getVTD();
-        wtd = WebThreadData.getWtd();
+        if (updateVTD)
+            vtd = VisionCorrectionThreadData.getVTD();
+        if (updateWeb)
+            wtd = WebThreadData.getWtd();
     }
 
     /**
@@ -730,9 +727,9 @@ public class Drive extends Subsystem {
             double Kd) {
         stop();
         setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        setRunMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        setRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
         setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        setRunMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        setRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
         boolean isMotorFLDone = false;
         boolean isMotorFRDone = false;
         boolean isMotorRLDone = false;
@@ -775,11 +772,11 @@ public class Drive extends Subsystem {
         int prevCountRR = 0;
         double currentError = 0.0;
         double currentTargetSpeedFL, currentTargetSpeedFR, currentTargetSpeedRL, currentTargetSpeedRR;
-        double currentPower;
+        double currentPower = 0.0;
         double alpha = 0.95;
         double startTime = ((double) timer.nanoseconds()) * 1.0e-9;
         double currentTime = 0.0;
-        double errorSlope;
+        double errorSlope = 0.0;
         // PID loop
         while (((!isMotorFLDone) || (!isMotorFRDone) || (!isMotorRLDone) || (!isMotorRRDone))
                 && (!isTimeOutExceeded)) {
@@ -816,7 +813,7 @@ public class Drive extends Subsystem {
                                 acculErrorFL * alpha
                                         + currentError * (currentTime - prevTimeFL); // integrate error
                         // Calculate le D term
-                            errorSlope = (currentError - prevErrorFL) / (currentTime - prevTimeFL); // error slope
+                        errorSlope = (currentError - prevErrorFL) / (currentTime - prevTimeFL); // error slope
                         // Calculate le P + I + D
                         currentPower = getCurrentPower(maxSpeed[0], Kp, Ki, Kd, acculErrorFL, currentError, currentTargetSpeedFL, errorSlope); // apply PID correction
                     } else { // at the first point, use Kp only at the first point when we can't do I or D
@@ -975,7 +972,7 @@ public class Drive extends Subsystem {
                         + prevErrorFR + " " + prevErrorRL + " " + prevErrorRR + "\ninitialized: " + initialized;
             }
             try {
-                Log.v(TAG, output);
+                Log.v(TAG, "motorEnc: " + output);
             }
             catch (RuntimeException ignored) {
 
@@ -1122,10 +1119,11 @@ public class Drive extends Subsystem {
                 motorKd);
         robotCurrentPosX += distance * Math.cos((robotCurrentAngle + angle) * Math.PI / 180.0);
         robotCurrentPosY += distance * Math.sin((robotCurrentAngle + angle) * Math.PI / 180.0);
-        if (visionCorrectionEnabled)
+        if (vtd != null)
             vtd.setTheoreticalPosition(calcBoundingBoxOfRobot(robotCurrentPosX, robotCurrentPosY));
-        if (webEnabled)
+        if (wtd != null)
             wtd.setPosition(new Coordinate(robotCurrentPosX, robotCurrentPosY));
+        stop();
         logMovement();
     }
 
