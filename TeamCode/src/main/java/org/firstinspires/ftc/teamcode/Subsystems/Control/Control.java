@@ -70,23 +70,14 @@ public class Control extends Subsystem {
         this.clawServo.setPosition(position);
     }
 
-    private void turnFlipServoThread(double position) {
-        FlipServoMoveThread p = new FlipServoMoveThread(flipServo, position);
-        new Thread(p).start();
-    }
-
-    private void turnClawServoThread(double position) {
-        ClawServoMoveThread p = new ClawServoMoveThread(clawServo, position);
-        new Thread(p).start();
-    }
 
     public void turn4BarWithClaw(BarState position) {
-        turnFlipServoThread(position.position);
+        flipServo.setPosition(position.position);
         if (position.position > 0.25) {
-            turnClawServoThread(1.25 - position.position);
+            clawServo.setPosition(1.25 - position.position);
         }
         else {
-            turnClawServoThread(0.25 - position.position);
+            clawServo.setPosition(0.25 - position.position);
         }
     }
 }
