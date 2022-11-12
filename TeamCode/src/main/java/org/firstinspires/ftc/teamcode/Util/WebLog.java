@@ -15,12 +15,17 @@ public class WebLog {
     public String TAG;
     public String message;
     public LogSeverity severity;
-    public LocalDate timestamp;
+    public String timestamp;
 
     public WebLog(String tag, String message, LogSeverity severity) {
         this.TAG = tag;
         this.message = message;
         this.severity = severity;
-        this.timestamp = LocalDate.now();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            this.timestamp = LocalDate.now().toString();
+        }
+        else {
+            this.timestamp = "";
+        }
     }
 }
