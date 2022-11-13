@@ -7,7 +7,6 @@ import org.apache.commons.geometry.euclidean.twod.ConvexArea;
 import org.apache.commons.geometry.euclidean.twod.Vector2D;
 import org.apache.commons.geometry.euclidean.twod.path.LinePath;
 import org.apache.commons.numbers.core.Precision;
-import org.checkerframework.checker.units.qual.C;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.DriveControl.BoundingBox;
 import org.firstinspires.ftc.teamcode.Robot;
@@ -88,7 +87,7 @@ public class Drive extends Subsystem {
      */
     public final DcMotorEx rearRight;
     private final ElapsedTime timer;
-    // use motor encoder for odometry
+    // use motor encoder for odometer
     /**
      * Odometry Left
      */
@@ -330,12 +329,27 @@ public class Drive extends Subsystem {
     }
 
     /**
-     * Turns the robot by the specified angle, ticks and angles are equivalent. Use this method to turn the robot instead
-     *
+     * Turns the robot by the specified angle
      * @param angle The angle to turn by. Positive corresponds to counterclockwise
      */
     public void turnByAngle(double angle) {
-        moveVector(new Vector(0, 0), angle);
+        int[] tickCount = new int[4];
+        double[] peakSpeed = new double[4];
+        double[] maxSpeed = new double[4];
+        Arrays.fill(tickCount, (int) (-angle*COUNTS_PER_DEGREE));
+        Arrays.fill(peakSpeed, TURN_SPEED * ANGULAR_V_MAX_NEVERREST_20);
+        Arrays.fill(maxSpeed, ANGULAR_V_MAX_NEVERREST_20);
+        if (angle > 0.0) {
+            // false true false true
+            tickCount[0] = -tickCount[0];
+            tickCount[2] = -tickCount[2];
+        }
+        else {
+            // true false true false
+            tickCount[1] = -tickCount[1];
+            tickCount[3] = -tickCount[3];
+        }
+        allMotorPIDControl(tickCount, peakSpeed, maxSpeed, motorRampTime, motorKp, motorKi, motorKd);
         robotCurrentAngle += angle;
         telemetry.addData("turnRobot", "turn to %7.2f degrees", robotCurrentAngle);
         telemetry.update();
@@ -758,14 +772,11 @@ public class Drive extends Subsystem {
         double prevTimeRL = 0.0;
         double prevTimeRR = 0.0;
         boolean initialized = false; // disable Ki and Kd terms in first iteration
-        int currentCountFL = 0;
-        int currentCountFR = 0;
-        int currentCountRL = 0;
-        int currentCountRR = 0;
-        int targetCountFL = 0;
-        int targetCountFR = 0;
-        int targetCountRL = 0;
-        int targetCountRR = 0;
+        int currentCountFL = frontLeft.getCurrentPosition();
+        int currentCountFR = frontRight.getCurrentPosition();
+        int currentCountRL = rearLeft.getCurrentPosition();
+        int currentCountRR = rearRight.getCurrentPosition();
+        int targetCountFL, targetCountFR, targetCountRL, targetCountRR;
         int prevCountFL = 0;
         int prevCountFR = 0;
         int prevCountRL = 0;
@@ -951,28 +962,9 @@ public class Drive extends Subsystem {
                 isTimeOutExceeded = false;
             }
             String output = "";
+            output = String.format(Locale.US, "Motor Status: %s %s %s %s\nTimeout Started: %s\nTimeout Exceeded: %s\nTime out started time: %s\nTime out threshold: %d\nacculError: %s %s %s %s\nprevError: %s %s %s %s\ninitialized: %s\ncurrentCountFL: %s\ncurrentCountFR: %s\ncurrentCountRL: %s\ncurrentCount RR: %s", isMotorFLDone, isMotorFRDone, isMotorRLDone, isMotorRRDone, isTimeOutStarted, isTimeOutExceeded, timeOutStartedTime, timeOutThreshold, acculErrorFL, acculErrorFR, acculErrorRL, acculErrorRR, prevErrorFL, prevErrorFR, prevErrorRL, prevErrorRR, initialized, currentCountFL, currentCountFR, currentCountRL, currentCountRR);
             try {
-                output = "Motor Status: " + isMotorFLDone + " " + isMotorFRDone + " " +
-                        isMotorRLDone + " " + isMotorRRDone + "\nTimeout Started: " + isTimeOutStarted
-                        + "\nTimeout Exceeded: " + isTimeOutExceeded + "\nTime out period: " +
-                        timeOutPeriod + "\nTime out started time: " + timeOutStartedTime +
-                        "\nTime out threshold: " + timeOutThreshold + "\nacculError: " + acculErrorFL + " "
-                        + acculErrorFR + " " + acculErrorRL + " " + acculErrorRR + "\nprevError: " + prevErrorFL + " "
-                        + prevErrorFR + " " + prevErrorRL + " " + prevErrorRR + "\ninitialized: " + initialized
-                        + "\ncurrentCount: " + currentCountFL + " " + currentCountFR + " " + currentCountRL + " " + currentCountRR
-                        + "\ntargetCount: " + targetCountFL + " " + targetCountFR + " " + targetCountRL + " " + targetCountRR;
-            }
-            catch (Exception ignored) {
-                output = "Motor Status: " + isMotorFLDone + " " + isMotorFRDone + " " +
-                        isMotorRLDone + " " + isMotorRRDone + "\nTimeout Started: " + isTimeOutStarted
-                        + "\nTimeout Exceeded: " + isTimeOutExceeded + "\nTime out period: " +
-                        timeOutPeriod + "\nTime out started time: " + timeOutStartedTime +
-                        "\nTime out threshold: " + timeOutThreshold + "\nacculError: " + acculErrorFL + " "
-                        + acculErrorFR + " " + acculErrorRL + " " + acculErrorRR + "\nprevError: " + prevErrorFL + " "
-                        + prevErrorFR + " " + prevErrorRL + " " + prevErrorRR + "\ninitialized: " + initialized;
-            }
-            try {
-                Log.v(TAG, "motorEnc: " + output);
+                Log.v(TAG, output);
             }
             catch (RuntimeException ignored) {
 

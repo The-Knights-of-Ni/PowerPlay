@@ -46,6 +46,7 @@ public abstract class Auto extends LinearOpMode {
      * @param allianceColor The alliance color
      */
     public void initAuto(AllianceColor allianceColor) {
+        Log.i("main", "*** Opmode control passed to teamcode ***");
         timer = new ElapsedTime();
         try {
             HashMap<String, Boolean> flags = new HashMap<>();
