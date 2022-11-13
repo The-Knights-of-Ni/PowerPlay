@@ -24,7 +24,7 @@ public class Teleop extends LinearOpMode {
         // Initialize DC motor objects
         timer = new ElapsedTime();
         HashMap<String, Boolean> flags = new HashMap<String, Boolean>();
-        flags.put("vision", true);
+        flags.put("vision", false);
         this.robot =  new Robot(hardwareMap, telemetry, timer, AllianceColor.BLUE, gamepad1, gamepad2,flags);
         timeCurrent = timer.nanoseconds();
         timePre = timeCurrent;

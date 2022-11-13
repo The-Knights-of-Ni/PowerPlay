@@ -2,8 +2,6 @@ package org.firstinspires.ftc.teamcode.Subsystems.Web;
 
 import android.util.JsonWriter;
 
-//import io.javalin.Javalin;
-
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Subsystems.Subsystem;
 import org.firstinspires.ftc.teamcode.Util.WebLog;

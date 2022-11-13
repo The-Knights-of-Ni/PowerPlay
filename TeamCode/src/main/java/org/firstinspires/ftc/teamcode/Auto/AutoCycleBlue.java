@@ -17,6 +17,7 @@ public class AutoCycleBlue extends Auto {
      */
     @Override
     public void runOpMode() throws InterruptedException {
+
         initAuto(AllianceColor.BLUE);
         waitForStart();
         timer.reset();
