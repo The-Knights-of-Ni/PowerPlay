@@ -70,7 +70,6 @@ public class Drive extends Subsystem {
     private static final double motorKi = 0.02;
     private static final double motorKd = 0.0003;
     private static final double motorRampTime = 0.3;
-    private static final double DEGREES_TO_RADIANS = Math.PI/180;
     /**
      * DC Motor front left
      */
