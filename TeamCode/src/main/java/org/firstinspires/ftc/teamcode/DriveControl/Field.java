@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * Represents a Field with game objects.
  */
 public class Field {
-    private ArrayList<GameObject> gameObjects;
+    private final ArrayList<GameObject> gameObjects;
 
     public final BoundingBox boundingBox;
 

@@ -1,11 +1,9 @@
-//package org.firstinspires.ftc.teamcode.Subsystems;
-//
+package org.firstinspires.ftc.teamcode.Subsystems;
+
+//import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 //import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 //import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 //import com.qualcomm.robotcore.hardware.DcMotor;
-//import com.qualcomm.robotcore.hardware.DcMotorSimple;
-//import com.qualcomm.robotcore.hardware.DistanceSensor;
-//import com.qualcomm.robotcore.hardware.Servo;
 //import com.qualcomm.robotcore.util.ElapsedTime;
 //
 //import org.firstinspires.ftc.teamcode.Robot;
@@ -15,6 +13,7 @@
 // */
 //
 //@TeleOp(name = "Arm-Claw Synchronization Test")
+//@Disabled
 //public class ArmClawSync extends LinearOpMode {
 //    //Declare DC motor objects
 //    private Robot robot;
@@ -59,7 +58,7 @@
 //        double tgtPower = 0;
 //
 //        telemetry.clearAll();
-//        while(opModeIsActive()) {
+//        while (opModeIsActive()) {
 //            //Get gamepad inputs
 //            leftStickX = gamepad1.left_stick_x;
 //            leftStickY = -gamepad1.left_stick_y;
@@ -87,18 +86,18 @@
 //
 //            timeCurrent = timer.nanoseconds();
 //
-//            if(aButton) {
-//                robot.mainClaw.setPosition(robot.mainClaw.getPosition()+0.01);
+//            if (aButton) {
+//                robot.mainClaw.setPosition(robot.mainClaw.getPosition() + 0.01);
 //            }
-//            if(bButton) {
-//                robot.mainClaw.setPosition(robot.mainClaw.getPosition()-0.01);
+//            if (bButton) {
+//                robot.mainClaw.setPosition(robot.mainClaw.getPosition() - 0.01);
 //            }
 //
-//            if(aButton2) {
-//                robot.mainArm.setPosition(robot.mainClaw.getPosition()+0.01);
+//            if (aButton2) {
+//                robot.mainArm.setPosition(robot.mainClaw.getPosition() + 0.01);
 //            }
-//            if(bButton2) {
-//                robot.mainArm.setPosition(robot.mainClaw.getPosition()-0.01);
+//            if (bButton2) {
+//                robot.mainArm.setPosition(robot.mainClaw.getPosition() - 0.01);
 //            }
 //
 //            telemetry.addData("Main Claw Servo Position", robot.mainClaw.getPosition());
@@ -107,12 +106,13 @@
 //            telemetry.addData("Main Arm Servo Position", robot.mainArm.getPosition());
 //            telemetry.addData("Status", "Running");
 //
-//            telemetry.addData("Difference", robot.mainClaw.getPosition()-robot.mainArm.getPosition());
+//            telemetry.addData("Difference", robot.mainClaw.getPosition() - robot.mainArm.getPosition());
 //
 //            telemetry.update();
 //            timePre = timeCurrent;
 //        }
 //    }
+//
 //    private void initOpMode() {
 //        //Initialize DC motor objects
 //        timer = new ElapsedTime();
@@ -131,3 +131,4 @@
 //        telemetry.addData("Wait for start", "");
 //        telemetry.update();
 //    }
+//}

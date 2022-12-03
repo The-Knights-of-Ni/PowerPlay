@@ -107,7 +107,7 @@ public class Robot {
     private final boolean visionCorrectionEnabled;
     private final boolean odometryEnabled;
 
-    private WebThreadData wtd;
+    private final WebThreadData wtd;
     private final HardwareMap hardwareMap;
     private final Telemetry telemetry;
     private static final double joystickDeadZone = 0.1;

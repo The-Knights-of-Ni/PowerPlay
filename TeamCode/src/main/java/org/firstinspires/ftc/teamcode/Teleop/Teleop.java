@@ -23,7 +23,7 @@ public class Teleop extends LinearOpMode {
     private void initOpMode() throws IOException {
         // Initialize DC motor objects
         timer = new ElapsedTime();
-        HashMap<String, Boolean> flags = new HashMap<String, Boolean>();
+        HashMap<String, Boolean> flags = new HashMap<>();
         flags.put("vision", false);
         this.robot =  new Robot(hardwareMap, telemetry, timer, AllianceColor.BLUE, gamepad1, gamepad2,flags);
         timeCurrent = timer.nanoseconds();
@@ -33,8 +33,6 @@ public class Teleop extends LinearOpMode {
         telemetry.update();
     }
 
-    private void initDevices() {
-    }
 
     /**
      * Override of runOpMode()
@@ -53,9 +51,6 @@ public class Teleop extends LinearOpMode {
         }
 
         ElapsedTime timer = new ElapsedTime();
-
-
-        initDevices();
 
         waitForStart();
 

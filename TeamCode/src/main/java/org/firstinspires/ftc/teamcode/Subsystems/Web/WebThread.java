@@ -43,16 +43,16 @@ public class WebThread extends Subsystem implements Runnable {
 
     public String writeJson(ArrayList<WebLog> logs) throws IOException {
         OutputStream output = new OutputStream() {
-            private StringBuilder string = new StringBuilder();
+            private StringBuilder s = new StringBuilder();
 
             @Override
             public void write(int b) throws IOException {
-                this.string.append((char) b);
+                this.s.append((char) b);
             }
 
             @Override
             public String toString() {
-                return this.string.toString();
+                return this.s.toString();
             }
         };
         writeJsonStream(output, logs);

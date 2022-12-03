@@ -946,10 +946,10 @@ public class Drive extends Subsystem {
         }
     }
 
-    private static double getCurrentPower(double maxSpeed, double Kp, double Ki, double Kd, double acculErrorFR, double currentError, double currentTargetSpeedFR, double errorSlope) {
-        return currentTargetSpeedFR / maxSpeed
+    private static double getCurrentPower(double maxSpeed, double Kp, double Ki, double Kd, double actualError, double currentError, double currentTargetSpeed, double errorSlope) {
+        return currentTargetSpeed / maxSpeed
                 - currentError * Kp
-                - acculErrorFR * Ki
+                - actualError * Ki
                 - errorSlope * Kd;
     }
 
