@@ -102,7 +102,7 @@ public class Robot {
     public Vision vision;
     public WebThread web;
     private final AllianceColor allianceColor;
-    private final boolean visionEnabled;
+    public final boolean visionEnabled;
     private final boolean webEnabled;
     private final boolean visionCorrectionEnabled;
     private final boolean odometryEnabled;
