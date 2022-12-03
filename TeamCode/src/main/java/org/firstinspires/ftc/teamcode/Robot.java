@@ -161,6 +161,8 @@ public class Robot {
         subsystemInit();
     }
 
+    /** Gets all the drive motors from the hardware map and sets the defaults for them
+     */
     private void motorInit() {
         frontLeftDriveMotor = (DcMotorEx) hardwareMap.dcMotor.get("fl");
         frontRightDriveMotor = (DcMotorEx) hardwareMap.dcMotor.get("fr");

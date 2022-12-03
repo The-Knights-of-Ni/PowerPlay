@@ -7,7 +7,6 @@ import org.apache.commons.geometry.euclidean.twod.ConvexArea;
 import org.apache.commons.geometry.euclidean.twod.Vector2D;
 import org.apache.commons.geometry.euclidean.twod.path.LinePath;
 import org.apache.commons.numbers.core.Precision;
-import org.checkerframework.checker.units.qual.C;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.DriveControl.BoundingBox;
 import org.firstinspires.ftc.teamcode.Robot;
@@ -22,6 +21,7 @@ import java.util.Locale;
 
 /**
  * Mecanum drivetrain subsystem
+ * To move the robot, use {@link #moveVector(Vector)}, to turn it try using {@link #turnByAngle(double)}
  */
 public class Drive extends Subsystem {
     /**
@@ -63,7 +63,7 @@ public class Drive extends Subsystem {
      */
     private static final double TURN_SPEED = 0.40;
     /**
-     * Number of millimeters per an Inch
+     * Number of millimeters per an Inch (to be used by opmodes, not used internally)
      */
     public static final double mmPerInch = 25.4;
     private static final double motorKp = 0.015;
@@ -90,15 +90,15 @@ public class Drive extends Subsystem {
     private final ElapsedTime timer;
     // use motor encoder for odometry
     /**
-     * Odometry Left
+     * Odometry Left Motor Encoder
      */
     public DcMotorEx odL;
     /**
-     * Odometry Back
+     * Odometry Back Motor Encoder
      */
     public DcMotorEx odB;
     /**
-     * Odometry Right
+     * Odometry Right Motor Encoder
      */
     public DcMotorEx odR;
     /**
@@ -137,7 +137,7 @@ public class Drive extends Subsystem {
      * @param rearLeft    The rear left motor
      * @param rearRight   The rear right motor
      * @param telemetry   The telemetry
-     * @param elapsedTime       The timer for the elapsed time
+     * @param elapsedTime  The timer for the elapsed time
      */
     public Drive(DcMotorEx frontLeft, DcMotorEx frontRight, DcMotorEx rearLeft, DcMotorEx rearRight, Telemetry telemetry, ElapsedTime elapsedTime, boolean updateVTD, boolean updateWeb) {
         super(telemetry, "drive");
@@ -150,9 +150,9 @@ public class Drive extends Subsystem {
         robotCurrentPosX = 0;
         robotCurrentPosY = 0;
         if (updateVTD)
-        vtd = VisionCorrectionThreadData.getVTD();
+            vtd = VisionCorrectionThreadData.getVTD();
         if (updateWeb)
-        wtd = WebThreadData.getWtd();
+            wtd = WebThreadData.getWtd();
     }
 
     /**
@@ -223,6 +223,7 @@ public class Drive extends Subsystem {
 
     /**
      * Stops all drive motors by setting the powers to 0
+     * @see #checkAndStopMotors()
      */
     public void stop() {
         frontLeft.setPower(0);
@@ -233,6 +234,7 @@ public class Drive extends Subsystem {
 
     /**
      * Stops the motors only if they are not busy.
+     * @see #stop()
      */
     public void checkAndStopMotors() {
         if (!frontLeft.isBusy()) {
@@ -383,15 +385,7 @@ public class Drive extends Subsystem {
      * @param motorSpeed The speed, a value between 0 and 1
      */
     public void moveForwardOdometry(double distance, double motorSpeed) {
-        resetOdometry();
-        moveForward(distance, motorSpeed);
-        correctAngleOdometry();
-        if (odometryCountB * ODOMETRY_mm_PER_COUNT > 25.0) {
-            moveLeft(odometryCountB * ODOMETRY_mm_PER_COUNT);
-        }
-        if (odometryCountB * ODOMETRY_mm_PER_COUNT < -25.0) {
-            moveRight(-odometryCountB * ODOMETRY_mm_PER_COUNT);
-        }
+        moveVectorOdometry(new Vector(0, distance), 0, motorSpeed);
     }
 
     /**
@@ -432,15 +426,7 @@ public class Drive extends Subsystem {
      * @param motorSpeed The speed, a value between 0 and 1
      */
     public void moveBackwardOdometry(double distance, double motorSpeed) {
-        resetOdometry();
-        moveBackward(distance, motorSpeed);
-        correctAngleOdometry();
-        if (odometryCountB * ODOMETRY_mm_PER_COUNT > 25.0) {
-            moveLeft(odometryCountB * ODOMETRY_mm_PER_COUNT);
-        }
-        if (odometryCountB * ODOMETRY_mm_PER_COUNT < -25.0) {
-            moveRight(-odometryCountB * ODOMETRY_mm_PER_COUNT);
-        }
+        moveVectorOdometry(new Vector(0, -distance), 0, motorSpeed);
     }
 
     /**
@@ -481,16 +467,7 @@ public class Drive extends Subsystem {
      * @param motorSpeed The speed, a value between 0 and 1
      */
     public void moveLeftOdometry(double distance, double motorSpeed) {
-        resetOdometry();
-        moveLeft(distance, motorSpeed);
-        correctAngleOdometry();
-        double offsetY = (((double) odometryCountR) + ((double) odometryCountL)) * 0.5;
-        if (offsetY * ODOMETRY_mm_PER_COUNT > 25.0) {
-            moveBackward(offsetY * ODOMETRY_mm_PER_COUNT);
-        }
-        if (offsetY * ODOMETRY_mm_PER_COUNT < -25.0) {
-            moveForward(-offsetY * ODOMETRY_mm_PER_COUNT);
-        }
+        moveVectorOdometry(new Vector(-distance, 0), 0, motorSpeed);
     }
 
     /**
@@ -531,16 +508,7 @@ public class Drive extends Subsystem {
      * @param motorSpeed The speed, a value between 0 and 1
      */
     public void moveRightOdometry(double distance, double motorSpeed) {
-        resetOdometry();
-        moveRight(distance, motorSpeed);
-        correctAngleOdometry();
-        double offsetY = (((double) odometryCountR) + ((double) odometryCountL)) * 0.5;
-        if (offsetY * ODOMETRY_mm_PER_COUNT > 25.0) {
-            moveBackward(offsetY * ODOMETRY_mm_PER_COUNT);
-        }
-        if (offsetY * ODOMETRY_mm_PER_COUNT < -25.0) {
-            moveForward(-offsetY * ODOMETRY_mm_PER_COUNT);
-        }
+        moveVectorOdometry(new Vector(distance, 0), 0, motorSpeed);
     }
 
     /**
@@ -725,7 +693,6 @@ public class Drive extends Subsystem {
             double Kp,
             double Ki,
             double Kd) {
-        stop();
         setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
         setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -772,11 +739,11 @@ public class Drive extends Subsystem {
         int prevCountRR = 0;
         double currentError = 0.0;
         double currentTargetSpeedFL, currentTargetSpeedFR, currentTargetSpeedRL, currentTargetSpeedRR;
-        double currentPower = 0.0;
+        double currentPower;
         double alpha = 0.95;
         double startTime = ((double) timer.nanoseconds()) * 1.0e-9;
         double currentTime = 0.0;
-        double errorSlope = 0.0;
+        double errorSlope;
         // PID loop
         while (((!isMotorFLDone) || (!isMotorFRDone) || (!isMotorRLDone) || (!isMotorRRDone))
                 && (!isTimeOutExceeded)) {
@@ -797,7 +764,7 @@ public class Drive extends Subsystem {
                                 peakSpeed[0],
                                 rampTime,
                                 currentTime); // get the target speed on the speed profile
-                if (initialized) { // check if the motor is rotating first time runing
+                if (initialized) { // check if the motor is rotating first time running
                     // Check if moving
                     isMotorFLNotMoving = Math.abs(currentCountFL - prevCountFL) < timeOutThreshold;
                 }
@@ -855,8 +822,8 @@ public class Drive extends Subsystem {
                         // Calculate le P + I + D
                         currentPower =
                                 getCurrentPower(maxSpeed[1], Kp, Ki, Kd, acculErrorFR, currentError, currentTargetSpeedFR, errorSlope); // apply PID correction
-                    } else { // at the first point, use Kp only
-                        // Calculate only P at the first run
+                    } else { // at the first point, only use Kp
+                        // Only calculate P at the first run
                         currentPower = currentTargetSpeedFR / maxSpeed[1] - currentError * Kp;
                     }
                     // Cap the powers at 0 and 1
@@ -950,7 +917,7 @@ public class Drive extends Subsystem {
                 isTimeOutStarted = false;
                 isTimeOutExceeded = false;
             }
-            String output = "";
+            String output;
             try {
                 output = "Motor Status: " + isMotorFLDone + " " + isMotorFRDone + " " +
                         isMotorRLDone + " " + isMotorRRDone + "\nTimeout Started: " + isTimeOutStarted
@@ -1089,12 +1056,14 @@ public class Drive extends Subsystem {
 
     /**
      * Moves to the position specified by the vector.
+     * The y component is forwards/backwards and the x component in left/right
      *
      * @param v          The position to move to
+     * @param turnAngle  How much to turn by (not reliable, set to zero)
      * @param motorSpeed the peak motor speed to pass to the PID
      */
     public void moveVector(Vector v, double turnAngle, double motorSpeed) {
-        double distance = v.distance(new Vector(0, 0));
+        double distance = v.distance(Vector.ZERO);
         double angle = Math.atan2(v.getY(), v.getX()) - (Math.PI / 4.);
         int[] calcMotorDistancesTicks = new int[4];
         // Order is: FL, FR, RL, RR
@@ -1122,7 +1091,7 @@ public class Drive extends Subsystem {
         if (vtd != null)
             vtd.setTheoreticalPosition(calcBoundingBoxOfRobot(robotCurrentPosX, robotCurrentPosY));
         if (wtd != null)
-        wtd.setPosition(new Coordinate(robotCurrentPosX, robotCurrentPosY));
+            wtd.setPosition(new Coordinate(robotCurrentPosX, robotCurrentPosY));
         stop();
         logMovement();
     }
@@ -1140,9 +1109,15 @@ public class Drive extends Subsystem {
         return new BoundingBox(ConvexArea.convexPolygonFromPath(path));
     }
 
+
+    /** @see #moveVector(Vector, double, double)
+     */
     public void moveVector(Vector v) {
         moveVector(v, 0, ANGULAR_V_MAX_NEVERREST_20);
     }
+
+    /** @see #moveVector(Vector, double, double)
+     */
     public void moveVector(Vector v, double angle) {
         moveVector(v, angle, ANGULAR_V_MAX_NEVERREST_20);
     }
@@ -1173,6 +1148,7 @@ public class Drive extends Subsystem {
         if (offsetY * ODOMETRY_mm_PER_COUNT < -25.0) {
             moveForward(-offsetY * ODOMETRY_mm_PER_COUNT);
         }
+        logDriveEncoders();
     }
 
     public void moveVectorOdometry(Vector v) {
