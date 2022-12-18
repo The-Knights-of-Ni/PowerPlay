@@ -7,7 +7,6 @@ import org.apache.commons.geometry.euclidean.twod.ConvexArea;
 import org.apache.commons.geometry.euclidean.twod.Vector2D;
 import org.apache.commons.geometry.euclidean.twod.path.LinePath;
 import org.apache.commons.numbers.core.Precision;
-import org.checkerframework.checker.units.qual.C;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.DriveControl.BoundingBox;
 import org.firstinspires.ftc.teamcode.Robot;
@@ -27,7 +26,7 @@ public class Drive extends Subsystem {
     /**
      * The number of millimeters per a count in odometry
      */
-    private static final double ODOMETRY_mm_PER_COUNT = 38.85 * 3.14159265 / 8192.0;
+    private static final double ODOMETRY_mm_PER_COUNT = 38.85 * Math.PI / 8192.0;
     private static final double ODOMETRY_RADIUS_X = 201.0;
     private static final double ODOMETRY_RADIUS_Y = 178.0;
     // DO WITH ENCODERS
@@ -150,9 +149,9 @@ public class Drive extends Subsystem {
         robotCurrentPosX = 0;
         robotCurrentPosY = 0;
         if (updateVTD)
-        vtd = VisionCorrectionThreadData.getVTD();
+            vtd = VisionCorrectionThreadData.getVTD();
         if (updateWeb)
-        wtd = WebThreadData.getWtd();
+            wtd = WebThreadData.getWtd();
     }
 
     /**
@@ -813,7 +812,7 @@ public class Drive extends Subsystem {
                                 acculErrorFL * alpha
                                         + currentError * (currentTime - prevTimeFL); // integrate error
                         // Calculate le D term
-                            errorSlope = (currentError - prevErrorFL) / (currentTime - prevTimeFL); // error slope
+                        errorSlope = (currentError - prevErrorFL) / (currentTime - prevTimeFL); // error slope
                         // Calculate le P + I + D
                         currentPower = getCurrentPower(maxSpeed[0], Kp, Ki, Kd, acculErrorFL, currentError, currentTargetSpeedFL, errorSlope); // apply PID correction
                     } else { // at the first point, use Kp only at the first point when we can't do I or D
@@ -978,6 +977,7 @@ public class Drive extends Subsystem {
 
             }
         }
+        stop();
     }
 
     private static double getCurrentPower(double maxSpeed, double Kp, double Ki, double Kd, double acculErrorFR, double currentError, double currentTargetSpeedFR, double errorSlope) {
@@ -1122,7 +1122,7 @@ public class Drive extends Subsystem {
         if (vtd != null)
             vtd.setTheoreticalPosition(calcBoundingBoxOfRobot(robotCurrentPosX, robotCurrentPosY));
         if (wtd != null)
-        wtd.setPosition(new Coordinate(robotCurrentPosX, robotCurrentPosY));
+            wtd.setPosition(new Coordinate(robotCurrentPosX, robotCurrentPosY));
         stop();
         logMovement();
     }

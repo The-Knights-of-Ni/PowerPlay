@@ -19,9 +19,10 @@ public class AutoCycleBlue extends Auto {
     public void runOpMode() throws InterruptedException {
 
         initAuto(AllianceColor.BLUE);
+        telemetry.addData("cone color", robot.vision.detectConeColor());
         waitForStart();
         timer.reset();
-        robot.drive.moveVector(new Vector(24*mmPerInch, 24*mmPerInch));
+        robot.drive.moveVector(new Vector(24*mmPerInch,24*mmPerInch));
 //        while (timer.seconds() < 20) {
 //            // TODO: Insert Intake code
 //            robot.drive.moveForward(22 * mmPerInch);

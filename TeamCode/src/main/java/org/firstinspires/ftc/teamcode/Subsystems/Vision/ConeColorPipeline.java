@@ -27,13 +27,21 @@ public class ConeColorPipeline extends OpenCvPipeline {
     private ConeColor coneColor = ConeColor.OTHER;
 
     public enum ConeColor {
-        GREEN(new Scalar(70,74,12), new Scalar(111,171,138)), //TODO:Calibrate color constants
-        CYAN(new Scalar(104,97,24), new Scalar(127,152,136)),
+        GREEN(new Scalar(37,53,97), new Scalar(76,152,148)), // TODO:Calibrate color constants
+        BLUE(new Scalar(103,23,92), new Scalar(179,126,136)),
         BROWN(new Scalar(0,0,0), new Scalar(136,117,69)),
         OTHER(new Scalar(0,0,0), new Scalar(0,0,0)); //leave OTHER as is
         public final Scalar lowHSV;
         public final Scalar highHSV;
         ConeColor(Scalar lowHSV, Scalar highHSV) { this.highHSV = highHSV; this.lowHSV = lowHSV;}
+
+        @Override
+        public String toString() {
+            return "ConeColor{" +
+                    "lowHSV=" + lowHSV +
+                    ", highHSV=" + highHSV +
+                    '}';
+        }
     }
 
     /**
@@ -88,14 +96,14 @@ public class ConeColorPipeline extends OpenCvPipeline {
 
         Core.inRange(crop, ConeColor.BROWN.lowHSV, ConeColor.BROWN.highHSV, threshBrown);
         Core.inRange(crop, ConeColor.GREEN.lowHSV, ConeColor.GREEN.highHSV, threshGreen);
-        Core.inRange(crop, ConeColor.CYAN.lowHSV, ConeColor.CYAN.highHSV, threshCyan);
+        Core.inRange(crop, ConeColor.BLUE.lowHSV, ConeColor.BLUE.highHSV, threshCyan);
 
         if(Core.sumElems(threshBrown).val[0] / rectCrop.area() / 255 > 0) {
             coneColor = ConeColor.BROWN;
         } else if(Core.sumElems(threshGreen).val[0] / rectCrop.area() / 255 > 0) {
             coneColor = ConeColor.GREEN;
         } else if(Core.sumElems(threshCyan).val[0] / rectCrop.area() / 255 > 0) {
-            coneColor = ConeColor.CYAN;
+            coneColor = ConeColor.BLUE;
         } else {
             coneColor = ConeColor.OTHER;
         }
