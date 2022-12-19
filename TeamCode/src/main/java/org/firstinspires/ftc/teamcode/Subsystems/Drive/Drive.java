@@ -27,7 +27,7 @@ public class Drive extends Subsystem {
     /**
      * The number of millimeters per a count in odometry
      */
-    private static final double ODOMETRY_mm_PER_COUNT = 38.85 * 3.14159265 / 8192.0;
+    private static final double ODOMETRY_mm_PER_COUNT = 38.85 * Math.PI / 8192.0;
     private static final double ODOMETRY_RADIUS_X = 201.0;
     private static final double ODOMETRY_RADIUS_Y = 178.0;
     // DO WITH ENCODERS
@@ -48,16 +48,16 @@ public class Drive extends Subsystem {
      */
     private static final double WHEEL_DIAMETER_MM = 100.0;
     private static final double COUNTS_PER_INCH =
-            (TICKS_PER_MOTOR_REV_20 * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415);
+            (TICKS_PER_MOTOR_REV_20 * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * Math.PI);
     private static final double COUNTS_CORRECTION_X = 1.150;
     private static final double COUNTS_CORRECTION_Y = 0.9918;
     private static final double COUNTS_PER_DEGREE = 10; // 900 ticks per 90 degrees
     /**
      * Default drive speeds
      */
-    private static final double DRIVE_SPEED = 0.40;
-    private static final double DRIVE_SPEED_X = 0.35;
-    private static final double DRIVE_SPEED_Y = 0.40;
+    private static final double DRIVE_SPEED = 0.80;
+    private static final double DRIVE_SPEED_X = 0.70;
+    private static final double DRIVE_SPEED_Y = 0.80;
     /**
      * Default turn speed
      */
@@ -139,7 +139,7 @@ public class Drive extends Subsystem {
      * @param telemetry   The telemetry
      * @param elapsedTime       The timer for the elapsed time
      */
-    public Drive(DcMotorEx frontLeft, DcMotorEx frontRight, DcMotorEx rearLeft, DcMotorEx rearRight, Telemetry telemetry, ElapsedTime elapsedTime, boolean updateVTD, boolean updateWeb) {
+    public Drive(DcMotorEx frontLeft, DcMotorEx frontRight, DcMotorEx rearLeft, DcMotorEx rearRight, Telemetry telemetry, ElapsedTime elapsedTime, boolean updateVTD) {
         super(telemetry, "drive");
         this.timer = elapsedTime;
         this.frontLeft = frontLeft;
@@ -151,8 +151,6 @@ public class Drive extends Subsystem {
         robotCurrentPosY = 0;
 //        if (updateVTD)
 //        vtd = VisionCorrectionThreadData.getVTD();
-//        if (updateWeb)
-//        wtd = WebThreadData.getWtd();
     }
 
     /**
@@ -303,18 +301,6 @@ public class Drive extends Subsystem {
         double rfPower = r * Math.sin(robotAngle) - rightStickX;
         // Return the calculated powers
         return new double[]{lfPower, rfPower, lrPower, rrPower};
-    }
-
-    /**
-     * Sets the drive power to every motor
-     *
-     * @param power the power to set the motors to
-     */
-    public void setDrivePower(double power) {
-        frontLeft.setPower(power);
-        frontRight.setPower(power);
-        rearLeft.setPower(power);
-        rearRight.setPower(power);
     }
 
     /**
@@ -565,78 +551,6 @@ public class Drive extends Subsystem {
     }
 
     /**
-     * Print the motor PID coefficients to telemetry
-     */
-    public void printMotorPIDCoefficients() {
-        PIDFCoefficients pidfCoefficients;
-        pidfCoefficients = getMotorPIDCoefficients(frontLeft, DcMotor.RunMode.RUN_TO_POSITION);
-        telemetry.addData(
-                "Front Left ",
-                "P: %.2f I: %.2f D: %.2f F: %.2f A: %s",
-                pidfCoefficients.p,
-                pidfCoefficients.i,
-                pidfCoefficients.d,
-                pidfCoefficients.f,
-                pidfCoefficients.algorithm.toString());
-        pidfCoefficients = getMotorPIDCoefficients(frontRight, DcMotor.RunMode.RUN_TO_POSITION);
-        telemetry.addData(
-                "Front Right",
-                "P: %.2f I: %.2f D: %.2f F: %.2f A: %s",
-                pidfCoefficients.p,
-                pidfCoefficients.i,
-                pidfCoefficients.d,
-                pidfCoefficients.f,
-                pidfCoefficients.algorithm.toString());
-        pidfCoefficients = getMotorPIDCoefficients(rearLeft, DcMotor.RunMode.RUN_TO_POSITION);
-        telemetry.addData(
-                "Rear Left  ",
-                "P: %.2f I: %.2f D: %.2f F: %.2f A: %s",
-                pidfCoefficients.p,
-                pidfCoefficients.i,
-                pidfCoefficients.d,
-                pidfCoefficients.f,
-                pidfCoefficients.algorithm.toString());
-        pidfCoefficients = getMotorPIDCoefficients(rearRight, DcMotor.RunMode.RUN_TO_POSITION);
-        telemetry.addData(
-                "Rear Right ",
-                "P: %.2f I: %.2f D: %.2f F: %.2f A: %s",
-                pidfCoefficients.p,
-                pidfCoefficients.i,
-                pidfCoefficients.d,
-                pidfCoefficients.f,
-                pidfCoefficients.algorithm.toString());
-        telemetry.update();
-    }
-
-    public void setMotorKp(double motorKPFL, double motorKPFR, double motorKPRL, double motorKPRR) {
-        frontLeft.setPositionPIDFCoefficients(motorKPFL);
-        frontRight.setPositionPIDFCoefficients(motorKPFR);
-        rearLeft.setPositionPIDFCoefficients(motorKPRL);
-        rearRight.setPositionPIDFCoefficients(motorKPRR);
-    }
-
-    /**
-     * Sets the motor pid coefficients
-     *
-     * @param Kp
-     * @param Ki
-     * @param Kd
-     * @param Kf
-     */
-    public void setMotorPID(double Kp, double Ki, double Kd, double Kf) {
-        PIDFCoefficients pidFCoefficients = new PIDFCoefficients();
-        pidFCoefficients.p = Kp;
-        pidFCoefficients.i = Ki;
-        pidFCoefficients.d = Kd;
-        pidFCoefficients.f = Kf;
-        pidFCoefficients.algorithm = MotorControlAlgorithm.PIDF;
-        setMotorPIDCoefficients(frontLeft, DcMotor.RunMode.RUN_TO_POSITION, pidFCoefficients);
-        setMotorPIDCoefficients(frontRight, DcMotor.RunMode.RUN_TO_POSITION, pidFCoefficients);
-        setMotorPIDCoefficients(rearLeft, DcMotor.RunMode.RUN_TO_POSITION, pidFCoefficients);
-        setMotorPIDCoefficients(rearRight, DcMotor.RunMode.RUN_TO_POSITION, pidFCoefficients);
-    }
-
-    /**
      * Gets the Motor PID Coefficients
      *
      * @param motor The motor to calculate the PID Coefficients
@@ -709,7 +623,7 @@ public class Drive extends Subsystem {
     /**
      * PID motor control program to ensure all four motors are synchronized
      *
-     * @param tickCount: absolute value of target tick count of each motor
+     * @param tickCount: value of target tick count of each motor
      * @param motorPowers: peak speed of motor rotation in tick per second
      * @param rampTime:  motor speed ramp uptime/downtime in sec (the amount of time it takes for the motor to reach the desired speed)
      * @param Kp:        coefficient Kp
@@ -1102,15 +1016,16 @@ public class Drive extends Subsystem {
      * Moves to the position specified by the vector.
      *
      * @param v          The position to move to
-     * @param motorSpeed the peak motor speed to pass to the PID
+     * @param turnAngle  The angular position to move to
+     * @param motorSpeed The peak motor speed to pass to the PID, ratio from 0-1
      */
     public void moveVector(Vector v, double turnAngle, double motorSpeed) {
         Vector newV = new Vector(v.getX() * COUNTS_CORRECTION_X, v.getY() * COUNTS_CORRECTION_Y);
         double distance = Math.hypot(newV.getX(), newV.getY());
         double angle = Math.atan2(newV.getY(), newV.getX()) - (Math.PI / 4.);
         int[] calcMotorDistancesTicks = new int[4];
-        // Order is: FL, FR, RL, RR
 
+        // Order is: FL, FR, RL, RR
         calcMotorDistancesTicks[0] = (int)((distance * Math.cos(angle)) * COUNTS_PER_MM);
         calcMotorDistancesTicks[0] -= (int)(turnAngle * COUNTS_PER_DEGREE);
         calcMotorDistancesTicks[1] = (int)((distance * Math.sin(angle)) * COUNTS_PER_MM);
@@ -1119,6 +1034,7 @@ public class Drive extends Subsystem {
         calcMotorDistancesTicks[2] -= (int)(turnAngle * COUNTS_PER_DEGREE);
         calcMotorDistancesTicks[3] = (int)((distance * Math.cos(angle)) * COUNTS_PER_MM);
         calcMotorDistancesTicks[3] += (int)(turnAngle * COUNTS_PER_DEGREE);
+
         // Get largest motor dist
         double largestMotorsTicks = calcMotorDistancesTicks[0];
         for (int i = 1; i < 4; i++) {
@@ -1126,8 +1042,9 @@ public class Drive extends Subsystem {
                 largestMotorsTicks = calcMotorDistancesTicks[i];
             }
         }
+
         // Calc relative motor max powers
-        double[] calcMotorPowers = {calcMotorDistancesTicks[0] / largestMotorsTicks,
+        double[] calcMotorPowers = {calcMotorDistancesTicks[0] / largestMotorsTicks * motorSpeed,
                                     calcMotorDistancesTicks[1] / largestMotorsTicks,
                                     calcMotorDistancesTicks[2] / largestMotorsTicks,
                                     calcMotorDistancesTicks[3] / largestMotorsTicks};
@@ -1144,8 +1061,6 @@ public class Drive extends Subsystem {
         robotCurrentPosY += distance * Math.sin((robotCurrentAngle + angle) * Math.PI / 180.0);
         if (vtd != null)
             vtd.setTheoreticalPosition(calcBoundingBoxOfRobot(robotCurrentPosX, robotCurrentPosY));
-//        if (wtd != null)
-//            wtd.setPosition(new Coordinate(robotCurrentPosX, robotCurrentPosY));
         stop();
         logMovement();
     }
@@ -1164,10 +1079,10 @@ public class Drive extends Subsystem {
     }
 
     public void moveVector(Vector v) {
-        moveVector(v, 0, ANGULAR_V_MAX_NEVERREST_20);
+        moveVector(v, 0, DRIVE_SPEED);
     }
     public void moveVector(Vector v, double angle) {
-        moveVector(v, angle, ANGULAR_V_MAX_NEVERREST_20);
+        moveVector(v, angle, DRIVE_SPEED);
     }
 
 
