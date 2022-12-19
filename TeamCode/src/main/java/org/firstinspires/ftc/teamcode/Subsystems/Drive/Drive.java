@@ -783,11 +783,7 @@ public class Drive extends Subsystem {
                 currentCountFL = frontLeft.getCurrentPosition(); // get current motor tick
 
                 currentTime = ((double) timer.nanoseconds()) * 1.0e-9 - startTime; // get current time
-                targetCountFL = getTargetTickCount(
-                                tickCount[0],
-                                motorPowers[0],
-                                rampTime,
-                                currentTime); // get integrated target tick on the speed profile
+                targetCountFL = tickCount[0]; // get integrated target tick on the speed profile
                 currentTargetSpeedFL =
                         getTargetSpeed(
                                 tickCount[0],
@@ -836,7 +832,7 @@ public class Drive extends Subsystem {
             if (!isMotorFRDone) {
                 currentCountFR = frontRight.getCurrentPosition();
                 currentTime = ((double) timer.nanoseconds()) * 1.0e-9 - startTime;
-                targetCountFR = getTargetTickCount(tickCount[1], motorPowers[1], rampTime, currentTime);
+                targetCountFR = tickCount[1];
                 currentTargetSpeedFR = getTargetSpeed(tickCount[1], motorPowers[1], rampTime, currentTime);
                 if (initialized) { // check if the motor is rotating
                     isMotorFRNotMoving = Math.abs(currentCountFR - prevCountFR) < timeOutThreshold;
@@ -880,7 +876,7 @@ public class Drive extends Subsystem {
             if (!isMotorRLDone) {
                 currentCountRL = rearLeft.getCurrentPosition(); // Get current motor tick
                 currentTime = ((double) timer.nanoseconds()) * 1.0e-9 - startTime; // Get current time
-                targetCountRL = getTargetTickCount(tickCount[2], motorPowers[2], rampTime, currentTime); // Get the target count
+                targetCountRL = tickCount[2]; // Get the target count
                 currentTargetSpeedRL = getTargetSpeed(tickCount[2], motorPowers[2], rampTime, currentTime);
                 if (initialized) { // check if the motor is rotating
                     isMotorRLNotMoving = Math.abs(currentCountRL - prevCountRL) < timeOutThreshold;
@@ -917,7 +913,7 @@ public class Drive extends Subsystem {
             if (!isMotorRRDone) {
                 currentCountRR = rearRight.getCurrentPosition();
                 currentTime = ((double) timer.nanoseconds()) * 1.0e-9 - startTime;
-                targetCountRR = getTargetTickCount(tickCount[3], motorPowers[3], rampTime, currentTime);
+                targetCountRR = tickCount[3];
                 currentTargetSpeedRR = getTargetSpeed(tickCount[3], motorPowers[3], rampTime, currentTime);
                 if (initialized) { // check if the motor is rotating
                     isMotorRRNotMoving = Math.abs(currentCountRR - prevCountRR) < timeOutThreshold;
@@ -1109,8 +1105,9 @@ public class Drive extends Subsystem {
      * @param motorSpeed the peak motor speed to pass to the PID
      */
     public void moveVector(Vector v, double turnAngle, double motorSpeed) {
-        double distance = v.distance(new Vector(v.getX() * COUNTS_CORRECTION_X, v.getY() * COUNTS_CORRECTION_Y));
-        double angle = Math.atan2(v.getY(), v.getX()) - (Math.PI / 4.);
+        Vector newV = new Vector(v.getX() * COUNTS_CORRECTION_X, v.getY() * COUNTS_CORRECTION_Y);
+        double distance = Math.hypot(newV.getX(), newV.getY());
+        double angle = Math.atan2(newV.getY(), newV.getX()) - (Math.PI / 4.);
         int[] calcMotorDistancesTicks = new int[4];
         // Order is: FL, FR, RL, RR
 
@@ -1125,7 +1122,7 @@ public class Drive extends Subsystem {
         // Get largest motor dist
         double largestMotorsTicks = calcMotorDistancesTicks[0];
         for (int i = 1; i < 4; i++) {
-            if (calcMotorDistancesTicks[i] > largestMotorsTicks) {
+            if (Math.abs(calcMotorDistancesTicks[i]) > Math.abs(largestMotorsTicks)) {
                 largestMotorsTicks = calcMotorDistancesTicks[i];
             }
         }

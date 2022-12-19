@@ -21,7 +21,7 @@ public class AutoCycleBlue extends Auto {
         initAuto(AllianceColor.BLUE);
         waitForStart();
         timer.reset();
-        robot.drive.moveVector(new Vector(24, 48*mmPerInch));
+        robot.drive.moveVector(new Vector(24*mmPerInch, 48*mmPerInch));
         robot.drive.moveVector(new Vector(0*mmPerInch, 24*mmPerInch));
         robot.drive.turnByAngle(90);
 //        while (timer.seconds() < 20) {
