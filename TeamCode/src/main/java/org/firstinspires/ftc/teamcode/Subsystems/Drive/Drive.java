@@ -725,7 +725,9 @@ public class Drive extends Subsystem {
             double Kd) {
         stop();
         setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        setRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        setRunMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        setRunMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         boolean isMotorFLDone = false;
         boolean isMotorFRDone = false;
         boolean isMotorRLDone = false;
