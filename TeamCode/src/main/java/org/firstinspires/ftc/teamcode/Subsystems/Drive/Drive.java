@@ -818,7 +818,7 @@ public class Drive extends Subsystem {
                         // Calculate le P + I + D
                         currentPower = getCurrentPower(currentTargetSpeedFL, Kp, Ki, Kd, acculErrorFL, currentError, errorSlope); // apply PID correction
                     } else { // at the first point, use Kp only at the first point when we can't do I or D
-                        currentPower = motorPowers[0] + currentError * Kp;
+                        currentPower = currentError * Kp;
                     }
                     // Cap the powers at 0 and 1
                     if (currentPower > Math.abs(motorPowers[0])) currentPower = Math.abs(motorPowers[0]);
@@ -862,7 +862,7 @@ public class Drive extends Subsystem {
                                 getCurrentPower(currentTargetSpeedFR, Kp, Ki, Kd, acculErrorFR, currentError, errorSlope); // apply PID correction
                     } else { // at the first point, use Kp only
                         // Calculate only P at the first run
-                        currentPower = motorPowers[1] + currentError * Kp;
+                        currentPower = currentError * Kp;
                     }
                     // Cap the powers at 0 and 1
                     if (currentPower > Math.abs(motorPowers[1])) currentPower = Math.abs(motorPowers[1]);
@@ -902,7 +902,7 @@ public class Drive extends Subsystem {
                         errorSlope = (currentError - prevErrorRL) / (currentTime - prevTimeRL); // error slope
                         currentPower = getCurrentPower(currentTargetSpeedRL, Kp, Ki, Kd, acculErrorRL, currentError, errorSlope); // apply PID correction
                     } else { // at the first point, use Kp only
-                        currentPower = motorPowers[2] + currentError * Kp;
+                        currentPower = currentError * Kp;
                     }
                     if (currentPower > Math.abs(motorPowers[2])) currentPower = Math.abs(motorPowers[2]);
                     if (currentPower < -Math.abs(motorPowers[2])) currentPower = -Math.abs(motorPowers[2]);
@@ -939,7 +939,7 @@ public class Drive extends Subsystem {
                         errorSlope = (currentError - prevErrorRR) / (currentTime - prevTimeRR); // error slope
                         currentPower = getCurrentPower(currentTargetSpeedRR, Kp, Ki, Kd, acculErrorRR, currentError, errorSlope); // apply PID correction
                     } else { // at the first point, use Kp only
-                        currentPower = motorPowers[3] + currentError * Kp;
+                        currentPower = currentError * Kp;
                     }
                     if (currentPower > Math.abs(motorPowers[3])) currentPower = Math.abs(motorPowers[3]);
                     if (currentPower < -Math.abs(motorPowers[3])) currentPower = -Math.abs(motorPowers[3]);
@@ -996,8 +996,8 @@ public class Drive extends Subsystem {
     }
 
     private static double getCurrentPower(double maxPower, double Kp, double Ki, double Kd, double acculErrorFR, double currentError, double errorSlope) {
-        return maxPower
-                + currentError * Kp
+        return
+                currentError * Kp
                 + acculErrorFR * Ki
                 + errorSlope * Kd;
     }
@@ -1109,18 +1109,18 @@ public class Drive extends Subsystem {
      * @param motorSpeed the peak motor speed to pass to the PID
      */
     public void moveVector(Vector v, double turnAngle, double motorSpeed) {
-        double distance = v.distance(new Vector(0, 0));
+        double distance = v.distance(new Vector(v.getX() * COUNTS_CORRECTION_X, v.getY() * COUNTS_CORRECTION_Y));
         double angle = Math.atan2(v.getY(), v.getX()) - (Math.PI / 4.);
         int[] calcMotorDistancesTicks = new int[4];
         // Order is: FL, FR, RL, RR
 
-        calcMotorDistancesTicks[0] = (int)((distance * Math.cos(angle)) * COUNTS_PER_MM * COUNTS_CORRECTION_Y);
+        calcMotorDistancesTicks[0] = (int)((distance * Math.cos(angle)) * COUNTS_PER_MM);
         calcMotorDistancesTicks[0] -= (int)(turnAngle * COUNTS_PER_DEGREE);
-        calcMotorDistancesTicks[1] = (int)((distance * Math.sin(angle)) * COUNTS_PER_MM * COUNTS_CORRECTION_X);
+        calcMotorDistancesTicks[1] = (int)((distance * Math.sin(angle)) * COUNTS_PER_MM);
         calcMotorDistancesTicks[1] += (int)(turnAngle * COUNTS_PER_DEGREE);
-        calcMotorDistancesTicks[2] = (int)((distance * Math.sin(angle)) * COUNTS_PER_MM * COUNTS_CORRECTION_X);
+        calcMotorDistancesTicks[2] = (int)((distance * Math.sin(angle)) * COUNTS_PER_MM);
         calcMotorDistancesTicks[2] -= (int)(turnAngle * COUNTS_PER_DEGREE);
-        calcMotorDistancesTicks[3] = (int)((distance * Math.cos(angle)) * COUNTS_PER_MM * COUNTS_CORRECTION_Y);
+        calcMotorDistancesTicks[3] = (int)((distance * Math.cos(angle)) * COUNTS_PER_MM);
         calcMotorDistancesTicks[3] += (int)(turnAngle * COUNTS_PER_DEGREE);
         // Get largest motor dist
         double largestMotorsTicks = calcMotorDistancesTicks[0];
