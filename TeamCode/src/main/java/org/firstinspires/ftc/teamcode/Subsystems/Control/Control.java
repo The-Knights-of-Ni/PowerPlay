@@ -55,8 +55,8 @@ public class Control extends Subsystem {
     }
 
     public enum ClawAngleState {
-        CLOSED(0),
-        OPEN(0.7);
+        PICKUP(0.1),
+        DROPOFF(0.7);
 
         public final double position;
 
