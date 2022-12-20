@@ -21,7 +21,7 @@ public class Control extends Subsystem {
         HIGH(159, 1.0), //TODO: calibrate constants
         MIDDLE(135, 1.0),
         LOW(91, 1.0),
-        Pickup(0, 1.0);
+        PICKUP(0, 1.0);
 
         public final int position;
         public final double power;
@@ -45,7 +45,8 @@ public class Control extends Subsystem {
 
     public enum ArmState {
         DROPOFF(0.225),
-        PICKUP(0.025);
+        PICKUP(0.03),
+        UNFOLD(0.1);
 
         public final double position;
 
@@ -55,8 +56,9 @@ public class Control extends Subsystem {
     }
 
     public enum ClawAngleState {
-        PICKUP(0.1),
-        DROPOFF(0.7);
+        PICKUP(0.325),
+        DROPOFF(0.9),
+        RETRACTED(0);
 
         public final double position;
 
@@ -98,12 +100,31 @@ public class Control extends Subsystem {
         this.claw.setPosition(clawState.position);
     }
 
-    public void toggleArm(ArmState armState) {
+    private void toggleArm(ArmState armState) {
         this.arm.setPosition(armState.position);
     }
 
-    public void toggleClawAngle(ClawAngleState clawAngleState) {
+    private void toggleClawAngle(ClawAngleState clawAngleState) {
         this.clawAngle.setPosition(clawAngleState.position);
+    }
+
+    public void initDevices() {
+        this.extendBar(BarState.PICKUP);
+        this.toggleClaw(ClawState.CLOSED);
+        this.toggleClawAngle(ClawAngleState.RETRACTED);
+    }
+    public void unfold() {
+        this.toggleArm(ArmState.UNFOLD);
+        while(Math.abs(this.arm.getPosition() - ArmState.UNFOLD.position) > 0.001) {
+            this.toggleClawAngle(ClawAngleState.RETRACTED);
+        }
+        this.toggleClawAngle(ClawAngleState.PICKUP);
+        this.toggleArm(ArmState.PICKUP);
+        this.toggleClaw(ClawState.OPEN);
+    }
+    public void deploy() {
+        this.toggleArm(ArmState.DROPOFF);
+        this.toggleClawAngle(ClawAngleState.DROPOFF);
     }
 
 //    private void turnClawServo(double position) {
