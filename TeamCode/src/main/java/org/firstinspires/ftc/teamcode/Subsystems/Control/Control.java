@@ -34,7 +34,7 @@ public class Control extends Subsystem {
 
     public enum ClawState {
         CLOSED(0.72),
-        OPEN(0.66);
+        OPEN(0.63);
 
         public final double position;
 
@@ -44,8 +44,8 @@ public class Control extends Subsystem {
     }
 
     public enum ArmState {
-        CLOSED(0),
-        OPEN(0.7);
+        DROPOFF(0.225),
+        PICKUP(0.025);
 
         public final double position;
 

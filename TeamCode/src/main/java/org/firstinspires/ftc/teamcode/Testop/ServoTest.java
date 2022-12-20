@@ -37,17 +37,17 @@ public class ServoTest extends LinearOpMode {
         }
         waitForStart();
         while (opModeIsActive()) {
-//            if(gamepad1.a) {
-//                robot.control.toggleClaw(Control.ClawState.OPEN);
-//            }
-//            if(gamepad1.b) {
-//                robot.control.toggleClaw(Control.ClawState.CLOSED);
-//            }
+            if(gamepad1.right_bumper) {
+                robot.control.toggleClaw(Control.ClawState.OPEN);
+            }
+            if(gamepad1.left_bumper) {
+                robot.control.toggleClaw(Control.ClawState.CLOSED);
+            }
             if(gamepad1.a) {
-                robot.control.toggleArm(Control.ArmState.OPEN);
+                robot.control.toggleArm(Control.ArmState.PICKUP);
             }
             if(gamepad1.b) {
-                robot.control.toggleArm(Control.ArmState.CLOSED);
+                robot.control.toggleArm(Control.ArmState.DROPOFF);
             }
             if (gamepad1.x) {
                 robot.control.toggleClawAngle(Control.ClawAngleState.DROPOFF);
