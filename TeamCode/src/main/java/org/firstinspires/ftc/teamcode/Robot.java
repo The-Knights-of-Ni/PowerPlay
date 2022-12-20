@@ -31,6 +31,10 @@ public class Robot {
     public DcMotorEx rearRightDriveMotor;
     public DcMotorEx rearLeftDriveMotor;
     public DcMotorEx bar;
+    //Servos
+    public Servo claw;
+    public Servo clawAngle;
+    public Servo arm;
     // Odometry
     public List<LynxModule> allHubs;
     public DigitalChannel odometryRA;
@@ -158,6 +162,7 @@ public class Robot {
 
     public void init() {
         motorInit();
+        servoInit();
         Log.i(initLogTag, "motor init finished");
         subsystemInit();
     }
@@ -183,6 +188,12 @@ public class Robot {
         bar.setPower(0.0);
     }
 
+    private void servoInit() {
+        claw = hardwareMap.servo.get("claw");
+        clawAngle = hardwareMap.servo.get("clawAngle");
+        arm = hardwareMap.servo.get("arm");
+    }
+
     public void subsystemInit()
     {
         Log.d(initLogTag, "Drive subsystem init started");
@@ -190,7 +201,7 @@ public class Robot {
         Log.i(initLogTag, "Drive subsystem init finished");
 
         Log.d(initLogTag, "Control subsystem init started");
-        control = new Control(telemetry, bar);
+        control = new Control(telemetry, bar, claw, clawAngle, arm);
         Log.i(initLogTag, "Control subsystem init finished");
 
         if (visionEnabled) {

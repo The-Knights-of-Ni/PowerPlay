@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.Robot;
+import org.firstinspires.ftc.teamcode.Subsystems.Control.Control;
 import org.firstinspires.ftc.teamcode.Util.AllianceColor;
 
 import java.io.IOException;
@@ -20,7 +21,7 @@ public class ServoTest extends LinearOpMode {
         telemetry.update();
         timer = new ElapsedTime();
         HashMap<String, Boolean> flags = new HashMap<String, Boolean>();
-        flags.put("vision", true);
+        flags.put("vision", false);
         this.robot =  new Robot(hardwareMap, telemetry, timer, AllianceColor.BLUE, gamepad1, gamepad2,flags);
 
         robot.telemetryBroadcast("wait for start", "");
@@ -35,7 +36,29 @@ public class ServoTest extends LinearOpMode {
         }
         waitForStart();
         while(opModeIsActive()) {
-            robot.getGamePadInputs();
+            if(gamepad1.a) {
+                robot.control.toggleClaw(Control.ClawState.OPEN);
+            }
+            if(gamepad1.b) {
+                robot.control.toggleClaw(Control.ClawState.CLOSED);
+            }
+//            if(gamepad1.a) {
+//                robot.control.toggleArm(Control.ArmState.OPEN);
+//            }
+//            if(gamepad1.b) {
+//                robot.control.toggleArm(Control.ArmState.CLOSED);
+//            }
+//            if(gamepad1.a) {
+//                robot.control.toggleClawAngle(Control.ClawAngleState.CLOSED);
+//
+//            }
+//            if(gamepad1.b) {
+//                robot.control.toggleClawAngle(Control.ClawAngleState.OPEN);
+//            }
+            telemetry.addData("ARM", robot.arm.getPosition());
+            telemetry.addData("CLAW", robot.claw.getPosition());
+            telemetry.addData("CLAW_ANGLE", robot.clawAngle.getPosition());
+            telemetry.update();
         }
     }
 

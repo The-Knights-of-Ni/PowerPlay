@@ -20,13 +20,13 @@ public class MotorTest extends LinearOpMode {
     public void runOpMode() {
         ElapsedTime timer = new ElapsedTime();
         HashMap<String, Boolean> flags = new HashMap<String, Boolean>();
-//        flags.put("vision", true);
+        flags.put("vision", false);
         this.robot = new Robot(hardwareMap, telemetry, timer, AllianceColor.BLUE, gamepad1, gamepad2, flags);
         robot.drive.setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         waitForStart();
         while (opModeIsActive()) {
-
+            robot.getGamePadInputs();
             if(gamepad1.a) {
                 robot.control.extendBar(Control.BarState.HIGH);
             }

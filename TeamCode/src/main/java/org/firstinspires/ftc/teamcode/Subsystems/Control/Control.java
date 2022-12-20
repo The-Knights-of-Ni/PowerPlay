@@ -13,14 +13,15 @@ import org.firstinspires.ftc.teamcode.Subsystems.Subsystem;
 public class Control extends Subsystem {
 
     private DcMotorEx bar;
-    private Servo flipServo;
-    private Servo clawServo;
+    private Servo claw;
+    private Servo clawAngle;
+    private Servo arm;
 
     public enum BarState {
-        HIGH(159, 0.5), //TODO: calibrate constants
-        MIDDLE(65, 0.5),
-        LOW(13, 0.5),
-        Pickup(0, 0.5);
+        HIGH(159, 1.0), //TODO: calibrate constants
+        MIDDLE(135, 1.0),
+        LOW(91, 1.0),
+        Pickup(0, 1.0);
 
         public final int position;
         public final double power;
@@ -31,32 +32,61 @@ public class Control extends Subsystem {
         }
     }
 
-    public Control(Telemetry telemetry, DcMotorEx bar, Servo flipServo, Servo clawServo) {
-        super(telemetry, "control");
+    public enum ClawState {
+        CLOSED(0.72),
+        OPEN(0.66);
 
-        this.flipServo = flipServo;
-        this.clawServo = clawServo;
-    }
+        public final double position;
 
-    public Control(Telemetry telemetry, DcMotorEx bar) { // TODO: Delete this
-        super(telemetry, "control");
-        this.bar = bar;
-    }
-
-    public void extend4Bar(BarState position) {
-        this.extendBar(position);
-        switch (position) {
-            case LOW:
-                this.turnFlipServo(0);
-                break;
-            case MIDDLE:
-                this.turnFlipServo(1);
-                break;
-            case HIGH:
-                this.turnFlipServo(2);
-                break;
+        ClawState(double position) {
+            this.position = position;
         }
     }
+
+    public enum ArmState {
+        CLOSED(0),
+        OPEN(0.7);
+
+        public final double position;
+
+        ArmState(double position) {
+            this.position = position;
+        }
+    }
+
+    public enum ClawAngleState {
+        CLOSED(0),
+        OPEN(0.7);
+
+        public final double position;
+
+        ClawAngleState(double position) {
+            this.position = position;
+        }
+    }
+
+    public Control(Telemetry telemetry, DcMotorEx bar, Servo claw, Servo clawAngle, Servo arm) {
+        super(telemetry, "control");
+        this.bar = bar;
+        this.claw = claw;
+        this.clawAngle = clawAngle;
+        this.arm = arm;
+    }
+
+//    public void extend4Bar(BarState position) {
+//        this.extendBar(position);
+//        switch (position) {
+//            case LOW:
+//                this.turnFlipServo(0);
+//                break;
+//            case MIDDLE:
+//                this.turnFlipServo(1);
+//                break;
+//            case HIGH:
+//                this.turnFlipServo(2);
+//                break;
+//        }
+//    }
 
     public void extendBar(BarState position) {
         this.bar.setTargetPosition(position.position);
@@ -64,22 +94,30 @@ public class Control extends Subsystem {
         this.bar.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
     }
 
-    private void turnFlipServo(double position) {
-        this.flipServo.setPosition(position);
+    public void toggleClaw(ClawState clawState) {
+        this.claw.setPosition(clawState.position);
     }
 
-    private void turnClawServo(double position) {
-        this.clawServo.setPosition(position);
+    public void toggleArm(ArmState armState) {
+        this.arm.setPosition(armState.position);
     }
 
-
-    public void turn4BarWithClaw(BarState position) {
-        flipServo.setPosition(position.position);
-        if (position.position > 0.25) {
-            clawServo.setPosition(1.25 - position.position);
-        }
-        else {
-            clawServo.setPosition(0.25 - position.position);
-        }
+    public void toggleClawAngle(ClawAngleState clawAngleState) {
+        this.clawAngle.setPosition(clawAngleState.position);
     }
+
+//    private void turnClawServo(double position) {
+//        this.clawServo.setPosition(position);
+//    }
+
+
+//    public void turn4BarWithClaw(BarState position) {
+//        flipServo.setPosition(position.position);
+//        if (position.position > 0.25) {
+//            clawServo.setPosition(1.25 - position.position);
+//        }
+//        else {
+//            clawServo.setPosition(0.25 - position.position);
+//        }
+//    }
 }
