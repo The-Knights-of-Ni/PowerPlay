@@ -102,7 +102,7 @@ public class Robot {
     public Vision vision;
     public WebThread web;
     private final AllianceColor allianceColor;
-    private final boolean visionEnabled;
+    public final boolean visionEnabled;
     private final boolean webEnabled;
     private final boolean visionCorrectionEnabled;
     private final boolean odometryEnabled;
@@ -168,8 +168,8 @@ public class Robot {
         rearRightDriveMotor = (DcMotorEx) hardwareMap.dcMotor.get("rr");
 
 
-        frontRightDriveMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        rearRightDriveMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeftDriveMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        rearLeftDriveMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         frontLeftDriveMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         frontRightDriveMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
@@ -180,22 +180,13 @@ public class Robot {
     public void subsystemInit()
     {
         Log.d(initLogTag, "Drive subsystem init started");
-        drive = new Drive(frontLeftDriveMotor, frontRightDriveMotor, rearLeftDriveMotor, rearRightDriveMotor, telemetry, timer, visionCorrectionEnabled, webEnabled);
+        drive = new Drive(frontLeftDriveMotor, frontRightDriveMotor, rearLeftDriveMotor, rearRightDriveMotor, telemetry, timer, visionCorrectionEnabled);
         Log.i(initLogTag, "Drive subsystem init finished");
 
         Log.d(initLogTag, "Control subsystem init started");
         control = new Control(telemetry);
         Log.i(initLogTag, "Control subsystem init finished");
 
-        if (webEnabled) {
-            Log.d("init", "Web subsystem init started");
-            web = new WebThread(telemetry, 7000);
-            web.run();
-            Log.i("init", "Web subsystem init finished");
-        }
-        else {
-            Log.w("init", "Web subsystem init skipped");
-        }
         if (visionEnabled) {
             Log.d("init", "Vision subsystem init started");
             vision = new Vision(telemetry, hardwareMap, allianceColor, visionCorrectionEnabled);
