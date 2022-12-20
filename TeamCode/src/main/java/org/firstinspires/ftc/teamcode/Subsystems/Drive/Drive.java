@@ -66,9 +66,9 @@ public class Drive extends Subsystem {
      * Number of millimeters per an Inch
      */
     public static final double mmPerInch = 25.4;
-    private static final double motorKp = 0.015;
-    private static final double motorKi = 0.02;
-    private static final double motorKd = 0.0003;
+    private static final double motorKp = 0.01;
+    private static final double motorKi = 0;
+    private static final double motorKd = 0;
     private static final double motorRampTime = 0.3;
     private static final double DEGREES_TO_RADIANS = Math.PI/180;
     /**
@@ -751,7 +751,7 @@ public class Drive extends Subsystem {
                 if (initialized) { // check if the motor is rotating
                     isMotorFRNotMoving = Math.abs(currentCountFR - prevCountFR) < timeOutThreshold;
                 }
-                if (tickCount[1] == 0 || currentCountFL * (tickCount[1] / Math.abs(tickCount[1])) >= Math.abs(tickCount[1])) {
+                if (tickCount[1] == 0 || currentCountFR * (tickCount[1] / Math.abs(tickCount[1])) >= Math.abs(tickCount[1])) {
                     isMotorFRDone = true;
                     isMotorFRNotMoving = true;
                     frontRight.setPower(0.0);
@@ -795,7 +795,7 @@ public class Drive extends Subsystem {
                 if (initialized) { // check if the motor is rotating
                     isMotorRLNotMoving = Math.abs(currentCountRL - prevCountRL) < timeOutThreshold;
                 }
-                if (tickCount[2] == 0 || currentCountFL * (tickCount[2] / Math.abs(tickCount[2])) >= Math.abs(tickCount[2])) {
+                if (tickCount[2] == 0 || currentCountRL * (tickCount[2] / Math.abs(tickCount[2])) >= Math.abs(tickCount[2])) {
                     isMotorRLDone = true;
                     isMotorRLNotMoving = true;
                     rearLeft.setPower(0.0);
@@ -832,7 +832,7 @@ public class Drive extends Subsystem {
                 if (initialized) { // check if the motor is rotating
                     isMotorRRNotMoving = Math.abs(currentCountRR - prevCountRR) < timeOutThreshold;
                 }
-                if (tickCount[3] == 0 || currentCountFL * (tickCount[3] / Math.abs(tickCount[3])) >= Math.abs(tickCount[3])) {
+                if (tickCount[3] == 0 || currentCountRR * (tickCount[3] / Math.abs(tickCount[3])) >= Math.abs(tickCount[3])) {
                     isMotorRRDone = true;
                     isMotorRRNotMoving = true;
                     rearRight.setPower(0.0);
