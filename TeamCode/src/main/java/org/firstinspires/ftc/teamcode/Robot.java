@@ -30,6 +30,7 @@ public class Robot {
     public DcMotorEx frontRightDriveMotor;
     public DcMotorEx rearRightDriveMotor;
     public DcMotorEx rearLeftDriveMotor;
+    public DcMotorEx bar;
     // Odometry
     public List<LynxModule> allHubs;
     public DigitalChannel odometryRA;
@@ -175,6 +176,11 @@ public class Robot {
         frontRightDriveMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         rearLeftDriveMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         rearRightDriveMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+
+        bar = (DcMotorEx) hardwareMap.dcMotor.get("bar");
+        bar.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        bar.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        bar.setPower(0.0);
     }
 
     public void subsystemInit()
@@ -184,7 +190,7 @@ public class Robot {
         Log.i(initLogTag, "Drive subsystem init finished");
 
         Log.d(initLogTag, "Control subsystem init started");
-        control = new Control(telemetry);
+        control = new Control(telemetry, bar);
         Log.i(initLogTag, "Control subsystem init finished");
 
         if (visionEnabled) {

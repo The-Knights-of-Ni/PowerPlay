@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Robot;
+import org.firstinspires.ftc.teamcode.Subsystems.Control.Control;
 import org.firstinspires.ftc.teamcode.Util.AllianceColor;
 
 import java.util.HashMap;
@@ -19,17 +20,28 @@ public class MotorTest extends LinearOpMode {
     public void runOpMode() {
         ElapsedTime timer = new ElapsedTime();
         HashMap<String, Boolean> flags = new HashMap<String, Boolean>();
-        flags.put("vision", true);
+//        flags.put("vision", true);
         this.robot = new Robot(hardwareMap, telemetry, timer, AllianceColor.BLUE, gamepad1, gamepad2, flags);
         robot.drive.setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         waitForStart();
         while (opModeIsActive()) {
 
-            telemetry.addData("Position (front left)", robot.frontLeftDriveMotor.getCurrentPosition());
-            telemetry.addData("Position (front right)", robot.frontRightDriveMotor.getCurrentPosition());
-            telemetry.addData("Position (rear left)", robot.rearLeftDriveMotor.getCurrentPosition());
-            telemetry.addData("Position (rear right)", robot.rearRightDriveMotor.getCurrentPosition());
+            if(gamepad1.a) {
+                robot.control.extendBar(Control.BarState.HIGH);
+            }
+            if(gamepad1.b) {
+                robot.control.extendBar(Control.BarState.MIDDLE);
+            }
+            if(gamepad1.y) {
+                robot.control.extendBar(Control.BarState.LOW);
+            }
+//            telemetry.addData("Position (front left)", robot.frontLeftDriveMotor.getCurrentPosition());
+//            telemetry.addData("Position (front right)", robot.frontRightDriveMotor.getCurrentPosition());
+//            telemetry.addData("Position (rear left)", robot.rearLeftDriveMotor.getCurrentPosition());
+//            telemetry.addData("Position (rear right)", robot.rearRightDriveMotor.getCurrentPosition());
+
+            telemetry.addData("Position (bar)", robot.bar.getCurrentPosition());
 
             telemetry.update();
         }

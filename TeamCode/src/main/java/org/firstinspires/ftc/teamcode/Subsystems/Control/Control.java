@@ -12,14 +12,14 @@ import org.firstinspires.ftc.teamcode.Subsystems.Subsystem;
  */
 public class Control extends Subsystem {
 
-    private DcMotorEx extendBar;
+    private DcMotorEx bar;
     private Servo flipServo;
     private Servo clawServo;
 
     public enum BarState {
-        HIGH(0, 0.5), //TODO: calibrate constants
-        MIDDLE(1, 0.5),
-        LOW(2, 0.5),
+        HIGH(159, 0.5), //TODO: calibrate constants
+        MIDDLE(65, 0.5),
+        LOW(13, 0.5),
         Pickup(0, 0.5);
 
         public final int position;
@@ -31,18 +31,20 @@ public class Control extends Subsystem {
         }
     }
 
-    public Control(Telemetry telemetry, Servo flipServo, Servo clawServo) {
+    public Control(Telemetry telemetry, DcMotorEx bar, Servo flipServo, Servo clawServo) {
         super(telemetry, "control");
+
         this.flipServo = flipServo;
         this.clawServo = clawServo;
     }
 
-    public Control(Telemetry telemetry) { // TODO: Delete this
+    public Control(Telemetry telemetry, DcMotorEx bar) { // TODO: Delete this
         super(telemetry, "control");
+        this.bar = bar;
     }
 
     public void extend4Bar(BarState position) {
-        this.turn4Bar(position);
+        this.extendBar(position);
         switch (position) {
             case LOW:
                 this.turnFlipServo(0);
@@ -56,10 +58,10 @@ public class Control extends Subsystem {
         }
     }
 
-    private void turn4Bar(BarState position) {
-        this.extendBar.setTargetPosition(position.position);
-        this.extendBar.setPower(position.power);
-        this.extendBar.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    public void extendBar(BarState position) {
+        this.bar.setTargetPosition(position.position);
+        this.bar.setPower(position.power);
+        this.bar.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
     }
 
     private void turnFlipServo(double position) {
