@@ -25,8 +25,8 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.
  * @see <a href="https://github.com/OpenFTC/EasyOpenCV">EasyOpenCV</a>
  */
 public class Vision extends Subsystem {
-    public static final int CAMERA_WIDTH = 1600; // width of wanted camera resolution
-    public static final int CAMERA_HEIGHT = 1200; // height of wanted camera resolution
+    public static final int CAMERA_WIDTH = 1920; // width of wanted camera resolution
+    public static final int CAMERA_HEIGHT = 1080; // height of wanted camera resolution
     public static final int HORIZON = 100; // horizon value to tune
     public static final String WEBCAM_NAME =
             "Webcam 1"; // insert webcam name from configuration if using webcam

@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.Testop;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.Subsystems.Vision.ConeColorPipeline;
+import org.firstinspires.ftc.teamcode.Util.AllianceColor;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -27,6 +29,10 @@ public class CameraPOV extends LinearOpMode {
         camera =
                 OpenCvCameraFactory.getInstance()
                         .createWebcam(hardwareMap.get(WebcamName.class, WEBCAM_NAME), cameraMonitorViewId);
+        camera.setViewportRenderer(OpenCvCamera.ViewportRenderer.GPU_ACCELERATED);
+        // Create a detection pipeline for detecting the position
+        ConeColorPipeline pipeline = new ConeColorPipeline(AllianceColor.BLUE, CAMERA_WIDTH, CAMERA_HEIGHT);
+        camera.setPipeline(pipeline);
         camera.openCameraDeviceAsync(
                 new OpenCvCamera.AsyncCameraOpenListener() {
                     @Override
