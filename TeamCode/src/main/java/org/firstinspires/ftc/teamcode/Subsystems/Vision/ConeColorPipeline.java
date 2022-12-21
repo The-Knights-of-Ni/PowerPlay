@@ -90,15 +90,15 @@ public class ConeColorPipeline extends OpenCvPipeline {
             return input;
         }
 
-        Mat threshBrown = new Mat();
+        Mat threshMagenta = new Mat();
         Mat threshGreen = new Mat();
         Mat threshCyan = new Mat();
 
-        Core.inRange(crop, ConeColor.MAGENTA.lowHSV, ConeColor.MAGENTA.highHSV, threshBrown);
+        Core.inRange(crop, ConeColor.MAGENTA.lowHSV, ConeColor.MAGENTA.highHSV, threshMagenta);
         Core.inRange(crop, ConeColor.GREEN.lowHSV, ConeColor.GREEN.highHSV, threshGreen);
         Core.inRange(crop, ConeColor.BLUE.lowHSV, ConeColor.BLUE.highHSV, threshCyan);
 
-        if(Core.sumElems(threshBrown).val[0] / rectCrop.area() / 255 > 0) {
+        if(Core.sumElems(threshMagenta).val[0] / rectCrop.area() / 255 > 0) {
             coneColor = ConeColor.MAGENTA;
         } else if(Core.sumElems(threshGreen).val[0] / rectCrop.area() / 255 > 0) {
             coneColor = ConeColor.GREEN;
