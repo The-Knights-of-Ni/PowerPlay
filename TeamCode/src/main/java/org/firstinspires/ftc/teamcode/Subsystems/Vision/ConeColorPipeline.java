@@ -29,7 +29,7 @@ public class ConeColorPipeline extends OpenCvPipeline {
     public enum ConeColor {
         GREEN(new Scalar(37,53,97), new Scalar(76,152,148)), // TODO:Calibrate color constants
         BLUE(new Scalar(103,23,92), new Scalar(179,126,136)),
-        BROWN(new Scalar(0,0,0), new Scalar(136,117,69)),
+        MAGENTA(new Scalar(289,74,90), new Scalar(309,94,110)),
         OTHER(new Scalar(0,0,0), new Scalar(0,0,0)); //leave OTHER as is
         public final Scalar lowHSV;
         public final Scalar highHSV;
@@ -94,12 +94,12 @@ public class ConeColorPipeline extends OpenCvPipeline {
         Mat threshGreen = new Mat();
         Mat threshCyan = new Mat();
 
-        Core.inRange(crop, ConeColor.BROWN.lowHSV, ConeColor.BROWN.highHSV, threshBrown);
+        Core.inRange(crop, ConeColor.MAGENTA.lowHSV, ConeColor.MAGENTA.highHSV, threshBrown);
         Core.inRange(crop, ConeColor.GREEN.lowHSV, ConeColor.GREEN.highHSV, threshGreen);
         Core.inRange(crop, ConeColor.BLUE.lowHSV, ConeColor.BLUE.highHSV, threshCyan);
 
         if(Core.sumElems(threshBrown).val[0] / rectCrop.area() / 255 > 0) {
-            coneColor = ConeColor.BROWN;
+            coneColor = ConeColor.MAGENTA;
         } else if(Core.sumElems(threshGreen).val[0] / rectCrop.area() / 255 > 0) {
             coneColor = ConeColor.GREEN;
         } else if(Core.sumElems(threshCyan).val[0] / rectCrop.area() / 255 > 0) {
