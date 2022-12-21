@@ -6,7 +6,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.Vision.ConeColorPipeline;
 import org.firstinspires.ftc.teamcode.Util.AllianceColor;
 import org.firstinspires.ftc.teamcode.Util.Vector;
 
-@Autonomous(name = "Auto Cycle Blue")
+@Autonomous(name = "Auto Cycle Blue A5")
 public class AutoCycleBlueA5 extends Auto {
     /**
      * Override of runOpMode()
