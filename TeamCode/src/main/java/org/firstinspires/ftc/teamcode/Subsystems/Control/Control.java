@@ -100,11 +100,11 @@ public class Control extends Subsystem {
         this.claw.setPosition(clawState.position);
     }
 
-    private void toggleArm(ArmState armState) {
+    public void toggleArm(ArmState armState) {
         this.arm.setPosition(armState.position);
     }
 
-    private void toggleClawAngle(ClawAngleState clawAngleState) {
+    public void toggleClawAngle(ClawAngleState clawAngleState) {
         this.clawAngle.setPosition(clawAngleState.position);
     }
 
@@ -114,13 +114,7 @@ public class Control extends Subsystem {
         this.toggleClawAngle(ClawAngleState.RETRACTED);
     }
     public void unfold() {
-        this.toggleArm(ArmState.UNFOLD);
-        while(Math.abs(this.arm.getPosition() - ArmState.UNFOLD.position) > 0.001) {
-            this.toggleClawAngle(ClawAngleState.RETRACTED);
-        }
-        this.toggleClawAngle(ClawAngleState.PICKUP);
-        this.toggleArm(ArmState.PICKUP);
-        this.toggleClaw(ClawState.OPEN);
+        new UnfoldThread(this).start();
     }
     public void deploy() {
         this.toggleArm(ArmState.DROPOFF);
