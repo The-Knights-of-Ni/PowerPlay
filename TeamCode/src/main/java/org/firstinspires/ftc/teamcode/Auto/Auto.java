@@ -54,7 +54,6 @@ public class Auto extends LinearOpMode {
             telemetry.addData("Waiting for start", "");
             telemetry.update();
         } catch (Exception ioException) {
-//            telemetry.addData("ERROR: ", );
             telemetry.addData("ERROR: ", "IO EXCEPTION", ioException);
             telemetry.update();
             Log.e("main", "fatal error IO EXCEPTION", ioException);

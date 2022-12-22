@@ -126,7 +126,6 @@ public class Drive extends Subsystem {
 
     private long startTime;
 
-    private VisionCorrectionThreadData vtd;
     private WebThreadData wtd;
 
     /**
@@ -139,7 +138,7 @@ public class Drive extends Subsystem {
      * @param telemetry   The telemetry
      * @param elapsedTime       The timer for the elapsed time
      */
-    public Drive(DcMotorEx frontLeft, DcMotorEx frontRight, DcMotorEx rearLeft, DcMotorEx rearRight, Telemetry telemetry, ElapsedTime elapsedTime, boolean updateVTD, boolean updateWeb) {
+    public Drive(DcMotorEx frontLeft, DcMotorEx frontRight, DcMotorEx rearLeft, DcMotorEx rearRight, Telemetry telemetry, ElapsedTime elapsedTime, boolean updateWeb) {
         super(telemetry, "drive");
         this.timer = elapsedTime;
         this.frontLeft = frontLeft;
@@ -149,8 +148,6 @@ public class Drive extends Subsystem {
         setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robotCurrentPosX = 0;
         robotCurrentPosY = 0;
-        if (updateVTD)
-        vtd = VisionCorrectionThreadData.getVTD();
         if (updateWeb)
         wtd = WebThreadData.getWtd();
     }
@@ -1119,10 +1116,8 @@ public class Drive extends Subsystem {
                 motorKd);
         robotCurrentPosX += distance * Math.cos((robotCurrentAngle + angle) * Math.PI / 180.0);
         robotCurrentPosY += distance * Math.sin((robotCurrentAngle + angle) * Math.PI / 180.0);
-        if (vtd != null)
-            vtd.setTheoreticalPosition(calcBoundingBoxOfRobot(robotCurrentPosX, robotCurrentPosY));
         if (wtd != null)
-        wtd.setPosition(new Coordinate(robotCurrentPosX, robotCurrentPosY));
+            wtd.setPosition(new Coordinate(robotCurrentPosX, robotCurrentPosY));
         stop();
         logMovement();
     }

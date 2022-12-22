@@ -180,7 +180,7 @@ public class Robot {
     public void subsystemInit()
     {
         Log.d(initLogTag, "Drive subsystem init started");
-        drive = new Drive(frontLeftDriveMotor, frontRightDriveMotor, rearLeftDriveMotor, rearRightDriveMotor, telemetry, timer, visionCorrectionEnabled, webEnabled);
+        drive = new Drive(frontLeftDriveMotor, frontRightDriveMotor, rearLeftDriveMotor, rearRightDriveMotor, telemetry, timer, webEnabled);
         Log.i(initLogTag, "Drive subsystem init finished");
 
         Log.d(initLogTag, "Control subsystem init started");
@@ -188,18 +188,18 @@ public class Robot {
         Log.i(initLogTag, "Control subsystem init finished");
 
         if (webEnabled) {
-            Log.d("init", "Web subsystem init started");
+            Log.d(initLogTag, "Web subsystem init started");
             web = new WebThread(telemetry, 7000);
             web.run();
-            Log.i("init", "Web subsystem init finished");
+            Log.i(initLogTag, "Web subsystem init finished");
         }
         else {
-            Log.w("init", "Web subsystem init skipped");
+            Log.w(initLogTag, "Web subsystem init skipped");
         }
         if (visionEnabled) {
-            Log.d("init", "Vision subsystem init started");
+            Log.d(initLogTag, "Vision subsystem init started");
             vision = new Vision(telemetry, hardwareMap, allianceColor, visionCorrectionEnabled);
-            Log.i("init", "Vision subsystem init finished");
+            Log.i(initLogTag, "Vision subsystem init finished");
         }
         else {
             Log.w(initLogTag, "Vision subsystem init skipped");
