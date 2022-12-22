@@ -87,7 +87,8 @@ public class VisionCorrectionThread implements Runnable {
                 .append(Vector2D.of(96*mmPerInch+9, 18))
                 .append(Vector2D.of(96*mmPerInch+9, 0))
                 .build(true); // build the path, ending it with the starting point
-        BoundingBox theoreticalPosition = new BoundingBox(ConvexArea.convexPolygonFromPath(path));
-        vtd.setTheoreticalPosition(theoreticalPosition);
+        BoundingBox actualPosition = new BoundingBox(ConvexArea.convexPolygonFromPath(path));
+        BoundingBox theoreticalPosition = vtd.getTheoreticalPosition();
+        vtd.setCorrectionVector(theoreticalPosition.distanceFrom(actualPosition));
     }
 }
