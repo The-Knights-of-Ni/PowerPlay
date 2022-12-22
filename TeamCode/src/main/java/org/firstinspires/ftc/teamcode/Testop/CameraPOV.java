@@ -18,6 +18,7 @@ public class CameraPOV extends LinearOpMode {
     public static final int CAMERA_HEIGHT = 1080; // height of wanted camera resolution
     public static final String WEBCAM_NAME = "Webcam 1";
     private OpenCvCamera camera;
+    private ConeColorPipeline pipeline;
 
     private void initCamera() {
         int cameraMonitorViewId =
@@ -31,7 +32,7 @@ public class CameraPOV extends LinearOpMode {
                         .createWebcam(hardwareMap.get(WebcamName.class, WEBCAM_NAME), cameraMonitorViewId);
         camera.setViewportRenderer(OpenCvCamera.ViewportRenderer.GPU_ACCELERATED);
         // Create a detection pipeline for detecting the position
-        ConeColorPipeline pipeline = new ConeColorPipeline(AllianceColor.BLUE, CAMERA_WIDTH, CAMERA_HEIGHT);
+        pipeline = new ConeColorPipeline(AllianceColor.BLUE, CAMERA_WIDTH, CAMERA_HEIGHT);
         camera.setPipeline(pipeline);
         camera.openCameraDeviceAsync(
                 new OpenCvCamera.AsyncCameraOpenListener() {
@@ -53,5 +54,9 @@ public class CameraPOV extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         initCamera();
         waitForStart();
+        while(opModeIsActive()) {
+            telemetry.addData("Cone Color", pipeline.getConeColor().color);
+            telemetry.update();
+        }
     }
 }
