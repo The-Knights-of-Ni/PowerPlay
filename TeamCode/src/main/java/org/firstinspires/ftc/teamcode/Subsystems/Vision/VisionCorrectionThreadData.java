@@ -7,7 +7,6 @@ public class VisionCorrectionThreadData {
     private static VisionCorrectionThreadData vtd;
     private static Vector correctionVector;
 
-    private static BoundingBox theoreticalPosition;
     private static boolean close = false;
 
     public static VisionCorrectionThreadData getVTD() {
@@ -28,13 +27,5 @@ public class VisionCorrectionThreadData {
 
     public void setClose(boolean newClose) {
         vtd.close = newClose;
-    }
-
-    public BoundingBox getTheoreticalPosition() {
-        return theoreticalPosition;
-    }
-
-    public void setTheoreticalPosition(BoundingBox newPosition) {
-        vtd.theoreticalPosition = newPosition;
     }
 }

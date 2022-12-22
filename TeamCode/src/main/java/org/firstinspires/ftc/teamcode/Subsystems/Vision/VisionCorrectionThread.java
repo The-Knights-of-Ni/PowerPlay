@@ -80,15 +80,6 @@ public class VisionCorrectionThread implements Runnable {
         }
         Rect pole = poles.get(0);
         Vector offset = new Vector(pole.x + (pole.width/2), pole.y - (pole.height/2));
-        Precision.DoubleEquivalence precision = Precision.doubleEquivalenceOfEpsilon(1e-6);
-        LinePath path = LinePath.builder(precision)
-                .append(Vector2D.of(96*mmPerInch-9, 0))
-                .append(Vector2D.of(96*mmPerInch-9, 18))
-                .append(Vector2D.of(96*mmPerInch+9, 18))
-                .append(Vector2D.of(96*mmPerInch+9, 0))
-                .build(true); // build the path, ending it with the starting point
-        BoundingBox actualPosition = new BoundingBox(ConvexArea.convexPolygonFromPath(path));
-        BoundingBox theoreticalPosition = vtd.getTheoreticalPosition();
-        vtd.setCorrectionVector(theoreticalPosition.distanceFrom(actualPosition));
+        vtd.setCorrectionVector(offset);
     }
 }

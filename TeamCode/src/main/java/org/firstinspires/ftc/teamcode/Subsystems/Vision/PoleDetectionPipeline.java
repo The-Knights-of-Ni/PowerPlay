@@ -22,9 +22,7 @@ import java.util.List;
  * @see Vision
  */
 public class PoleDetectionPipeline extends OpenCvPipeline {
-    private final AllianceColor allianceColor;
-    private final int CAMERA_WIDTH;
-    private final int CAMERA_HEIGHT;
+    MatOfRect poles;
 
     /**
      * Class instantiation
@@ -33,10 +31,7 @@ public class PoleDetectionPipeline extends OpenCvPipeline {
      * @see Telemetry
      * @see AllianceColor
      */
-    public PoleDetectionPipeline(AllianceColor allianceColor, int width, int height) {
-        this.allianceColor = allianceColor;
-        this.CAMERA_WIDTH = width;
-        this.CAMERA_HEIGHT = height;
+    public PoleDetectionPipeline() {
     }
 
     @Override
@@ -49,8 +44,12 @@ public class PoleDetectionPipeline extends OpenCvPipeline {
         Imgproc.cvtColor(input, frameGray, Imgproc.COLOR_BGR2GRAY);
         Imgproc.equalizeHist(frameGray, frameGray);
         // -- Detect faces
-        MatOfRect poles = new MatOfRect();
+        poles = new MatOfRect();
         poleCascade.detectMultiScale(frameGray, poles);
         return frameGray;
+    }
+
+    public List<Rect> getPoles() {
+        return poles.toList();
     }
 }
