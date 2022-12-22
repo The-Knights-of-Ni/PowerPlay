@@ -4,11 +4,16 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.Util.AllianceColor;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint;
+import org.opencv.core.MatOfPoint2f;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Core;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This pipeline detects where the cone is.
@@ -26,11 +31,12 @@ public class ConeColorPipeline extends OpenCvPipeline {
     private final int CAMERA_HEIGHT;
     private ConeColor coneColor = ConeColor.OTHER;
 
+
     /**
      * The cone color with the hsv constants
      */
     public enum ConeColor {
-        GREEN(new Scalar(37,53,97), new Scalar(76,152,148)), // TODO:Calibrate color constants for Magenta
+        GREEN(new Scalar(50,100,20), new Scalar(100,255,255)), // TODO:Calibrate color constants for Magenta
         BLUE(new Scalar(103,23,92), new Scalar(179,126,136)),
         MAGENTA(new Scalar(289,74,90), new Scalar(309,94,110)),
         OTHER(new Scalar(0,0,0), new Scalar(0,0,0)); //leave OTHER as is
@@ -82,36 +88,90 @@ public class ConeColorPipeline extends OpenCvPipeline {
      */
     @Override
     public Mat processFrame(Mat input) {
+//        Mat mask = new Mat();
+//        Imgproc.cvtColor(input, mask, Imgproc.COLOR_RGB2HSV);
+//
+//        Rect rectCrop = new Rect(480, 270, 960, 540); //TODO: Calibrate crop constants if necessary
+//        Mat crop = new Mat(mask, rectCrop);
+//
+//
+//        if (crop.empty()) {
+//            return input;
+//        }
+//
+//        Mat threshMagenta = new Mat();
+//        Mat threshGreen = new Mat();
+//        Mat threshCyan = new Mat();
+//
+////        Core.inRange(crop, ConeColor.MAGENTA.lowHSV, ConeColor.MAGENTA.highHSV, threshMagenta);
+//        Core.inRange(crop, ConeColor.GREEN.lowHSV, ConeColor.GREEN.highHSV, threshGreen);
+////        Core.inRange(cr op, ConeColor.BLUE.lowHSV, ConeColor.BLUE.highHSV, threshCyan);
+//
+////        if(Core.sumElems(threshMagenta).val[0] / rectCrop.area() / 255 > 0) {
+////            coneColor = ConeColor.MAGENTA;
+////        } else if(Core.sumElems(threshGreen).val[0] / rectCrop.area() / 255 > 0) {
+//        if(Core.sumElems(threshGreen).val[0] / rectCrop.area() / 255 > 0) {
+//            coneColor = ConeColor.GREEN;
+////        } else if(Core.sumElems(threshCyan).val[0] / rectCrop.area() / 255 > 0) {
+////            coneColor = ConeColor.BLUE;
+//        } else {
+//            coneColor = ConeColor.OTHER;
+//        }
+//        return threshGreen;
+
         Mat mask = new Mat();
         Imgproc.cvtColor(input, mask, Imgproc.COLOR_RGB2HSV);
 
-        Rect rectCrop = new Rect(480, 270, 960, 540); //TODO: Calibrate crop constants if necessary
-        Mat crop = new Mat(mask, rectCrop);
 
-
-        if (crop.empty()) {
+        if(mask.empty()) {
+            coneColor = ConeColor.OTHER;
             return input;
         }
 
-        Mat threshMagenta = new Mat();
-        Mat threshGreen = new Mat();
-        Mat threshCyan = new Mat();
+        Scalar lowHSV = ConeColor.GREEN.lowHSV;
+        Scalar highHSV = ConeColor.GREEN.highHSV;
+        Mat thresh = new Mat();
 
-//        Core.inRange(crop, ConeColor.MAGENTA.lowHSV, ConeColor.MAGENTA.highHSV, threshMagenta);
-        Core.inRange(crop, ConeColor.GREEN.lowHSV, ConeColor.GREEN.highHSV, threshGreen);
-//        Core.inRange(crop, ConeColor.BLUE.lowHSV, ConeColor.BLUE.highHSV, threshCyan);
+        Core.inRange(mask, lowHSV, highHSV, thresh);
 
-//        if(Core.sumElems(threshMagenta).val[0] / rectCrop.area() / 255 > 0) {
-//            coneColor = ConeColor.MAGENTA;
-//        } else if(Core.sumElems(threshGreen).val[0] / rectCrop.area() / 255 > 0) {
-        if(Core.sumElems(threshGreen).val[0] / rectCrop.area() / 255 > 0) {
-            coneColor = ConeColor.GREEN;
-//        } else if(Core.sumElems(threshCyan).val[0] / rectCrop.area() / 255 > 0) {
-//            coneColor = ConeColor.BLUE;
-        } else {
-            coneColor = ConeColor.OTHER;
+        Mat edges = new Mat();
+        Imgproc.Canny(thresh, edges, 100, 300);
+
+        List<MatOfPoint> contours = new ArrayList<>();
+        Mat hierarchy = new Mat();
+        Imgproc.findContours(edges, contours, hierarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
+
+        MatOfPoint2f[] contoursPoly = new MatOfPoint2f[contours.size()];
+        Rect[] boundRect = new Rect[contours.size()];
+
+        for(int i = 0; i < contours.size(); i++) {
+            contoursPoly[i] = new MatOfPoint2f();
+            Imgproc.approxPolyDP(new MatOfPoint2f(contours.get(i).toArray()), contoursPoly[i], 3, true);
+            boundRect[i] = Imgproc.boundingRect(new MatOfPoint(contoursPoly[i].toArray()));
+//            Imgproc.contourArea(contoursPoly[i]); // TODO Maybe implement contour area check for next tourney
         }
-        return threshGreen;
+
+        double left_x = 0.375 * CAMERA_WIDTH;
+        double right_x = 0.625 * CAMERA_WIDTH;
+
+        boolean left = false;
+        boolean middle = false;
+        boolean right = false;
+
+        for(int i = 0; i != boundRect.length; i++) {
+            int midpoint = boundRect[i].x + boundRect[i].width/2;
+            if (midpoint < left_x)
+                left = true;
+            if (left_x <= midpoint && midpoint <= right_x)
+                middle = true;
+            if (right_x < midpoint)
+                right = true;
+        }
+        if(left) coneColor = ConeColor.BLUE;
+        if(middle) coneColor = ConeColor.GREEN;
+        if(right) coneColor = ConeColor.MAGENTA;
+
+        return thresh;
     }
 
     /**
