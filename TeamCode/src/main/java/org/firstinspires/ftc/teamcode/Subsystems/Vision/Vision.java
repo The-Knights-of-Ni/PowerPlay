@@ -17,6 +17,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
+import static org.firstinspires.ftc.teamcode.Subsystems.Drive.Drive.mmPerInch;
 
 /**
  * The Vision Subsystem
@@ -37,7 +38,6 @@ public class Vision extends Subsystem {
     // Since ImageTarget trackable use mm to specify their dimensions, we must use mm for all the
     // physical dimension.
     // Define constants
-    private static final double mmPerInch = 25.4;
     // Define where camera is in relation to center of robot in inches
     final static double CAMERA_FORWARD_DISPLACEMENT = 6.0f * mmPerInch; // TODO: CALIBRATE WHEN ROBOT IS BUILT
     final static double CAMERA_VERTICAL_DISPLACEMENT = 6.5f * mmPerInch;
@@ -82,7 +82,7 @@ public class Vision extends Subsystem {
         telemetry.update();
         if (visionCorrectionEnabled) {
             WebcamName webcamName = hardwareMap.get(WebcamName.class, WEBCAM_NAME);
-            visionCorrectionThread = new VisionCorrectionThread(webcamName);
+            visionCorrectionThread = new VisionCorrectionThread(webcamName, hardwareMap);
         }
     }
 
