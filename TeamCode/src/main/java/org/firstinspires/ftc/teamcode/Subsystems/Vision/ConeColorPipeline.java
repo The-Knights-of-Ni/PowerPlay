@@ -93,6 +93,7 @@ public class ConeColorPipeline extends OpenCvPipeline {
         Mat mask = new Mat();
         Imgproc.cvtColor(input, mask, Imgproc.COLOR_RGB2HSV);
 
+        // Find all pixels within given threshold color values
         Mat threshMagenta = new Mat();
         Mat threshGreen = new Mat();
         Mat threshCyan = new Mat();
@@ -101,6 +102,7 @@ public class ConeColorPipeline extends OpenCvPipeline {
         Core.inRange(mask, ConeColor.GREEN.lowHSV, ConeColor.GREEN.highHSV, threshGreen);
         Core.inRange(mask, ConeColor.BLUE.lowHSV, ConeColor.BLUE.highHSV, threshCyan);
 
+        // Select the mat which has the most white pixels
         double magentaSum = Core.sumElems(threshMagenta).val[0] / (CAMERA_HEIGHT*CAMERA_WIDTH) / 255;
         double greenSum = Core.sumElems(threshGreen).val[0] / (CAMERA_HEIGHT*CAMERA_WIDTH) / 255;
         double cyanSum = Core.sumElems(threshCyan).val[0] / (CAMERA_HEIGHT * CAMERA_WIDTH) / 255;
@@ -116,6 +118,8 @@ public class ConeColorPipeline extends OpenCvPipeline {
         } else {
             coneColor = ConeColor.OTHER;
         }
+
+        // Return whichever mat is desired to be viewed on Camera Stream
         return threshGreen;
     }
 

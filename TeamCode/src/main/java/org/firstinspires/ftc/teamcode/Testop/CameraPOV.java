@@ -54,10 +54,6 @@ public class CameraPOV extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         initCamera();
         waitForStart();
-//
-//        do {
-//            color = pipeline.getConeColor();
-//        } while(color == ConeColorPipeline.ConeColor.OTHER);
 
         while(opModeIsActive()) {
             telemetry.addData("Cone Color", pipeline.getConeColor().color);
