@@ -37,7 +37,8 @@ public class ConeColorPipeline extends OpenCvPipeline {
      */
     public enum ConeColor {
         GREEN(new Scalar(50,100,20), new Scalar(100,255,255), "Green"), // TODO:Calibrate color constants for Magenta
-        BLUE(new Scalar(103,23,92), new Scalar(179,126,136), "Blue"),
+//        BLUE(new Scalar(103,23,92), new Scalar(179,126,136), "Blue"),
+        BLUE(new Scalar(20, 100, 100), new Scalar(30, 255, 255), "Duck"),
         MAGENTA(new Scalar(289,74,90), new Scalar(309,94,110), "Magenta"),
         OTHER(new Scalar(0,0,0), new Scalar(0,0,0), "Other"); //leave OTHER as is
         public final Scalar lowHSV;
@@ -100,16 +101,20 @@ public class ConeColorPipeline extends OpenCvPipeline {
         Core.inRange(mask, ConeColor.GREEN.lowHSV, ConeColor.GREEN.highHSV, threshGreen);
         Core.inRange(mask, ConeColor.BLUE.lowHSV, ConeColor.BLUE.highHSV, threshCyan);
 
-        if(Core.sumElems(threshMagenta).val[0] / (CAMERA_HEIGHT*CAMERA_WIDTH) / 255 > 0) {
-            coneColor = ConeColor.MAGENTA;
-        } else if(Core.sumElems(threshGreen).val[0] / (CAMERA_HEIGHT*CAMERA_WIDTH) / 255 > 0) {
-            if (Core.sumElems(threshGreen).val[0] / (CAMERA_HEIGHT * CAMERA_WIDTH) / 255 > 0) {
+        double magentaSum = Core.sumElems(threshMagenta).val[0] / (CAMERA_HEIGHT*CAMERA_WIDTH) / 255;
+        double greenSum = Core.sumElems(threshGreen).val[0] / (CAMERA_HEIGHT*CAMERA_WIDTH) / 255;
+        double cyanSum = Core.sumElems(threshCyan).val[0] / (CAMERA_HEIGHT * CAMERA_WIDTH) / 255;
+
+        if(magentaSum > 0 || greenSum > 0 || cyanSum > 0) {
+            if(magentaSum >= greenSum && magentaSum >= cyanSum) {
+                coneColor = ConeColor.MAGENTA;
+            } else if(greenSum >= cyanSum) {
                 coneColor = ConeColor.GREEN;
-            } else if (Core.sumElems(threshCyan).val[0] / (CAMERA_HEIGHT * CAMERA_WIDTH) / 255 > 0) {
-                coneColor = ConeColor.BLUE;
             } else {
-                coneColor = ConeColor.OTHER;
+                coneColor = ConeColor.BLUE;
             }
+        } else {
+            coneColor = ConeColor.OTHER;
         }
         return threshGreen;
     }
