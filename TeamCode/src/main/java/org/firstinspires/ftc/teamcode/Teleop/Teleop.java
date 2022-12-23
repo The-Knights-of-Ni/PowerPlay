@@ -32,9 +32,6 @@ public class Teleop extends LinearOpMode {
         telemetry.update();
     }
 
-    private void initDevices() {
-    }
-
     /**
      * Override of runOpMode()
      *
@@ -52,9 +49,6 @@ public class Teleop extends LinearOpMode {
         }
 
         ElapsedTime timer = new ElapsedTime();
-
-
-        initDevices();
 
         waitForStart();
 
@@ -90,6 +84,9 @@ public class Teleop extends LinearOpMode {
             //Toggle drive power
             if (robot.yButton && !robot.isyButtonPressedPrev){
                 driveHighPower = !driveHighPower;
+            }
+            else if (robot.xButton && !robot.isxButtonPressedPrev){
+                robot.drive.correctOD();
             }
         }
     }

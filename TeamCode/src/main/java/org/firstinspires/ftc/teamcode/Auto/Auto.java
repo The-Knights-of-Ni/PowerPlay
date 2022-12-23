@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.Robot;
-import org.firstinspires.ftc.teamcode.Subsystems.Vision.Vision;
 import org.firstinspires.ftc.teamcode.Util.AllianceColor;
 
 import java.util.HashMap;
@@ -29,7 +28,7 @@ import java.util.HashMap;
 
 @Autonomous(name = "Auto", group = "Concept")
 @Disabled
-public class Auto extends LinearOpMode {
+public abstract class Auto extends LinearOpMode {
 
     /**
      * Number of millimeters per an inch
@@ -60,17 +59,5 @@ public class Auto extends LinearOpMode {
 
             stop();
         }
-    }
-
-    /**
-     * Override of runOpMode()
-     *
-     * <p>Please do not swallow the InterruptedException, as it is used in cases where the op mode
-     * needs to be terminated early.</p>
-     *
-     * @see com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
-     */
-    @Override
-    public void runOpMode() throws InterruptedException {
     }
 }

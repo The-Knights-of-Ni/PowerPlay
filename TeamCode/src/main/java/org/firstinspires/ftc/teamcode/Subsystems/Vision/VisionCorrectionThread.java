@@ -2,14 +2,8 @@ package org.firstinspires.ftc.teamcode.Subsystems.Vision;
 
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import org.apache.commons.geometry.euclidean.twod.ConvexArea;
 
-import org.apache.commons.geometry.euclidean.twod.Vector2D;
-import org.apache.commons.geometry.euclidean.twod.path.LinePath;
-import org.apache.commons.numbers.core.Precision;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-
-import org.firstinspires.ftc.teamcode.DriveControl.BoundingBox;
 
 import org.firstinspires.ftc.teamcode.Util.Vector;
 import org.opencv.core.Rect;
@@ -21,12 +15,10 @@ import android.util.Log;
 
 import java.util.List;
 
-import static org.firstinspires.ftc.teamcode.Subsystems.Drive.Drive.mmPerInch;
 import static org.firstinspires.ftc.teamcode.Subsystems.Vision.Vision.*;
 
 
 public class VisionCorrectionThread implements Runnable {
-    private final VisionCorrectionThreadData vtd = VisionCorrectionThreadData.getVTD();
     private static final String TAG = "Vision Correction";
     private final WebcamName cameraName;
     private OpenCvCamera camera;
@@ -79,7 +71,6 @@ public class VisionCorrectionThread implements Runnable {
             Log.e(TAG, "Pole Detection Failed");
         }
         Rect pole = poles.get(0);
-        Vector offset = new Vector(pole.x + (pole.width/2), pole.y - (pole.height/2));
-        vtd.setCorrectionVector(offset);
+        VisionCorrectionThreadData.correctionVector = new Vector(pole.x + (pole.width/2), pole.y - (pole.height/2));
     }
 }

@@ -7,7 +7,6 @@ import org.apache.commons.geometry.euclidean.twod.ConvexArea;
 import org.apache.commons.geometry.euclidean.twod.Vector2D;
 import org.apache.commons.geometry.euclidean.twod.path.LinePath;
 import org.apache.commons.numbers.core.Precision;
-import org.checkerframework.checker.units.qual.C;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.DriveControl.BoundingBox;
 import org.firstinspires.ftc.teamcode.Robot;
@@ -24,6 +23,7 @@ import java.util.Locale;
  * Mecanum drivetrain subsystem
  */
 public class Drive extends Subsystem {
+    public static final double mmPerInch = 25.4;
     /**
      * The number of millimeters per a count in odometry
      */
@@ -42,11 +42,12 @@ public class Drive extends Subsystem {
     private static final double COUNTS_PER_MM =
             (MOTOR_TICK_PER_REV_YELLOW_JACKET_312 * DRIVE_GEAR_REDUCTION)
                     / (GOBUILDA_MECANUM_DIAMETER_MM * Math.PI);
-    private static final double WHEEL_DIAMETER_INCHES = 100.0 / 25.4; // For calculating circumference
     /**
      * Wheel Diameter MM
      */
     private static final double WHEEL_DIAMETER_MM = 100.0;
+    private static final double WHEEL_DIAMETER_INCHES = WHEEL_DIAMETER_MM / mmPerInch; // For calculating circumference
+
     private static final double COUNTS_PER_INCH =
             (TICKS_PER_MOTOR_REV_20 * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415);
     private static final double COUNTS_CORRECTION_X = 1.150;
@@ -65,12 +66,10 @@ public class Drive extends Subsystem {
     /**
      * Number of millimeters per an Inch
      */
-    public static final double mmPerInch = 25.4;
     private static final double motorKp = 0.015;
     private static final double motorKi = 0.02;
     private static final double motorKd = 0.0003;
     private static final double motorRampTime = 0.3;
-    private static final double DEGREES_TO_RADIANS = Math.PI/180;
     /**
      * DC Motor front left
      */
@@ -124,8 +123,6 @@ public class Drive extends Subsystem {
     private int odometryCountR = 0;
     private int odometryCountB = 0;
 
-    private long startTime;
-
     private WebThreadData wtd;
 
     /**
@@ -149,7 +146,7 @@ public class Drive extends Subsystem {
         robotCurrentPosX = 0;
         robotCurrentPosY = 0;
         if (updateWeb)
-        wtd = WebThreadData.getWtd();
+            wtd = WebThreadData.getWtd();
     }
 
     /**
@@ -675,33 +672,6 @@ public class Drive extends Subsystem {
         motorControllerEx.setPIDFCoefficients(motorIndex, mode, pidfCoefficients);
     }
 
-    /**
-     * Logs the drive encoder results to logcat
-     */
-    public void logDriveEncoders() {
-        int currentCountFL = frontLeft.getCurrentPosition();
-        double currentTimeFL = ((double) (timer.nanoseconds() - startTime)) * 1.0e-6;
-        int currentCountFR = frontRight.getCurrentPosition();
-        double currentTimeFR = ((double) (timer.nanoseconds() - startTime)) * 1.0e-6;
-        int currentCountRL = rearLeft.getCurrentPosition();
-        double currentTimeRL = ((double) (timer.nanoseconds() - startTime)) * 1.0e-6;
-        int currentCountRR = rearRight.getCurrentPosition();
-        double currentTimeRR = ((double) (timer.nanoseconds() - startTime)) * 1.0e-6;
-        String output =
-                String.format(
-                        Locale.US,
-                        "FL %.3f, %d, FR %.3f %d, RL %.3f %d, RR %.3f %d",
-                        currentTimeFL,
-                        currentCountFL,
-                        currentTimeFR,
-                        currentCountFR,
-                        currentTimeRL,
-                        currentCountRL,
-                        currentTimeRR,
-                        currentCountRR);
-        Log.d(TAG, output);
-    }
-
 
     /**
      * PID motor control program to ensure all four motors are synchronized
@@ -913,7 +883,7 @@ public class Drive extends Subsystem {
                     isMotorRRDone = true;
                     isMotorRRNotMoving = true;
                     currentPower = 0.0;
-                    rearRight.setPower(0.0);
+                    rearRight.setPower(currentPower);
                 } else {
                     if (initialized) { // after the first point, the previous data is valid
                         acculErrorRR =
@@ -1177,4 +1147,8 @@ public class Drive extends Subsystem {
         moveVectorOdometry(v, angle, ANGULAR_V_MAX_NEVERREST_20);
     }
 
+    public void correctOD() {
+        moveVector(VisionCorrectionThreadData.correctionVector);
+        VisionCorrectionThreadData.correctionVector = Vector.ZERO;
+    }
 }

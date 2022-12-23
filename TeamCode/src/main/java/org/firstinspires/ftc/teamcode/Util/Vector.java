@@ -4,6 +4,7 @@ import org.apache.commons.math3.exception.DimensionMismatchException;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
 public class Vector extends Vector2D {
+    public static final Vector ZERO = new Vector(0,0);
     /**
      * Simple constructor.
      * Build a vector from its coordinates
