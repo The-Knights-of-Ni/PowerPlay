@@ -18,9 +18,9 @@ public class Control extends Subsystem {
     private Servo arm;
 
     public enum BarState {
-        HIGH(159, 1.0), //TODO: calibrate constants
-        MIDDLE(135, 1.0),
-        LOW(91, 1.0),
+        HIGH(1950, 1.0), //TODO: calibrate constants
+        MIDDLE(700, 1.0),
+        LOW(400, 1.0),
         PICKUP(0, 1.0);
 
         public final int position;
@@ -91,8 +91,8 @@ public class Control extends Subsystem {
 //    }
 
     public void extendBar(BarState position) {
-        this.bar.setTargetPosition(position.position);
         this.bar.setPower(position.power);
+        this.bar.setTargetPosition(position.position);
         this.bar.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
     }
 
