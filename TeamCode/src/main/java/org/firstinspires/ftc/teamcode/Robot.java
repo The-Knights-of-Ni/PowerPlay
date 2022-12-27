@@ -13,6 +13,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.Vision.Vision;
 import org.firstinspires.ftc.teamcode.Subsystems.Web.WebThread;
 import org.firstinspires.ftc.teamcode.Subsystems.Web.WebThreadData;
 import org.firstinspires.ftc.teamcode.Util.AllianceColor;
+import org.firstinspires.ftc.teamcode.Util.Vector;
 import org.firstinspires.ftc.teamcode.Util.WebLog;
 
 import java.util.HashMap;
@@ -180,17 +181,26 @@ public class Robot {
     public void subsystemInit()
     {
         Log.d(initLogTag, "Drive subsystem init started");
-        drive = new Drive(frontLeftDriveMotor, frontRightDriveMotor, rearLeftDriveMotor, rearRightDriveMotor, telemetry, timer, visionCorrectionEnabled);
+        drive = new Drive(frontLeftDriveMotor, frontRightDriveMotor, rearLeftDriveMotor, rearRightDriveMotor, telemetry, timer, webEnabled);
         Log.i(initLogTag, "Drive subsystem init finished");
 
         Log.d(initLogTag, "Control subsystem init started");
         control = new Control(telemetry);
         Log.i(initLogTag, "Control subsystem init finished");
 
+        if (webEnabled) {
+            Log.d(initLogTag, "Web subsystem init started");
+            web = new WebThread(telemetry, 7000);
+            web.run();
+            Log.i(initLogTag, "Web subsystem init finished");
+        }
+        else {
+            Log.w(initLogTag, "Web subsystem init skipped");
+        }
         if (visionEnabled) {
-            Log.d("init", "Vision subsystem init started");
+            Log.d(initLogTag, "Vision subsystem init started");
             vision = new Vision(telemetry, hardwareMap, allianceColor, visionCorrectionEnabled);
-            Log.i("init", "Vision subsystem init finished");
+            Log.i(initLogTag, "Vision subsystem init finished");
         }
         else {
             Log.w(initLogTag, "Vision subsystem init skipped");
@@ -277,5 +287,9 @@ public class Robot {
         if (webEnabled)
             wtd.addLog(new WebLog(caption, value, WebLog.LogSeverity.INFO));
         Log.i(caption, value);
+    }
+
+    public void correctOD() {
+        drive.moveVector(vision.getCorrectionVector());
     }
 }

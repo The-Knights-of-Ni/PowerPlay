@@ -23,17 +23,13 @@ public class Teleop extends LinearOpMode {
     private void initOpMode() throws IOException {
         // Initialize DC motor objects
         timer = new ElapsedTime();
-        HashMap<String, Boolean> flags = new HashMap<String, Boolean>();
-        flags.put("vision", false);
+        HashMap<String, Boolean> flags = new HashMap<>();
         this.robot =  new Robot(hardwareMap, telemetry, timer, AllianceColor.BLUE, gamepad1, gamepad2,flags);
         timeCurrent = timer.nanoseconds();
         timePre = timeCurrent;
 
         telemetry.addData("Waiting for start", "...");
         telemetry.update();
-    }
-
-    private void initDevices() {
     }
 
     /**
@@ -53,9 +49,6 @@ public class Teleop extends LinearOpMode {
         }
 
         ElapsedTime timer = new ElapsedTime();
-
-
-        initDevices();
 
         waitForStart();
 
@@ -91,6 +84,9 @@ public class Teleop extends LinearOpMode {
             //Toggle drive power
             if (robot.yButton && !robot.isyButtonPressedPrev){
                 driveHighPower = !driveHighPower;
+            }
+            else if (robot.xButton && !robot.isxButtonPressedPrev){
+                robot.correctOD();
             }
         }
     }
