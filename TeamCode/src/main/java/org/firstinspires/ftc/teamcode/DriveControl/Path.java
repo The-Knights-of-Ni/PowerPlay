@@ -12,6 +12,7 @@ public class Path {
 
 
     private boolean isMoving;
+
     public Path(ArrayList<Waypoint> stops) {
         waypoints = stops;
         currentWaypoint = 0;
@@ -23,6 +24,7 @@ public class Path {
         currentWaypoint++;
         targetWaypoint++;
     }
+
     public Vector goToNextWaypoint() {
         return new Vector(
                 Math.abs(waypoints.get(currentWaypoint).coordinate.getX() - waypoints.get(targetWaypoint).coordinate.getX()),

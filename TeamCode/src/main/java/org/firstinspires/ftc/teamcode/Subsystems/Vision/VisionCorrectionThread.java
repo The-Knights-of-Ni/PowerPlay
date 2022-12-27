@@ -1,33 +1,6 @@
 package org.firstinspires.ftc.teamcode.Subsystems.Vision;
 
 
-import org.apache.commons.geometry.euclidean.twod.ConvexArea;
-import org.apache.commons.geometry.euclidean.twod.Vector2D;
-import org.apache.commons.geometry.euclidean.twod.path.LinePath;
-
-import org.apache.commons.numbers.core.Precision;
-
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraException;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
-import org.firstinspires.ftc.robotcore.external.android.util.Size;
-import org.firstinspires.ftc.robotcore.external.function.Continuation;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.Camera;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraCaptureRequest;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraCaptureSession;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraCharacteristics;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraManager;
-import org.firstinspires.ftc.robotcore.internal.collections.EvictingBlockingQueue;
-import org.firstinspires.ftc.robotcore.internal.network.CallbackLooper;
-import org.firstinspires.ftc.robotcore.internal.system.ContinuationSynchronizer;
-import org.firstinspires.ftc.robotcore.internal.system.Deadline;
-
-import org.firstinspires.ftc.teamcode.DriveControl.BoundingBox;
-import org.firstinspires.ftc.teamcode.Util.ThreadExceptionHandler;
-
-import org.tensorflow.lite.Interpreter;
-
 import android.graphics.Bitmap;
 import android.graphics.ImageFormat;
 import android.os.Handler;
@@ -35,41 +8,68 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import org.apache.commons.geometry.euclidean.twod.ConvexArea;
+import org.apache.commons.geometry.euclidean.twod.Vector2D;
+import org.apache.commons.geometry.euclidean.twod.path.LinePath;
+import org.apache.commons.numbers.core.Precision;
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.android.util.Size;
+import org.firstinspires.ftc.robotcore.external.function.Continuation;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.Camera;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraCaptureRequest;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraCaptureSession;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraCharacteristics;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraException;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraManager;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.internal.collections.EvictingBlockingQueue;
+import org.firstinspires.ftc.robotcore.internal.network.CallbackLooper;
+import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
+import org.firstinspires.ftc.robotcore.internal.system.ContinuationSynchronizer;
+import org.firstinspires.ftc.robotcore.internal.system.Deadline;
+import org.firstinspires.ftc.teamcode.DriveControl.BoundingBox;
+import org.firstinspires.ftc.teamcode.Util.ThreadExceptionHandler;
+import org.tensorflow.lite.Interpreter;
+
 import java.io.File;
 import java.io.IOException;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.TimeUnit;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 
 public class VisionCorrectionThread implements Runnable {
-    private final VisionCorrectionThreadData vtd = VisionCorrectionThreadData.getVTD();
-    private Interpreter modelInterpreter;
-    ReadWriteLock lock = new ReentrantReadWriteLock();
-
     private static final String TAG = "Vision Correction";
-
-    /** How long we are to wait to be granted permission to use the camera before giving up. Here,
-     * we wait indefinitely */
+    /**
+     * How long we are to wait to be granted permission to use the camera before giving up. Here,
+     * we wait indefinitely
+     */
     private static final int secondsPermissionTimeout = Integer.MAX_VALUE;
-
-    /** State regarding our interaction with the camera */
+    private final VisionCorrectionThreadData vtd = VisionCorrectionThreadData.getVTD();
+    /**
+     * State regarding our interaction with the camera
+     */
     private final CameraManager cameraManager;
     private final WebcamName cameraName;
+    /**
+     * A utility object that indicates where the asynchronous callbacks from the camera
+     * infrastructure are to run. In this OpMode, that's all hidden from you (but see {@link #startCamera}
+     * if you're curious): no knowledge of multi-threading is needed here.
+     */
+    private final Handler callbackHandler;
+    ReadWriteLock lock = new ReentrantReadWriteLock();
+    private Interpreter modelInterpreter;
     private Camera camera;
     private CameraCaptureSession cameraCaptureSession;
-
-    /** The queue into which all frames from the camera are placed as they become available.
-     * Frames which are not processed by the OpMode are automatically discarded. */
+    /**
+     * The queue into which all frames from the camera are placed as they become available.
+     * Frames which are not processed by the OpMode are automatically discarded.
+     */
     private EvictingBlockingQueue<Bitmap> frameQueue;
 
-    /** A utility object that indicates where the asynchronous callbacks from the camera
-     * infrastructure are to run. In this OpMode, that's all hidden from you (but see {@link #startCamera}
-     * if you're curious): no knowledge of multi-threading is needed here. */
-    private final Handler callbackHandler;
     public VisionCorrectionThread(WebcamName cameraName) {
         callbackHandler = CallbackLooper.getDefault().getHandler();
 
@@ -128,7 +128,8 @@ public class VisionCorrectionThread implements Runnable {
         try {
             /* Create a session in which requests to capture frames can be made */
             camera.createCaptureSession(Continuation.create(callbackHandler, new CameraCaptureSession.StateCallbackDefault() {
-                @Override public void onConfigured(@NonNull CameraCaptureSession session) {
+                @Override
+                public void onConfigured(@NonNull CameraCaptureSession session) {
                     try {
                         /* The session is ready to go. Start requesting frames */
                         final CameraCaptureRequest captureRequest = camera.createCaptureRequest(imageFormat, size, fps);
@@ -143,7 +144,7 @@ public class VisionCorrectionThread implements Runnable {
                                 Continuation.create(callbackHandler, (session12, cameraCaptureSequenceId, lastFrameNumber) -> Log.i(TAG, "capture sequence " + cameraCaptureSequenceId + " reports completed: lastFrame=" + lastFrameNumber))
                         );
                         synchronizer.finish(session);
-                    } catch (CameraException|RuntimeException e) {
+                    } catch (CameraException | RuntimeException e) {
                         Log.e(TAG, "exception starting capture", e);
                         session.close();
                         synchronizer.finish(null);
@@ -217,11 +218,11 @@ public class VisionCorrectionThread implements Runnable {
         if (bmp == null) {
             throw new IOException("Image not found");
         }
-        int[] input1 = new int[bmp.getHeight()*bmp.getWidth()];
-        bmp.getPixels(input1, 0, 0, 0,0, bmp.getHeight(), bmp.getWidth());
+        int[] input1 = new int[bmp.getHeight() * bmp.getWidth()];
+        bmp.getPixels(input1, 0, 0, 0, 0, bmp.getHeight(), bmp.getWidth());
         bmp.recycle(); // not strictly necessary, but helpful
         inputs.put("input_1", input1);
-        inputs.put("input_2", new int[] {bmp.getHeight(), bmp.getWidth()});
+        inputs.put("input_2", new int[]{bmp.getHeight(), bmp.getWidth()});
         Map<String, Object> outputs = new HashMap<>();
         outputs.put("output_1", distanceOff);
         modelInterpreter.run(inputs, outputs);

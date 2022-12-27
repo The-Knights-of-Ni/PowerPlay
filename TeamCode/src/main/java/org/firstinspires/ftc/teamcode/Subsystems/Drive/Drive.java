@@ -1,29 +1,35 @@
 package org.firstinspires.ftc.teamcode.Subsystems.Drive;
 
 import android.util.Log;
-import com.qualcomm.robotcore.hardware.*;
+
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorControllerEx;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
 import org.apache.commons.geometry.euclidean.twod.ConvexArea;
 import org.apache.commons.geometry.euclidean.twod.Vector2D;
 import org.apache.commons.geometry.euclidean.twod.path.LinePath;
 import org.apache.commons.numbers.core.Precision;
-import org.checkerframework.checker.units.qual.C;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.DriveControl.BoundingBox;
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.Subsystems.Subsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.Vision.VisionCorrectionThreadData;
 import org.firstinspires.ftc.teamcode.Subsystems.Web.WebThreadData;
-import org.firstinspires.ftc.teamcode.Util.Coordinate;
 import org.firstinspires.ftc.teamcode.Util.Vector;
 
-import java.util.Arrays;
 import java.util.Locale;
 
 /**
  * Mecanum drivetrain subsystem
  */
 public class Drive extends Subsystem {
+    /**
+     * Number of millimeters per an Inch
+     */
+    public static final double mmPerInch = 25.4;
     /**
      * The number of millimeters per a count in odometry
      */
@@ -62,15 +68,11 @@ public class Drive extends Subsystem {
      * Default turn speed
      */
     private static final double TURN_SPEED = 0.40;
-    /**
-     * Number of millimeters per an Inch
-     */
-    public static final double mmPerInch = 25.4;
     private static final double motorKp = 0.01;
     private static final double motorKi = 0;
     private static final double motorKd = 0;
     private static final double motorRampTime = 0.3;
-    private static final double DEGREES_TO_RADIANS = Math.PI/180;
+    private static final double DEGREES_TO_RADIANS = Math.PI / 180;
     /**
      * DC Motor front left
      */
@@ -137,7 +139,7 @@ public class Drive extends Subsystem {
      * @param rearLeft    The rear left motor
      * @param rearRight   The rear right motor
      * @param telemetry   The telemetry
-     * @param elapsedTime       The timer for the elapsed time
+     * @param elapsedTime The timer for the elapsed time
      */
     public Drive(DcMotorEx frontLeft, DcMotorEx frontRight, DcMotorEx rearLeft, DcMotorEx rearRight, Telemetry telemetry, ElapsedTime elapsedTime, boolean updateVTD) {
         super(telemetry, "drive");
@@ -153,16 +155,36 @@ public class Drive extends Subsystem {
 //        vtd = VisionCorrectionThreadData.getVTD();
     }
 
+    private static double getCurrentPower(double maxPower, double Kp, double Ki, double Kd, double acculErrorFR, double currentError, double errorSlope) {
+        return
+                currentError * Kp
+                        + acculErrorFR * Ki
+                        + errorSlope * Kd;
+    }
+
+    public static BoundingBox calcBoundingBoxOfRobot(double robotCurrentPosX, double robotCurrentPosY) {
+        Precision.DoubleEquivalence precision = Precision.doubleEquivalenceOfEpsilon(1e-6);
+        double xOff = Robot.length / 2;
+        double yOff = Robot.width / 2;
+        LinePath path = LinePath.builder(precision)
+                .append(Vector2D.of(robotCurrentPosX - xOff * mmPerInch, robotCurrentPosY - yOff * mmPerInch))
+                .append(Vector2D.of(robotCurrentPosX - xOff * mmPerInch, robotCurrentPosY + yOff * mmPerInch))
+                .append(Vector2D.of(robotCurrentPosX + xOff * mmPerInch, robotCurrentPosY + yOff * mmPerInch))
+                .append(Vector2D.of(robotCurrentPosX + xOff * mmPerInch, robotCurrentPosY - yOff * mmPerInch))
+                .build(true);
+        return new BoundingBox(ConvexArea.convexPolygonFromPath(path));
+    }
+
     /**
      * Logs the current robot position via Log.i
+     *
      * @see Log
      */
     private void logMovement() {
         try {
             Log.i(TAG, "Robot X: " + robotCurrentPosX + " Robot Y: " + robotCurrentPosY + " Robot Turn: " +
                     robotCurrentAngle);
-        }
-        catch (RuntimeException ignored) {
+        } catch (RuntimeException ignored) {
 
         }
     }
@@ -619,16 +641,15 @@ public class Drive extends Subsystem {
         Log.d(TAG, output);
     }
 
-
     /**
      * PID motor control program to ensure all four motors are synchronized
      *
-     * @param tickCount: value of target tick count of each motor
+     * @param tickCount:   value of target tick count of each motor
      * @param motorPowers: peak speed of motor rotation in tick per second
-     * @param rampTime:  motor speed ramp uptime/downtime in sec (the amount of time it takes for the motor to reach the desired speed)
-     * @param Kp:        coefficient Kp
-     * @param Ki:        coefficient Ki
-     * @param Kd:        coefficient Kd
+     * @param rampTime:    motor speed ramp uptime/downtime in sec (the amount of time it takes for the motor to reach the desired speed)
+     * @param Kp:          coefficient Kp
+     * @param Ki:          coefficient Ki
+     * @param Kd:          coefficient Kd
      */
     public void allMotorPIDControl(
             int[] tickCount,
@@ -724,15 +745,17 @@ public class Drive extends Subsystem {
                                 acculErrorFL * alpha
                                         + currentError * (currentTime - prevTimeFL); // integrate error
                         // Calculate le D term
-                            errorSlope = (currentError - prevErrorFL) / (currentTime - prevTimeFL); // error slope
+                        errorSlope = (currentError - prevErrorFL) / (currentTime - prevTimeFL); // error slope
                         // Calculate le P + I + D
                         currentPower = getCurrentPower(currentTargetSpeedFL, Kp, Ki, Kd, acculErrorFL, currentError, errorSlope); // apply PID correction
                     } else { // at the first point, use Kp only at the first point when we can't do I or D
                         currentPower = currentError * Kp;
                     }
                     // Cap the powers at 0 and 1
-                    if (currentPower > Math.abs(motorPowers[0])) currentPower = Math.abs(motorPowers[0]);
-                    if (currentPower < -Math.abs(motorPowers[0])) currentPower = -Math.abs(motorPowers[0]);
+                    if (currentPower > Math.abs(motorPowers[0]))
+                        currentPower = Math.abs(motorPowers[0]);
+                    if (currentPower < -Math.abs(motorPowers[0]))
+                        currentPower = -Math.abs(motorPowers[0]);
                     // Set power of motor
                     frontLeft.setPower(currentPower);
 
@@ -775,8 +798,10 @@ public class Drive extends Subsystem {
                         currentPower = currentError * Kp;
                     }
                     // Cap the powers at 0 and 1
-                    if (currentPower > Math.abs(motorPowers[1])) currentPower = Math.abs(motorPowers[1]);
-                    if (currentPower < -Math.abs(motorPowers[1])) currentPower = -Math.abs(motorPowers[1]);
+                    if (currentPower > Math.abs(motorPowers[1]))
+                        currentPower = Math.abs(motorPowers[1]);
+                    if (currentPower < -Math.abs(motorPowers[1]))
+                        currentPower = -Math.abs(motorPowers[1]);
                     // Set power of motor
                     frontRight.setPower(currentPower);
 
@@ -814,8 +839,10 @@ public class Drive extends Subsystem {
                     } else { // at the first point, use Kp only
                         currentPower = currentError * Kp;
                     }
-                    if (currentPower > Math.abs(motorPowers[2])) currentPower = Math.abs(motorPowers[2]);
-                    if (currentPower < -Math.abs(motorPowers[2])) currentPower = -Math.abs(motorPowers[2]);
+                    if (currentPower > Math.abs(motorPowers[2]))
+                        currentPower = Math.abs(motorPowers[2]);
+                    if (currentPower < -Math.abs(motorPowers[2]))
+                        currentPower = -Math.abs(motorPowers[2]);
                     rearLeft.setPower(currentPower);
 
                     prevErrorRL = currentError;
@@ -851,8 +878,10 @@ public class Drive extends Subsystem {
                     } else { // at the first point, use Kp only
                         currentPower = currentError * Kp;
                     }
-                    if (currentPower > Math.abs(motorPowers[3])) currentPower = Math.abs(motorPowers[3]);
-                    if (currentPower < -Math.abs(motorPowers[3])) currentPower = -Math.abs(motorPowers[3]);
+                    if (currentPower > Math.abs(motorPowers[3]))
+                        currentPower = Math.abs(motorPowers[3]);
+                    if (currentPower < -Math.abs(motorPowers[3]))
+                        currentPower = -Math.abs(motorPowers[3]);
                     rearRight.setPower(currentPower);
 
                     prevErrorRR = currentError;
@@ -886,8 +915,7 @@ public class Drive extends Subsystem {
                         + prevErrorFR + " " + prevErrorRL + " " + prevErrorRR + "\ninitialized: " + initialized
                         + "\ncurrentCount: " + currentCountFL + " " + currentCountFR + " " + currentCountRL + " " + currentCountRR
                         + "\ntargetCount: " + targetCountFL + " " + targetCountFR + " " + targetCountRL + " " + targetCountRR;
-            }
-            catch (Exception ignored) {
+            } catch (Exception ignored) {
                 output = "Motor Status: " + isMotorFLDone + " " + isMotorFRDone + " " +
                         isMotorRLDone + " " + isMotorRRDone + "\nTimeout Started: " + isTimeOutStarted
                         + "\nTimeout Exceeded: " + isTimeOutExceeded + "\nTime out period: " +
@@ -898,18 +926,10 @@ public class Drive extends Subsystem {
             }
             try {
                 Log.v(TAG, "motorEnc: " + output);
-            }
-            catch (RuntimeException ignored) {
+            } catch (RuntimeException ignored) {
 
             }
         }
-    }
-
-    private static double getCurrentPower(double maxPower, double Kp, double Ki, double Kd, double acculErrorFR, double currentError, double errorSlope) {
-        return
-                currentError * Kp
-                + acculErrorFR * Ki
-                + errorSlope * Kd;
     }
 
     /**
@@ -1026,14 +1046,14 @@ public class Drive extends Subsystem {
         int[] calcMotorDistancesTicks = new int[4];
 
         // Order is: FL, FR, RL, RR
-        calcMotorDistancesTicks[0] = (int)((distance * Math.cos(angle)) * COUNTS_PER_MM);
-        calcMotorDistancesTicks[0] -= (int)(turnAngle * COUNTS_PER_DEGREE);
-        calcMotorDistancesTicks[1] = (int)((distance * Math.sin(angle)) * COUNTS_PER_MM);
-        calcMotorDistancesTicks[1] += (int)(turnAngle * COUNTS_PER_DEGREE);
-        calcMotorDistancesTicks[2] = (int)((distance * Math.sin(angle)) * COUNTS_PER_MM);
-        calcMotorDistancesTicks[2] -= (int)(turnAngle * COUNTS_PER_DEGREE);
-        calcMotorDistancesTicks[3] = (int)((distance * Math.cos(angle)) * COUNTS_PER_MM);
-        calcMotorDistancesTicks[3] += (int)(turnAngle * COUNTS_PER_DEGREE);
+        calcMotorDistancesTicks[0] = (int) ((distance * Math.cos(angle)) * COUNTS_PER_MM);
+        calcMotorDistancesTicks[0] -= (int) (turnAngle * COUNTS_PER_DEGREE);
+        calcMotorDistancesTicks[1] = (int) ((distance * Math.sin(angle)) * COUNTS_PER_MM);
+        calcMotorDistancesTicks[1] += (int) (turnAngle * COUNTS_PER_DEGREE);
+        calcMotorDistancesTicks[2] = (int) ((distance * Math.sin(angle)) * COUNTS_PER_MM);
+        calcMotorDistancesTicks[2] -= (int) (turnAngle * COUNTS_PER_DEGREE);
+        calcMotorDistancesTicks[3] = (int) ((distance * Math.cos(angle)) * COUNTS_PER_MM);
+        calcMotorDistancesTicks[3] += (int) (turnAngle * COUNTS_PER_DEGREE);
 
         // Get largest motor dist
         double largestMotorsTicks = calcMotorDistancesTicks[0];
@@ -1045,9 +1065,9 @@ public class Drive extends Subsystem {
 
         // Calc relative motor max powers
         double[] calcMotorPowers = {calcMotorDistancesTicks[0] / largestMotorsTicks * motorSpeed,
-                                    calcMotorDistancesTicks[1] / largestMotorsTicks,
-                                    calcMotorDistancesTicks[2] / largestMotorsTicks,
-                                    calcMotorDistancesTicks[3] / largestMotorsTicks};
+                calcMotorDistancesTicks[1] / largestMotorsTicks,
+                calcMotorDistancesTicks[2] / largestMotorsTicks,
+                calcMotorDistancesTicks[3] / largestMotorsTicks};
         Log.v(TAG, "MOTOR_TICKDIST_CALC: [" + calcMotorDistancesTicks[0] + ", " + calcMotorDistancesTicks[1] + ", " + calcMotorDistancesTicks[2] + ", " + calcMotorDistancesTicks[3] + "]");
         Log.v(TAG, "MOTOR_MAXPOWERS_CALC: [" + calcMotorPowers[0] + ", " + calcMotorPowers[1] + ", " + calcMotorPowers[2] + ", " + calcMotorPowers[3] + "]");
         allMotorPIDControl(
@@ -1065,22 +1085,10 @@ public class Drive extends Subsystem {
         logMovement();
     }
 
-    public static BoundingBox calcBoundingBoxOfRobot(double robotCurrentPosX, double robotCurrentPosY) {
-        Precision.DoubleEquivalence precision = Precision.doubleEquivalenceOfEpsilon(1e-6);
-        double xOff = Robot.length/2;
-        double yOff = Robot.width/2;
-        LinePath path = LinePath.builder(precision)
-                .append(Vector2D.of(robotCurrentPosX - xOff*mmPerInch, robotCurrentPosY - yOff*mmPerInch))
-                .append(Vector2D.of(robotCurrentPosX - xOff*mmPerInch, robotCurrentPosY + yOff*mmPerInch))
-                .append(Vector2D.of(robotCurrentPosX + xOff*mmPerInch, robotCurrentPosY + yOff*mmPerInch))
-                .append(Vector2D.of(robotCurrentPosX + xOff*mmPerInch, robotCurrentPosY - yOff*mmPerInch))
-                .build(true);
-        return new BoundingBox(ConvexArea.convexPolygonFromPath(path));
-    }
-
     public void moveVector(Vector v) {
         moveVector(v, 0, DRIVE_SPEED);
     }
+
     public void moveVector(Vector v, double angle) {
         moveVector(v, angle, DRIVE_SPEED);
     }
@@ -1116,6 +1124,7 @@ public class Drive extends Subsystem {
     public void moveVectorOdometry(Vector v) {
         moveVectorOdometry(v, 0, ANGULAR_V_MAX_NEVERREST_20);
     }
+
     public void moveVectorOdometry(Vector v, double angle) {
         moveVectorOdometry(v, angle, ANGULAR_V_MAX_NEVERREST_20);
     }

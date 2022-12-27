@@ -1,12 +1,13 @@
 package org.firstinspires.ftc.teamcode.Auto;
 
 import android.util.Log;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
 import org.firstinspires.ftc.teamcode.Robot;
-import org.firstinspires.ftc.teamcode.Subsystems.Vision.Vision;
 import org.firstinspires.ftc.teamcode.Util.AllianceColor;
 
 import java.util.HashMap;
@@ -40,8 +41,10 @@ public class Auto extends LinearOpMode {
      */
     public Robot robot;
     public ElapsedTime timer;
+
     /**
      * Initializes the robot class and sets the robot as the newly initialized robot.
+     *
      * @param allianceColor The alliance color
      */
     public void initAuto(AllianceColor allianceColor) {

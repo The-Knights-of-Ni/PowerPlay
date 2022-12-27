@@ -1,9 +1,10 @@
 package org.firstinspires.ftc.teamcode.Subsystems.Control;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Subsystems.Subsystem;
 
 
@@ -15,21 +16,6 @@ public class Control extends Subsystem {
     private DcMotorEx extendBar;
     private Servo flipServo;
     private Servo clawServo;
-
-    public enum BarState {
-        HIGH(0, 0.5), //TODO: calibrate constants
-        MIDDLE(1, 0.5),
-        LOW(2, 0.5),
-        Pickup(0, 0.5);
-
-        public final int position;
-        public final double power;
-
-        BarState(int position, double power) {
-            this.position = position;
-            this.power = power;
-        }
-    }
 
     public Control(Telemetry telemetry, Servo flipServo, Servo clawServo) {
         super(telemetry, "control");
@@ -70,14 +56,28 @@ public class Control extends Subsystem {
         this.clawServo.setPosition(position);
     }
 
-
     public void turn4BarWithClaw(BarState position) {
         flipServo.setPosition(position.position);
         if (position.position > 0.25) {
             clawServo.setPosition(1.25 - position.position);
-        }
-        else {
+        } else {
             clawServo.setPosition(0.25 - position.position);
+        }
+    }
+
+
+    public enum BarState {
+        HIGH(0, 0.5), //TODO: calibrate constants
+        MIDDLE(1, 0.5),
+        LOW(2, 0.5),
+        Pickup(0, 0.5);
+
+        public final int position;
+        public final double power;
+
+        BarState(int position, double power) {
+            this.position = position;
+            this.power = power;
         }
     }
 }

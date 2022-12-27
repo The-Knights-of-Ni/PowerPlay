@@ -2,7 +2,12 @@ package org.firstinspires.ftc.teamcode.DriveControl;
 
 import org.firstinspires.ftc.teamcode.Util.Coordinate;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.StreamCorruptedException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -12,10 +17,10 @@ public class PathFile {
     public static byte getCheckSum(ArrayList<Byte> array) {
         int sum = 0;
         int checkSum = 0;
-        for (byte b: array) {
+        for (byte b : array) {
             sum += b;
         }
-        checkSum = sum%256;
+        checkSum = sum % 256;
         return (byte) checkSum;
     }
 
@@ -24,7 +29,7 @@ public class PathFile {
         ArrayList<Integer> contents = new ArrayList<>();
         ArrayList<Integer> all = new ArrayList<>();
         int r;
-        while((r=fs.read())!=-1) {
+        while ((r = fs.read()) != -1) {
             contents.add(r);
             all.add(r);
         }
@@ -42,18 +47,17 @@ public class PathFile {
         contents.remove(0);
         numberOfInfoBlocksLeft--;
         String checkSum;
-        if (numberOfInfoBlocks>2) {
+        if (numberOfInfoBlocks > 2) {
             checkSum = contents.get(0).toString();
             contents.remove(0);
             numberOfInfoBlocksLeft--;
-        }
-        else {
+        } else {
             checkSum = "";
         }
         contents.subList(0, numberOfInfoBlocksLeft).clear();
         if (!Objects.equals(checkSum, "")) {
             int sum = 0;
-            for (int i: all) {
+            for (int i : all) {
                 sum += i;
             }
             sum -= Integer.parseInt(checkSum);
@@ -66,18 +70,16 @@ public class PathFile {
         int x = 0;
         int y = 0;
         int chunkSize = numOfX + numOfY + 1;
-        for (int i:contents) {
+        for (int i : contents) {
             int which = counter % chunkSize;
-            if (which<numOfX) {
+            if (which < numOfX) {
                 x += i;
-            }
-            else if (which == (chunkSize-1)) {
+            } else if (which == (chunkSize - 1)) {
                 stop = i % 2 == 1;
                 waypointArrayList.add(new Waypoint(new Coordinate(x, y), stop));
                 x = 0;
                 y = 0;
-            }
-            else {
+            } else {
                 y += i;
             }
             counter++;
@@ -96,11 +98,11 @@ public class PathFile {
         arrayOut.add(xMax); // bytes per x
         arrayOut.add(yMax); // bytes per y
         arrayOut.add((byte) 0); // Checksum
-        for (Waypoint waypoint:path.waypoints) {
+        for (Waypoint waypoint : path.waypoints) {
             int x = (int) waypoint.coordinate.getX();
             int y = (int) waypoint.coordinate.getY();
             int counter = 0;
-            while (x>255) {
+            while (x > 255) {
                 arrayOut.add((byte) 255);
                 x -= 255;
                 counter++;
@@ -109,10 +111,9 @@ public class PathFile {
             counter++;
 
             if (xMax < counter) {
-                throw new RuntimeException("x is too large. x="+ waypoint.coordinate.getX() + " xMax="+(xMax*255) + " counter=" + counter);
-            }
-            else {
-                while (counter<xMax) {
+                throw new RuntimeException("x is too large. x=" + waypoint.coordinate.getX() + " xMax=" + (xMax * 255) + " counter=" + counter);
+            } else {
+                while (counter < xMax) {
                     arrayOut.add((byte) 0);
                     counter++;
                 }
@@ -128,10 +129,9 @@ public class PathFile {
             counter++;
 
             if (yMax < counter) {
-                throw new RuntimeException("y is too large. y="+ waypoint.coordinate.getY() + " yMax="+(yMax*255) + " counter=" + counter);
-            }
-            else {
-                while (counter<yMax) {
+                throw new RuntimeException("y is too large. y=" + waypoint.coordinate.getY() + " yMax=" + (yMax * 255) + " counter=" + counter);
+            } else {
+                while (counter < yMax) {
                     arrayOut.add((byte) 0);
                     counter++;
                 }
@@ -140,8 +140,7 @@ public class PathFile {
 
             if (waypoint.fullStop) {
                 arrayOut.add((byte) 1);
-            }
-            else {
+            } else {
                 arrayOut.add((byte) 0);
             }
         }
@@ -149,7 +148,7 @@ public class PathFile {
         // Turn the arrayList into an array
         byte[] output = new byte[arrayOut.size()];
         int count = 0;
-        for (byte b: arrayOut) {
+        for (byte b : arrayOut) {
             output[count] = b;
             count++;
         }

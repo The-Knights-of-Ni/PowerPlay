@@ -1,11 +1,19 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.util.Log;
-import androidx.annotation.NonNull;
-import com.qualcomm.hardware.lynx.LynxModule;
 import android.os.Build;
-import com.qualcomm.robotcore.hardware.*;
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+
+import com.qualcomm.hardware.lynx.LynxModule;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Subsystems.Control.Control;
 import org.firstinspires.ftc.teamcode.Subsystems.Drive.Drive;
@@ -20,11 +28,20 @@ import java.util.List;
 
 public class Robot {
     public static final String name = "PowerPlay 2023";
-    public final String initLogTag = "init";
     public static final double length = 18;
     public static final double width = 18;
-
+    private static final double joystickDeadZone = 0.1;
+    public final String initLogTag = "init";
     public final ElapsedTime timer;
+    public final boolean visionEnabled;
+    private final AllianceColor allianceColor;
+    private final boolean webEnabled;
+    private final boolean visionCorrectionEnabled;
+    private final boolean odometryEnabled;
+    private final HardwareMap hardwareMap;
+    private final Telemetry telemetry;
+    private final Gamepad gamepad1;
+    private final Gamepad gamepad2;
     // DC Motors
     public DcMotorEx frontLeftDriveMotor;
     public DcMotorEx frontRightDriveMotor;
@@ -101,25 +118,15 @@ public class Robot {
     public Control control;
     public Vision vision;
     public WebThread web;
-    private final AllianceColor allianceColor;
-    public final boolean visionEnabled;
-    private final boolean webEnabled;
-    private final boolean visionCorrectionEnabled;
-    private final boolean odometryEnabled;
-
     private WebThreadData wtd;
-    private final HardwareMap hardwareMap;
-    private final Telemetry telemetry;
-    private static final double joystickDeadZone = 0.1;
-    private final Gamepad gamepad1;
-    private final Gamepad gamepad2;
 
     /**
      * @param timer         The elapsed time
      * @param allianceColor the alliance color
      */
     public Robot(@NonNull HardwareMap hardwareMap, @NonNull Telemetry telemetry, ElapsedTime timer,
-                 AllianceColor allianceColor, Gamepad gamepad1, Gamepad gamepad2, HashMap<String, Boolean> flags) {        telemetry.setDisplayFormat(Telemetry.DisplayFormat.HTML); // Allow usage of some HTML tags
+                 AllianceColor allianceColor, Gamepad gamepad1, Gamepad gamepad2, HashMap<String, Boolean> flags) {
+        telemetry.setDisplayFormat(Telemetry.DisplayFormat.HTML); // Allow usage of some HTML tags
         telemetry.log().setDisplayOrder(Telemetry.Log.DisplayOrder.OLDEST_FIRST); // We show the log in oldest-to-newest order
         telemetry.log().setCapacity(5); // We can control the number of lines shown in the log
         Log.i(initLogTag, "started");
@@ -177,8 +184,7 @@ public class Robot {
         rearRightDriveMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
     }
 
-    public void subsystemInit()
-    {
+    public void subsystemInit() {
         Log.d(initLogTag, "Drive subsystem init started");
         drive = new Drive(frontLeftDriveMotor, frontRightDriveMotor, rearLeftDriveMotor, rearRightDriveMotor, telemetry, timer, visionCorrectionEnabled);
         Log.i(initLogTag, "Drive subsystem init finished");
@@ -191,8 +197,7 @@ public class Robot {
             Log.d("init", "Vision subsystem init started");
             vision = new Vision(telemetry, hardwareMap, allianceColor, visionCorrectionEnabled);
             Log.i("init", "Vision subsystem init finished");
-        }
-        else {
+        } else {
             Log.w(initLogTag, "Vision subsystem init skipped");
         }
         telemetryBroadcast("Status", " all subsystems initialized");
@@ -256,6 +261,7 @@ public class Robot {
 
     /**
      * Discards joystick inputs between -joystickDeadZone and joystickDeadZone
+     *
      * @param joystickInput the input of the joystick
      * @return the corrected input of the joystick
      */

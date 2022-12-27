@@ -1,7 +1,13 @@
 package org.firstinspires.ftc.teamcode.Subsystems.Vision;
 
+import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
+import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
+import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
+
 import android.util.Log;
+
 import com.qualcomm.robotcore.hardware.HardwareMap;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
@@ -13,10 +19,6 @@ import org.firstinspires.ftc.teamcode.Util.AllianceColor;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
-
-import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
-import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
-import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
 
 /**
  * The Vision Subsystem
@@ -42,28 +44,24 @@ public class Vision extends Subsystem {
     final static double CAMERA_FORWARD_DISPLACEMENT = 6.0f * mmPerInch; // TODO: CALIBRATE WHEN ROBOT IS BUILT
     final static double CAMERA_VERTICAL_DISPLACEMENT = 6.5f * mmPerInch;
     final static double CAMERA_LEFT_DISPLACEMENT = -0.75f * mmPerInch;
-    OpenGLMatrix robotFromCamera = null;
     private final HardwareMap hardwareMap;
     private final AllianceColor allianceColor;
+    OpenGLMatrix robotFromCamera = null;
+    VisionCorrectionThread visionCorrectionThread;
     // Class Members
     private OpenGLMatrix lastLocation;
     private VuforiaLocalizer vuforia;
-
     private VectorF targetTranslation;
     private Orientation targetRotation;
-
     private ConeColorPipeline pipeline;
     private OpenCvCamera camera;
-
     private int[] viewportContainerIds;
-
-    VisionCorrectionThread visionCorrectionThread;
 
     /**
      * Class instantiation
      *
-     * @param telemetry   Telemetry
-     * @param hardwareMap the hardware map
+     * @param telemetry     Telemetry
+     * @param hardwareMap   the hardware map
      * @param allianceColor the alliance color
      */
     public Vision(

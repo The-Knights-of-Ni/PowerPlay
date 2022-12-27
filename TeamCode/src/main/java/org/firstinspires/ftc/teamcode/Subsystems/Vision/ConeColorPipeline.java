@@ -3,10 +3,10 @@ package org.firstinspires.ftc.teamcode.Subsystems.Vision;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.Util.AllianceColor;
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
-import org.opencv.core.Core;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
@@ -25,16 +25,6 @@ public class ConeColorPipeline extends OpenCvPipeline {
     private final int CAMERA_WIDTH;
     private final int CAMERA_HEIGHT;
     private ConeColor coneColor = ConeColor.OTHER;
-
-    public enum ConeColor {
-        GREEN(new Scalar(70,74,12), new Scalar(111,171,138)), //TODO:Calibrate color constants
-        CYAN(new Scalar(104,97,24), new Scalar(127,152,136)),
-        BROWN(new Scalar(0,0,0), new Scalar(136,117,69)),
-        OTHER(new Scalar(0,0,0), new Scalar(0,0,0)); //leave OTHER as is
-        public final Scalar lowHSV;
-        public final Scalar highHSV;
-        ConeColor(Scalar lowHSV, Scalar highHSV) { this.highHSV = highHSV; this.lowHSV = lowHSV;}
-    }
 
     /**
      * Class instantiation
@@ -90,11 +80,11 @@ public class ConeColorPipeline extends OpenCvPipeline {
         Core.inRange(crop, ConeColor.GREEN.lowHSV, ConeColor.GREEN.highHSV, threshGreen);
         Core.inRange(crop, ConeColor.CYAN.lowHSV, ConeColor.CYAN.highHSV, threshCyan);
 
-        if(Core.sumElems(threshBrown).val[0] / rectCrop.area() / 255 > 0) {
+        if (Core.sumElems(threshBrown).val[0] / rectCrop.area() / 255 > 0) {
             coneColor = ConeColor.BROWN;
-        } else if(Core.sumElems(threshGreen).val[0] / rectCrop.area() / 255 > 0) {
+        } else if (Core.sumElems(threshGreen).val[0] / rectCrop.area() / 255 > 0) {
             coneColor = ConeColor.GREEN;
-        } else if(Core.sumElems(threshCyan).val[0] / rectCrop.area() / 255 > 0) {
+        } else if (Core.sumElems(threshCyan).val[0] / rectCrop.area() / 255 > 0) {
             coneColor = ConeColor.CYAN;
         } else {
             coneColor = ConeColor.OTHER;
@@ -110,5 +100,19 @@ public class ConeColorPipeline extends OpenCvPipeline {
      */
     public ConeColor getConeColor() {
         return coneColor;
+    }
+
+    public enum ConeColor {
+        GREEN(new Scalar(70, 74, 12), new Scalar(111, 171, 138)), //TODO:Calibrate color constants
+        CYAN(new Scalar(104, 97, 24), new Scalar(127, 152, 136)),
+        BROWN(new Scalar(0, 0, 0), new Scalar(136, 117, 69)),
+        OTHER(new Scalar(0, 0, 0), new Scalar(0, 0, 0)); //leave OTHER as is
+        public final Scalar lowHSV;
+        public final Scalar highHSV;
+
+        ConeColor(Scalar lowHSV, Scalar highHSV) {
+            this.highHSV = highHSV;
+            this.lowHSV = lowHSV;
+        }
     }
 }
