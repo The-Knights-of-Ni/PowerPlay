@@ -31,6 +31,7 @@ public class Robot {
     public DcMotorEx rearRightDriveMotor;
     public DcMotorEx rearLeftDriveMotor;
     public DcMotorEx bar;
+    public DcMotorEx bar2;
     //Servos
     public Servo claw;
     public Servo clawAngle;
@@ -186,6 +187,11 @@ public class Robot {
         bar.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         bar.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         bar.setPower(0.0);
+
+        bar2 = (DcMotorEx) hardwareMap.dcMotor.get("bar2");
+        bar2.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        bar2.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        bar2.setPower(0.0);
     }
 
     private void servoInit() {
@@ -201,7 +207,7 @@ public class Robot {
         Log.i(initLogTag, "Drive subsystem init finished");
 
         Log.d(initLogTag, "Control subsystem init started");
-        control = new Control(telemetry, bar, claw, clawAngle, arm);
+        control = new Control(telemetry, bar, bar2, claw, clawAngle, arm);
         Log.i(initLogTag, "Control subsystem init finished");
 
         if (visionEnabled) {
