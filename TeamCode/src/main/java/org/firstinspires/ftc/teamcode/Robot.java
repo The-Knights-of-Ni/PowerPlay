@@ -102,7 +102,7 @@ public class Robot {
     public Vision vision;
     public WebThread web;
     private final AllianceColor allianceColor;
-    private final boolean visionEnabled;
+    public final boolean visionEnabled;
     private final boolean webEnabled;
     private final boolean visionCorrectionEnabled;
     private final boolean odometryEnabled;
@@ -168,8 +168,8 @@ public class Robot {
         rearRightDriveMotor = (DcMotorEx) hardwareMap.dcMotor.get("rr");
 
 
-        frontRightDriveMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        rearRightDriveMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeftDriveMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        rearLeftDriveMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         frontLeftDriveMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         frontRightDriveMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
