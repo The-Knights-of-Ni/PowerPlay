@@ -86,7 +86,7 @@ public class Teleop extends LinearOpMode {
                 driveHighPower = !driveHighPower;
             }
             else if (robot.xButton && !robot.isxButtonPressedPrev){
-                robot.drive.correctOD();
+                robot.correctOD();
             }
         }
     }

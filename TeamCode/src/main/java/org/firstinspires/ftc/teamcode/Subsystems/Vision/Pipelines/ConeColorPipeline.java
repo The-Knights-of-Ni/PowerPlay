@@ -1,7 +1,8 @@
-package org.firstinspires.ftc.teamcode.Subsystems.Vision;
+package org.firstinspires.ftc.teamcode.Subsystems.Vision.Pipelines;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Robot;
+import org.firstinspires.ftc.teamcode.Subsystems.Vision.Vision;
 import org.firstinspires.ftc.teamcode.Util.AllianceColor;
 import org.opencv.core.Mat;
 import org.opencv.core.Rect;

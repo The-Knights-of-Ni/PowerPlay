@@ -13,6 +13,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.Vision.Vision;
 import org.firstinspires.ftc.teamcode.Subsystems.Web.WebThread;
 import org.firstinspires.ftc.teamcode.Subsystems.Web.WebThreadData;
 import org.firstinspires.ftc.teamcode.Util.AllianceColor;
+import org.firstinspires.ftc.teamcode.Util.Vector;
 import org.firstinspires.ftc.teamcode.Util.WebLog;
 
 import java.util.HashMap;
@@ -286,5 +287,9 @@ public class Robot {
         if (webEnabled)
             wtd.addLog(new WebLog(caption, value, WebLog.LogSeverity.INFO));
         Log.i(caption, value);
+    }
+
+    public void correctOD() {
+        drive.moveVector(vision.getCorrectionVector());
     }
 }

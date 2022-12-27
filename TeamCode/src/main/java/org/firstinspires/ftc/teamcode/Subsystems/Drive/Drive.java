@@ -11,7 +11,6 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.DriveControl.BoundingBox;
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.Subsystems.Subsystem;
-import org.firstinspires.ftc.teamcode.Subsystems.Vision.VisionCorrectionThreadData;
 import org.firstinspires.ftc.teamcode.Subsystems.Web.WebThreadData;
 import org.firstinspires.ftc.teamcode.Util.Coordinate;
 import org.firstinspires.ftc.teamcode.Util.Vector;
@@ -1083,10 +1082,5 @@ public class Drive extends Subsystem {
     }
     public void moveVectorOdometry(Vector v, double angle) {
         moveVectorOdometry(v, angle, ANGULAR_V_MAX_NEVERREST_20);
-    }
-
-    public void correctOD() {
-        moveVector(VisionCorrectionThreadData.correctionVector);
-        VisionCorrectionThreadData.correctionVector = Vector.ZERO;
     }
 }
