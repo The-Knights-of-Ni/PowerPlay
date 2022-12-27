@@ -22,8 +22,6 @@ import org.openftc.easyopencv.OpenCvPipeline;
  */
 public class ConeColorPipeline extends OpenCvPipeline {
     private final AllianceColor allianceColor;
-    private final int CAMERA_WIDTH;
-    private final int CAMERA_HEIGHT;
     private ConeColor coneColor = ConeColor.OTHER;
 
     public enum ConeColor {
@@ -43,10 +41,8 @@ public class ConeColorPipeline extends OpenCvPipeline {
      * @see Telemetry
      * @see AllianceColor
      */
-    public ConeColorPipeline(AllianceColor allianceColor, int width, int height) {
+    public ConeColorPipeline(AllianceColor allianceColor) {
         this.allianceColor = allianceColor;
-        this.CAMERA_WIDTH = width;
-        this.CAMERA_HEIGHT = height;
     }
 
     /**
