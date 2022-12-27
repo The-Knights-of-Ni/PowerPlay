@@ -260,7 +260,7 @@ public class Robot {
     }
 
     /**
-     * Discards joystick inputs between -joystickDeadZone and joystickDeadZone
+     * Discards joystick inputs between -joystickDeadZone and joystickDeadZone to compensate for noise
      *
      * @param joystickInput the input of the joystick
      * @return the corrected input of the joystick
