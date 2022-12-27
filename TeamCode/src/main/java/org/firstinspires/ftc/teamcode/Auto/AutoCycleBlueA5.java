@@ -35,7 +35,7 @@ public class AutoCycleBlueA5 extends Auto {
         if (coneColor == ConeColorPipeline.ConeColor.GREEN) {
             robot.drive.moveForward(22 * mmPerInch);
         }
-        else if (coneColor == ConeColorPipeline.ConeColor.BLUE) {
+        else if (coneColor == ConeColorPipeline.ConeColor.ORANGE) {
             robot.drive.moveForward(12 * mmPerInch);
         }
     }

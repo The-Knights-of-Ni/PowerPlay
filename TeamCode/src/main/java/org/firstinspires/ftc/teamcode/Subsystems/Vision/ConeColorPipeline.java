@@ -36,11 +36,10 @@ public class ConeColorPipeline extends OpenCvPipeline {
      * The cone color with the hsv constants
      */
     public enum ConeColor {
-        GREEN(new Scalar(50,100,20), new Scalar(100,255,255), "Green"), // TODO:Calibrate color constants for Magenta
-//        BLUE(new Scalar(103,23,92), new Scalar(179,126,136), "Blue"),
-        BLUE(new Scalar(20, 100, 100), new Scalar(30, 255, 255), "Duck"),
-        MAGENTA(new Scalar(289,74,90), new Scalar(309,94,110), "Magenta"),
-        OTHER(new Scalar(0,0,0), new Scalar(0,0,0), "Other"); //leave OTHER as is
+        GREEN(new Scalar(130,39,61), new Scalar(134,38,67), "Green"),
+        ORANGE(new Scalar(27, 50, 71), new Scalar(16, 43, 86), "Orange"),
+        MAGENTA(new Scalar(333,57,69), new Scalar(340,50,83), "Magenta"),
+        OTHER(new Scalar(0,0,0), new Scalar(0,0,0), "Other"); // leave OTHER as is
         public final Scalar lowHSV;
         public final Scalar highHSV;
         public final String color;
@@ -96,16 +95,16 @@ public class ConeColorPipeline extends OpenCvPipeline {
         // Find all pixels within given threshold color values
         Mat threshMagenta = new Mat();
         Mat threshGreen = new Mat();
-        Mat threshCyan = new Mat();
+        Mat threshOrange = new Mat();
 
         Core.inRange(mask, ConeColor.MAGENTA.lowHSV, ConeColor.MAGENTA.highHSV, threshMagenta);
         Core.inRange(mask, ConeColor.GREEN.lowHSV, ConeColor.GREEN.highHSV, threshGreen);
-        Core.inRange(mask, ConeColor.BLUE.lowHSV, ConeColor.BLUE.highHSV, threshCyan);
+        Core.inRange(mask, ConeColor.ORANGE.lowHSV, ConeColor.ORANGE.highHSV, threshOrange);
 
         // Select the mat which has the most white pixels
         double magentaSum = Core.sumElems(threshMagenta).val[0] / (CAMERA_HEIGHT*CAMERA_WIDTH) / 255;
         double greenSum = Core.sumElems(threshGreen).val[0] / (CAMERA_HEIGHT*CAMERA_WIDTH) / 255;
-        double cyanSum = Core.sumElems(threshCyan).val[0] / (CAMERA_HEIGHT * CAMERA_WIDTH) / 255;
+        double cyanSum = Core.sumElems(threshOrange).val[0] / (CAMERA_HEIGHT * CAMERA_WIDTH) / 255;
 
         if(magentaSum > 0 || greenSum > 0 || cyanSum > 0) {
             if(magentaSum >= greenSum && magentaSum >= cyanSum) {
@@ -113,7 +112,7 @@ public class ConeColorPipeline extends OpenCvPipeline {
             } else if(greenSum >= cyanSum) {
                 coneColor = ConeColor.GREEN;
             } else {
-                coneColor = ConeColor.BLUE;
+                coneColor = ConeColor.ORANGE;
             }
         } else {
             coneColor = ConeColor.OTHER;

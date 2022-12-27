@@ -92,7 +92,7 @@ public class CaptureImages extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-
+        telemetry.addData("t", captureDirectory.getAbsolutePath());
         callbackHandler = CallbackLooper.getDefault().getHandler();
 
         cameraManager = ClassFactory.getInstance().getCameraManager();

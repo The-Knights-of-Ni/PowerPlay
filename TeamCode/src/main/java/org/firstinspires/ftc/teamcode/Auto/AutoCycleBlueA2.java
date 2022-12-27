@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.Auto;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Util.AllianceColor;
-import org.firstinspires.ftc.teamcode.Util.Vector;
 
 @Autonomous(name = "Auto Cycle Blue A2")
 public class AutoCycleBlueA2 extends Auto {
