@@ -36,9 +36,11 @@ public class ConeColorPipeline extends OpenCvPipeline {
      * The cone color with the hsv constants
      */
     public enum ConeColor {
-        GREEN(new Scalar(130,39,61), new Scalar(134,38,67), "Green"),
-        ORANGE(new Scalar(27, 50, 71), new Scalar(16, 43, 86), "Orange"),
-        MAGENTA(new Scalar(333,57,69), new Scalar(340,50,83), "Magenta"),
+        GREEN(new Scalar(50,80,20), new Scalar(90,255,255), "Green"), // TODO:Calibrate color constants for Magenta
+
+//        GREEN(new Scalar(50,0,0), new Scalar(70,180,230), "Green"), // TODO:Calibrate color constants for Magenta
+        ORANGE(new Scalar(5, 200, 200), new Scalar(15, 235, 255), "Orange"),
+        PINK(new Scalar(165,150,200), new Scalar(175,260,255), "Pink"),
         OTHER(new Scalar(0,0,0), new Scalar(0,0,0), "Other"); // leave OTHER as is
         public final Scalar lowHSV;
         public final Scalar highHSV;
@@ -97,7 +99,7 @@ public class ConeColorPipeline extends OpenCvPipeline {
         Mat threshGreen = new Mat();
         Mat threshOrange = new Mat();
 
-        Core.inRange(mask, ConeColor.MAGENTA.lowHSV, ConeColor.MAGENTA.highHSV, threshMagenta);
+        Core.inRange(mask, ConeColor.PINK.lowHSV, ConeColor.PINK.highHSV, threshMagenta);
         Core.inRange(mask, ConeColor.GREEN.lowHSV, ConeColor.GREEN.highHSV, threshGreen);
         Core.inRange(mask, ConeColor.ORANGE.lowHSV, ConeColor.ORANGE.highHSV, threshOrange);
 
@@ -108,7 +110,7 @@ public class ConeColorPipeline extends OpenCvPipeline {
 
         if(magentaSum > 0 || greenSum > 0 || cyanSum > 0) {
             if(magentaSum >= greenSum && magentaSum >= cyanSum) {
-                coneColor = ConeColor.MAGENTA;
+                coneColor = ConeColor.PINK;
             } else if(greenSum >= cyanSum) {
                 coneColor = ConeColor.GREEN;
             } else {
