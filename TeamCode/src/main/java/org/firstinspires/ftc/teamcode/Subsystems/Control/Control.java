@@ -75,20 +75,12 @@ public class Control extends Subsystem {
         this.arm = arm;
     }
 
-//    public void extend4Bar(BarState position) {
-//        this.extendBar(position);
-//        switch (position) {
-//            case LOW:
-//                this.turnFlipServo(0);
-//                break;
-//            case MIDDLE:
-//                this.turnFlipServo(1);
-//                break;
-//            case HIGH:
-//                this.turnFlipServo(2);
-//                break;
-//        }
-//    }
+    public void initDevices() {
+        this.extendBar(BarState.PICKUP);
+        this.toggleArm(ArmState.PICKUP);
+        this.toggleClawAngle(ClawAngleState.PICKUP);
+        this.toggleClaw(ClawState.OPEN);
+    }
 
     public void extendBar(BarState position) {
         this.bar.setPower(position.power);
@@ -113,34 +105,14 @@ public class Control extends Subsystem {
         this.clawAngle.setPosition(clawAngleState.position);
     }
 
-    public void initDevices() {
-        this.extendBar(BarState.PICKUP);
-        this.toggleArm(ArmState.PICKUP);
-        this.toggleClawAngle(ClawAngleState.PICKUP);
-        this.toggleClaw(ClawState.OPEN);
-    }
-    public void unfold() {
-        this.toggleArm(Control.ArmState.PICKUP);
-        this.toggleClawAngle(Control.ClawAngleState.PICKUP);
-        this.toggleClaw(Control.ClawState.OPEN);
-    }
-    public void deploy() {
-        this.toggleArm(ArmState.DROPOFF);
+    public void deploy(BarState barState) {
+        this.extendBar(barState);
         this.toggleClawAngle(ClawAngleState.DROPOFF);
+        this.toggleArm(ArmState.DROPOFF);
     }
-
-//    private void turnClawServo(double position) {
-//        this.clawServo.setPosition(position);
-//    }
-
-
-//    public void turn4BarWithClaw(BarState position) {
-//        flipServo.setPosition(position.position);
-//        if (position.position > 0.25) {
-//            clawServo.setPosition(1.25 - position.position);
-//        }
-//        else {
-//            clawServo.setPosition(0.25 - position.position);
-//        }
-//    }
+    public void retract() {
+        this.toggleClawAngle(ClawAngleState.PICKUP);
+        this.toggleArm(ArmState.PICKUP);
+        this.extendBar(BarState.PICKUP);
+    }
 }

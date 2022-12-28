@@ -2,8 +2,10 @@ package org.firstinspires.ftc.teamcode.Teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.Robot;
+import org.firstinspires.ftc.teamcode.Subsystems.Control.Control;
 import org.firstinspires.ftc.teamcode.Util.AllianceColor;
 
 import java.io.IOException;
@@ -18,7 +20,6 @@ public class Teleop extends LinearOpMode {
     private Robot robot;
 
     private boolean driveHighPower = true;
-    private final int slowModePow = 5;
 
     private void initOpMode() throws IOException {
         // Initialize DC motor objects
@@ -34,6 +35,7 @@ public class Teleop extends LinearOpMode {
     }
 
     private void initDevices() {
+        robot.control.initDevices();
     }
 
     /**
@@ -53,10 +55,7 @@ public class Teleop extends LinearOpMode {
         }
 
         ElapsedTime timer = new ElapsedTime();
-
-
         initDevices();
-
         waitForStart();
 
         if (isStopRequested()) {
@@ -79,7 +78,6 @@ public class Teleop extends LinearOpMode {
 
             // Robot drive movement
             double[] motorPowers;
-
             if (driveHighPower) {
                 motorPowers = robot.drive.calcMotorPowers(robot.leftStickX * sensitivityHighPower, robot.leftStickY * sensitivityHighPower, robot.rightStickX * sensitivityHighPower);
             }
@@ -88,11 +86,36 @@ public class Teleop extends LinearOpMode {
             }
             robot.drive.setDrivePowers(motorPowers);
 
-            //Toggle drive power
+            // Toggle drive power
             if (robot.yButton && !robot.isyButtonPressedPrev){
                 driveHighPower = !driveHighPower;
             }
 
+            // Score state control
+            if(robot.dPadUp) {
+                robot.control.deploy(Control.BarState.HIGH);
+            }
+            if(robot.dPadLeft) {
+                robot.control.deploy(Control.BarState.LOW);
+            }
+            if(robot.dPadRight) {
+                robot.control.deploy(Control.BarState.MIDDLE);
+            }
+            if(robot.dPadDown) {
+                robot.control.retract();
+            }
+
+            // Manual 4-bar override
+            if(robot.bumperRight) {
+                robot.bar.setPower(1);
+                robot.bar.setTargetPosition(robot.bar.getCurrentPosition() + 50);
+                robot.bar.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+            }
+            if(robot.bumperLeft) {
+                robot.bar.setPower(1);
+                robot.bar.setTargetPosition(robot.bar.getCurrentPosition() - 50);
+                robot.bar.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+            }
 
         }
     }
