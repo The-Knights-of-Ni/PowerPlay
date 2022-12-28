@@ -37,9 +37,7 @@ public class ConeColorPipeline extends OpenCvPipeline {
      */
     public enum ConeColor {
         GREEN(new Scalar(50,80,20), new Scalar(90,255,255), "Green"), // TODO:Calibrate color constants for Magenta
-
-//        GREEN(new Scalar(50,0,0), new Scalar(70,180,230), "Green"), // TODO:Calibrate color constants for Magenta
-        ORANGE(new Scalar(5, 200, 200), new Scalar(15, 235, 255), "Orange"),
+        ORANGE(new Scalar(5, 20, 20), new Scalar(25, 255, 200), "Orange"),
         PINK(new Scalar(165,150,200), new Scalar(175,260,255), "Pink"),
         OTHER(new Scalar(0,0,0), new Scalar(0,0,0), "Other"); // leave OTHER as is
         public final Scalar lowHSV;
@@ -121,7 +119,7 @@ public class ConeColorPipeline extends OpenCvPipeline {
         }
 
         // Return whichever mat is desired to be viewed on Camera Stream
-        return threshGreen;
+        return threshOrange;
     }
 
     /**
