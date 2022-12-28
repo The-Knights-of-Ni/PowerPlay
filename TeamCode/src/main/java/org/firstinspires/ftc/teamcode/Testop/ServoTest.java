@@ -22,7 +22,7 @@ public class ServoTest extends LinearOpMode {
         timer = new ElapsedTime();
         HashMap<String, Boolean> flags = new HashMap<String, Boolean>();
         flags.put("vision", false);
-        this.robot =  new Robot(hardwareMap, telemetry, timer, AllianceColor.BLUE, gamepad1, gamepad2,flags);
+        this.robot =  new Robot(hardwareMap, telemetry, timer, AllianceColor.BLUE, gamepad1, gamepad2, flags);
 
         robot.control.initDevices();
         robot.telemetryBroadcast("wait for start", "");
@@ -36,7 +36,6 @@ public class ServoTest extends LinearOpMode {
             e.printStackTrace();
         }
         waitForStart();
-        robot.control.unfold();
         while (opModeIsActive()) {
             if(gamepad1.right_bumper) {
                 robot.control.toggleClaw(Control.ClawState.OPEN);
@@ -45,16 +44,23 @@ public class ServoTest extends LinearOpMode {
                 robot.control.toggleClaw(Control.ClawState.CLOSED);
             }
             if(gamepad1.a) {
-                robot.control.unfold();
+                robot.control.toggleClawAngle(Control.ClawAngleState.PICKUP);
             }
             if(gamepad1.b) {
-                robot.control.deploy();
+                robot.control.toggleClawAngle(Control.ClawAngleState.DROPOFF);
             }
-
-            telemetry.addData("ARM", robot.arm.getPosition());
-            telemetry.addData("CLAW", robot.claw.getPosition());
-            telemetry.addData("CLAW_ANGLE", robot.clawAngle.getPosition());
-            telemetry.update();
+            if(gamepad1.x) {
+                robot.control.toggleArm(Control.ArmState.PICKUP);
+            }
+            if(gamepad1.y) {
+                robot.control.toggleArm(Control.ArmState.DROPOFF);
+            }
+//            if(gamepad1.a) {
+//                robot.control.unfold();
+//            }
+//            if(gamepad1.b) {
+//                robot.control.deploy();
+//            }
         }
     }
 }

@@ -26,7 +26,6 @@ public class MotorTest extends LinearOpMode {
 
         // Initializing start state
         robot.control.initDevices();
-        robot.control.unfold();
 
         waitForStart();
         while (opModeIsActive()) {
@@ -52,13 +51,8 @@ public class MotorTest extends LinearOpMode {
                 robot.bar.setTargetPosition(robot.bar.getCurrentPosition() + 10);
                 robot.bar.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
             }
-//            telemetry.addData("Position (front left)", robot.frontLeftDriveMotor.getCurrentPosition());
-//            telemetry.addData("Position (front right)", robot.frontRightDriveMotor.getCurrentPosition());
-//            telemetry.addData("Position (rear left)", robot.rearLeftDriveMotor.getCurrentPosition());
-//            telemetry.addData("Position (rear right)", robot.rearRightDriveMotor.getCurrentPosition());
 
             telemetry.addData("Position (bar)", robot.bar.getCurrentPosition());
-
             telemetry.update();
         }
     }

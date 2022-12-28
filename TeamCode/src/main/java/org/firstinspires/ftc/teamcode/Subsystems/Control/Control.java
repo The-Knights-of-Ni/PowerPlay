@@ -19,7 +19,7 @@ public class Control extends Subsystem {
     private Servo arm;
 
     public enum BarState {
-        HIGH(1950, 1.0), //TODO: calibrate constants
+        HIGH(2650, 1.0), //TODO: calibrate constants
         MIDDLE(700, 1.0),
         LOW(400, 1.0),
         PICKUP(0, 1.0);
@@ -45,9 +45,8 @@ public class Control extends Subsystem {
     }
 
     public enum ArmState {
-        DROPOFF(0.225),
-        PICKUP(0.03),
-        UNFOLD(0.1);
+        DROPOFF(0.23),
+        PICKUP(0.025);
 
         public final double position;
 
@@ -57,9 +56,8 @@ public class Control extends Subsystem {
     }
 
     public enum ClawAngleState {
-        PICKUP(0.325),
-        DROPOFF(0.9),
-        RETRACTED(0);
+        PICKUP(0),
+        DROPOFF(0.625);
 
         public final double position;
 
@@ -117,11 +115,14 @@ public class Control extends Subsystem {
 
     public void initDevices() {
         this.extendBar(BarState.PICKUP);
-        this.toggleClaw(ClawState.CLOSED);
-        this.toggleClawAngle(ClawAngleState.RETRACTED);
+        this.toggleArm(ArmState.PICKUP);
+        this.toggleClawAngle(ClawAngleState.PICKUP);
+        this.toggleClaw(ClawState.OPEN);
     }
     public void unfold() {
-        new UnfoldThread(this).start();
+        this.toggleArm(Control.ArmState.PICKUP);
+        this.toggleClawAngle(Control.ClawAngleState.PICKUP);
+        this.toggleClaw(Control.ClawState.OPEN);
     }
     public void deploy() {
         this.toggleArm(ArmState.DROPOFF);
