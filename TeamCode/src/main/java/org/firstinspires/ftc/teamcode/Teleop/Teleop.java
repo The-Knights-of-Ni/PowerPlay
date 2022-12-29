@@ -117,6 +117,14 @@ public class Teleop extends LinearOpMode {
                 robot.bar.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
             }
 
+            // Claw open-close
+            if(robot.triggerRight > 0.5) {
+                robot.control.toggleClaw(Control.ClawState.OPEN);
+            }
+            if(robot.triggerLeft > 0.5) {
+                robot.control.toggleClaw(Control.ClawState.CLOSED);
+            }
+
         }
     }
 }

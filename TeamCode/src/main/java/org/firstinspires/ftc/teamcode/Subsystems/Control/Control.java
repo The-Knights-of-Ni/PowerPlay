@@ -79,7 +79,7 @@ public class Control extends Subsystem {
         this.extendBar(BarState.PICKUP);
         this.toggleArm(ArmState.PICKUP);
         this.toggleClawAngle(ClawAngleState.PICKUP);
-        this.toggleClaw(ClawState.OPEN);
+        this.toggleClaw(ClawState.CLOSED);
     }
 
     public void extendBar(BarState position) {
