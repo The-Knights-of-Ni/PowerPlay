@@ -38,7 +38,7 @@ public class ConeColorPipeline extends OpenCvPipeline {
     public enum ConeColor {
         GREEN(new Scalar(50,80,20), new Scalar(90,255,255), "Green"),
         ORANGE(new Scalar(8, 100, 200), new Scalar(35, 255, 255), "Orange"),
-        PINK(new Scalar(165,150,200), new Scalar(175,260,255), "Pink"),
+        PINK(new Scalar(150,130,150), new Scalar(170,180,255), "Pink"),
         OTHER(new Scalar(0,0,0), new Scalar(0,0,0), "Other"); // leave OTHER as is
         public final Scalar lowHSV;
         public final Scalar highHSV;
