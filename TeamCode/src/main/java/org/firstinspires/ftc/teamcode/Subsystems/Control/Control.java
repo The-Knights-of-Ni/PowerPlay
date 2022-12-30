@@ -19,9 +19,9 @@ public class Control extends Subsystem {
     private Servo arm;
 
     public enum BarState {
-        HIGH(2650, 1.0), //TODO: calibrate constants
-        MIDDLE(700, 1.0),
-        LOW(400, 1.0),
+        HIGH(4275, 1.0), //TODO: calibrate constants
+        MIDDLE(3320, 1.0),
+        LOW(2430, 1.0),
         PICKUP(0, 1.0);
 
         public final int position;
