@@ -58,10 +58,6 @@ public class Teleop extends LinearOpMode {
         initDevices();
         waitForStart();
 
-        if (isStopRequested()) {
-            return;
-        }
-
         telemetry.clearAll();
         timeCurrent = timer.nanoseconds();
         timePre = timeCurrent;
@@ -76,6 +72,12 @@ public class Teleop extends LinearOpMode {
             deltaT = timeCurrent - timePre;
             timePre = timeCurrent;
 
+            if(robot.yButton) {
+                driveHighPower = true;
+            } else {
+                driveHighPower = false;
+            }
+
             // Robot drive movement
             double[] motorPowers;
             if (driveHighPower) {
@@ -85,11 +87,6 @@ public class Teleop extends LinearOpMode {
                 motorPowers = robot.drive.calcMotorPowers(robot.leftStickX * sensitivityLowPower, robot.leftStickY * sensitivityLowPower, robot.rightStickX * sensitivityLowPower);
             }
             robot.drive.setDrivePowers(motorPowers);
-
-            // Toggle drive power
-            if (robot.yButton && !robot.isyButtonPressedPrev){
-                driveHighPower = !driveHighPower;
-            }
 
             // Score state control
             if(robot.dPadUp) {
