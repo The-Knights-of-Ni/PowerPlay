@@ -5,8 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.Subsystems.Vision.ConeColorPipeline.ConeColor;
 import org.firstinspires.ftc.teamcode.Util.AllianceColor;
 
-@Autonomous(name = "Recessive Auto")
-public class AutoRecessive extends Auto{
+@Autonomous(name = "Auto Park")
+public class AutoPark extends Auto{
     /**
      * Override of runOpMode()
      *
