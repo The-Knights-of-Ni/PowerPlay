@@ -32,7 +32,7 @@ public class CameraPOV extends LinearOpMode {
                         .createWebcam(hardwareMap.get(WebcamName.class, WEBCAM_NAME), cameraMonitorViewId);
         camera.setViewportRenderer(OpenCvCamera.ViewportRenderer.GPU_ACCELERATED);
         // Create a detection pipeline for detecting the position
-        pipeline = new ConeColorPipeline(AllianceColor.BLUE, CAMERA_WIDTH, CAMERA_HEIGHT);
+        pipeline = new ConeColorPipeline(CAMERA_WIDTH, CAMERA_HEIGHT);
         camera.setPipeline(pipeline);
         camera.openCameraDeviceAsync(
                 new OpenCvCamera.AsyncCameraOpenListener() {

@@ -58,9 +58,8 @@ public class ConeColorPipeline extends OpenCvPipeline {
      *
      * @see Robot
      * @see Telemetry
-     * @see AllianceColor unused
      */
-    public ConeColorPipeline(AllianceColor allianceColor, int width, int height) {
+    public ConeColorPipeline(int width, int height) {
         this.CAMERA_WIDTH = width;
         this.CAMERA_HEIGHT = height;
     }
