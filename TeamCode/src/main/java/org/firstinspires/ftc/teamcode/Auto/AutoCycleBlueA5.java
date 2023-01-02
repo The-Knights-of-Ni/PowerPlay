@@ -6,8 +6,8 @@ import org.firstinspires.ftc.teamcode.Subsystems.Vision.ConeColorPipeline.ConeCo
 import org.firstinspires.ftc.teamcode.Util.AllianceColor;
 import org.firstinspires.ftc.teamcode.Util.Vector;
 
-@Autonomous(name = "Auto Cycle Blue A2")
-public class AutoCycleBlueA2 extends Auto {
+@Autonomous(name = "Auto Cycle Blue A5")
+public class AutoCycleBlueA5 extends Auto {
     /**
      * Override of runOpMode()
      *
@@ -23,17 +23,17 @@ public class AutoCycleBlueA2 extends Auto {
         timer.reset();
         ConeColor coneColor = robot.vision.detectConeColor();
         telemetry.addData("Cone Color", coneColor);
-        robot.drive.moveVector(new Vector(0*mmPerInch, 48*mmPerInch), -11.3);
+        robot.drive.moveVector(new Vector(0*mmPerInch, 48*mmPerInch), 11.3);
         while (timer.seconds() < 20) {
             // TODO: Insert Scoring code
-            robot.drive.moveVector(new Vector(-12*mmPerInch, -24*mmPerInch), -45);
+            robot.drive.moveVector(new Vector(-12*mmPerInch, -24*mmPerInch), 45);
             // TODO: Insert Intake code
-            robot.drive.moveVector(new Vector(12*mmPerInch, 24*mmPerInch), 45);
+            robot.drive.moveVector(new Vector(12*mmPerInch, 24*mmPerInch), -45);
         }
         switch (coneColor) {
             case PINK:
                 robot.drive.moveForward(24*mmPerInch);
-            case GREEN:
+            case ORANGE:
                 robot.drive.moveForward(48*mmPerInch);
         }
     }
