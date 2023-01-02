@@ -26,7 +26,6 @@ import java.util.List;
  * @see Vision
  */
 public class ConeColorPipeline extends OpenCvPipeline {
-    private final AllianceColor allianceColor;
     private final int CAMERA_WIDTH;
     private final int CAMERA_HEIGHT;
     private ConeColor coneColor = ConeColor.OTHER;
@@ -59,10 +58,9 @@ public class ConeColorPipeline extends OpenCvPipeline {
      *
      * @see Robot
      * @see Telemetry
-     * @see AllianceColor
+     * @see AllianceColor unused
      */
     public ConeColorPipeline(AllianceColor allianceColor, int width, int height) {
-        this.allianceColor = allianceColor;
         this.CAMERA_WIDTH = width;
         this.CAMERA_HEIGHT = height;
     }
@@ -70,19 +68,9 @@ public class ConeColorPipeline extends OpenCvPipeline {
     /**
      * This method detects where the marker is.
      *
-     * <p>It does this by splitting the camera input into left, right, and middle rectangles, these
-     * rectangles need to be calibrated. Combined, they do not have to encompass the whole camera
-     * input, they probably will only check a small part of it. We then assume the alliance color is
-     * either (255, 0, 0) or (0, 0, 255), we get the info when the object is instantiated ({@link
-     * #allianceColor}), and that the marker color is (0, 255, 0), which is a bright green ({@link
-     * Scalar}'s are used for colors). We compare the marker color with the alliance color on each of
-     * the rectangles, if the marker color is on none or multiple of them, it is marked as {@link
-     * ConeColor#OTHER}, if otherwise, the respective Location it is in is returned via a
-     * {@link ConeColor} variable called {@link #coneColor}
      *
      * @param input A Mask (the class is called {@link Mat})
      * @return The marker location
-     * @see #allianceColor
      * @see Mat
      * @see Scalar
      * @see ConeColor
