@@ -21,8 +21,8 @@ public class AutoCycleRed extends Auto {
         waitForStart();
         timer.reset();
         telemetry.addData("cone color", robot.vision.detectConeColor());
-        robot.drive.moveForward(24*mmPerInch);
-        robot.drive.moveVector(new Vector(0, 24*mmPerInch), -45);
+        robot.drive.moveForward(24 * mmPerInch);
+        robot.drive.moveVector(new Vector(0, 24 * mmPerInch), -45);
         while (timer.seconds() < 20) {
             // TODO: Insert Intake code
             robot.drive.moveForward(22 * mmPerInch);
