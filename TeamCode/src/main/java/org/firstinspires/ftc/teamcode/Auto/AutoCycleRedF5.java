@@ -32,9 +32,9 @@ public class AutoCycleRedF5 extends Auto {
         }
         switch (coneColor) {
             case PINK:
-                robot.drive.moveForward(24*mmPerInch);
+                robot.drive.moveVector(new Vector(0, 24*mmPerInch));
             case GREEN:
-                robot.drive.moveForward(48*mmPerInch);
+                robot.drive.moveVector(new Vector(0, 48*mmPerInch));
         }
     }
 }

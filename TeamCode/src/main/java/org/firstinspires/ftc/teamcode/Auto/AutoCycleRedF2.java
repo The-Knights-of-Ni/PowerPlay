@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.Auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-
 import org.firstinspires.ftc.teamcode.Subsystems.Vision.ConeColorPipeline.ConeColor;
 import org.firstinspires.ftc.teamcode.Util.AllianceColor;
 import org.firstinspires.ftc.teamcode.Util.Vector;
@@ -32,9 +31,11 @@ public class AutoCycleRedF2 extends Auto {
         }
         switch (coneColor) {
             case PINK:
-                robot.drive.moveForward(24*mmPerInch);
+                robot.drive.moveVector(new Vector(0, 24*mmPerInch));
             case ORANGE:
-                robot.drive.moveForward(48*mmPerInch);
+                robot.drive.moveVector(new Vector(0, 48*mmPerInch));
         }
+        robot.drive.moveVector(new Vector(0*mmPerInch, 12*mmPerInch));
+        sleep(2000);
     }
 }
