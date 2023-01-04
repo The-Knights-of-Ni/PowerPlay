@@ -1,7 +1,8 @@
-package org.firstinspires.ftc.teamcode.Auto;
+package org.firstinspires.ftc.teamcode.Testop;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.teamcode.Auto.Auto;
 import org.firstinspires.ftc.teamcode.Util.AllianceColor;
 import org.firstinspires.ftc.teamcode.Util.Vector;
 
@@ -21,5 +22,6 @@ public class BackwardTest extends Auto {
         waitForStart();
         timer.reset();
         robot.drive.moveVector(new Vector(0*mmPerInch, -24*mmPerInch));
+        sleep(2000);
     }
 }

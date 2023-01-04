@@ -1,12 +1,13 @@
-package org.firstinspires.ftc.teamcode.Auto;
+package org.firstinspires.ftc.teamcode.Testop;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.teamcode.Auto.Auto;
 import org.firstinspires.ftc.teamcode.Util.AllianceColor;
 import org.firstinspires.ftc.teamcode.Util.Vector;
 
-@Autonomous(name = "Turn Test", group = "Concept")
-public class TurnTest extends Auto {
+@Autonomous(name = "Vector Test 2", group = "Concept")
+public class VectorTest2 extends Auto {
     /**
      * Override of runOpMode()
      *
@@ -20,6 +21,7 @@ public class TurnTest extends Auto {
         initAuto(AllianceColor.RED);
         waitForStart();
         timer.reset();
-        robot.drive.moveVector(new Vector(0*mmPerInch, 0*mmPerInch), 90);
+        robot.drive.moveVector(new Vector(24*mmPerInch, 12*mmPerInch));
+        sleep(2000);
     }
 }

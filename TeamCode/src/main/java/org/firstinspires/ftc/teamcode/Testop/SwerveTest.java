@@ -1,12 +1,13 @@
-package org.firstinspires.ftc.teamcode.Auto;
+package org.firstinspires.ftc.teamcode.Testop;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.teamcode.Auto.Auto;
 import org.firstinspires.ftc.teamcode.Util.AllianceColor;
 import org.firstinspires.ftc.teamcode.Util.Vector;
 
-@Autonomous(name = "Forward Test", group = "Concept")
-public class ForwardTest extends Auto {
+@Autonomous(name = "Swerve Test", group = "Concept")
+public class SwerveTest extends Auto {
     /**
      * Override of runOpMode()
      *
@@ -20,6 +21,7 @@ public class ForwardTest extends Auto {
         initAuto(AllianceColor.RED);
         waitForStart();
         timer.reset();
-        robot.drive.moveVector(new Vector(0*mmPerInch, 12*mmPerInch));
+        robot.drive.moveVector(new Vector(12*mmPerInch, 12*mmPerInch), 90);
+        sleep(2000);
     }
 }
