@@ -139,6 +139,7 @@ public class Vision extends Subsystem {
      */
     public ConeColorPipeline.ConeColor detectConeColor() {
         // Return the marker location
+        while(pipeline.getConeColor() == ConeColorPipeline.ConeColor.OTHER);
         return pipeline.getConeColor();
     }
 }

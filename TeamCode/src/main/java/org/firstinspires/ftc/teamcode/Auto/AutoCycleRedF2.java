@@ -22,20 +22,30 @@ public class AutoCycleRedF2 extends Auto {
         timer.reset();
         ConeColor coneColor = robot.vision.detectConeColor();
         telemetry.addData("Cone Color", coneColor);
-        robot.drive.moveVector(new Vector(0*mmPerInch, 48*mmPerInch), 11.3);
-        while (timer.seconds() < 20) {
-            // TODO: Insert Scoring code
-            robot.drive.moveVector(new Vector(-12*mmPerInch, -24*mmPerInch), -45);
-            // TODO: Insert Intake code
-            robot.drive.moveVector(new Vector(12*mmPerInch, 24*mmPerInch), 45);
-        }
-        switch (coneColor) {
-            case PINK:
-                robot.drive.moveVector(new Vector(0, 24*mmPerInch));
-            case ORANGE:
-                robot.drive.moveVector(new Vector(0, 48*mmPerInch));
-        }
-        robot.drive.moveVector(new Vector(0*mmPerInch, 12*mmPerInch));
+        robot.drive.moveVector(new Vector(0*mmPerInch, 48*mmPerInch));
+        robot.drive.moveVector(new Vector(12*mmPerInch, 0*mmPerInch));
+        // TODO: Score preloaded here
+        robot.drive.moveVector(new Vector(-12*mmPerInch, 0));
+        robot.drive.moveVector(new Vector(0, 0), -90);
+        robot.drive.moveVector(new Vector(0*mmPerInch, -21.5*mmPerInch));
+        // TODO: Pickup cone
+        robot.drive.moveVector(new Vector(0*mmPerInch, 21.5*mmPerInch));
+        robot.drive.moveVector(new Vector(0*mmPerInch, 0*mmPerInch), 45);
+        // TODO: Score
+
+//        while (timer.seconds() < 20) {
+//            // TODO: Insert Scoring code
+//            robot.drive.moveVector(new Vector(-12*mmPerInch, -24*mmPerInch), -45);
+//            // TODO: Insert Intake code
+//            robot.drive.moveVector(new Vector(12*mmPerInch, 24*mmPerInch), 45);
+//        }
+//        switch (coneColor) {
+//            case PINK:
+//                robot.drive.moveVector(new Vector(0, 24*mmPerInch));
+//            case ORANGE:
+//                robot.drive.moveVector(new Vector(0, 48*mmPerInch));
+//        }
+//        robot.drive.moveVector(new Vector(0*mmPerInch, 12*mmPerInch));
         sleep(2000);
     }
 }
