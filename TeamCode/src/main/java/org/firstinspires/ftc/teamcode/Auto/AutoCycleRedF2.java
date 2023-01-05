@@ -31,21 +31,9 @@ public class AutoCycleRedF2 extends Auto {
         // TODO: Pickup cone
         robot.drive.moveVector(new Vector(0*mmPerInch, 21.5*mmPerInch));
         robot.drive.moveVector(new Vector(0*mmPerInch, 0*mmPerInch), 45);
-        // TODO: Score
+        // TODO: Score/Cycle
+        // TODO: Park based on cone color
 
-//        while (timer.seconds() < 20) {
-//            // TODO: Insert Scoring code
-//            robot.drive.moveVector(new Vector(-12*mmPerInch, -24*mmPerInch), -45);
-//            // TODO: Insert Intake code
-//            robot.drive.moveVector(new Vector(12*mmPerInch, 24*mmPerInch), 45);
-//        }
-//        switch (coneColor) {
-//            case PINK:
-//                robot.drive.moveVector(new Vector(0, 24*mmPerInch));
-//            case ORANGE:
-//                robot.drive.moveVector(new Vector(0, 48*mmPerInch));
-//        }
-//        robot.drive.moveVector(new Vector(0*mmPerInch, 12*mmPerInch));
         sleep(2000);
     }
 }
