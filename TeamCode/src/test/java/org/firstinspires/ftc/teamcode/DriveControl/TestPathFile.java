@@ -19,24 +19,24 @@ public class TestPathFile {
         byte check = PathFile.getCheckSum(mockFile);
         mockFile.set(1, check);
         int sum = 0;
-        for (byte b: mockFile) {
+        for (byte b : mockFile) {
             sum += b;
         }
         sum -= check;
-        assertEquals(check, (byte) sum%256);
+        assertEquals(check, (byte) sum % 256);
     }
+
     @Test
     void testWrite() throws Exception {
         File file = new File(System.getProperty("user.dir") + "test.path");
         ArrayList<Waypoint> stops = new ArrayList<>();
-        stops.add(new Waypoint(new Coordinate(0,0), true));
+        stops.add(new Waypoint(new Coordinate(0, 0), true));
         stops.add(new Waypoint(new Coordinate(1000, 1250), false));
         stops.add(new Waypoint(new Coordinate(2000, 750), false));
         Path path = new Path(stops);
         try {
             PathFile.write(file, path);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
     }

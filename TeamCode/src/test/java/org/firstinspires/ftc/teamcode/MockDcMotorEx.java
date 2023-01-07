@@ -50,11 +50,6 @@ public class MockDcMotorEx implements DcMotorEx {
     }
 
     @Override
-    public void setVelocity(double angularRate) {
-
-    }
-
-    @Override
     public void setVelocity(double angularRate, AngleUnit unit) {
 
     }
@@ -62,6 +57,11 @@ public class MockDcMotorEx implements DcMotorEx {
     @Override
     public double getVelocity() {
         return 0;
+    }
+
+    @Override
+    public void setVelocity(double angularRate) {
+
     }
 
     @Override
@@ -100,13 +100,13 @@ public class MockDcMotorEx implements DcMotorEx {
     }
 
     @Override
-    public void setTargetPositionTolerance(int tolerance) {
-
+    public int getTargetPositionTolerance() {
+        return 0;
     }
 
     @Override
-    public int getTargetPositionTolerance() {
-        return 0;
+    public void setTargetPositionTolerance(int tolerance) {
+
     }
 
     @Override
@@ -150,13 +150,13 @@ public class MockDcMotorEx implements DcMotorEx {
     }
 
     @Override
-    public void setZeroPowerBehavior(ZeroPowerBehavior zeroPowerBehavior) {
-        powerBehavior = zeroPowerBehavior;
+    public ZeroPowerBehavior getZeroPowerBehavior() {
+        return powerBehavior;
     }
 
     @Override
-    public ZeroPowerBehavior getZeroPowerBehavior() {
-        return powerBehavior;
+    public void setZeroPowerBehavior(ZeroPowerBehavior zeroPowerBehavior) {
+        powerBehavior = zeroPowerBehavior;
     }
 
     @Override
@@ -170,13 +170,13 @@ public class MockDcMotorEx implements DcMotorEx {
     }
 
     @Override
-    public void setTargetPosition(int position) {
-        targetPosition = position;
+    public int getTargetPosition() {
+        return targetPosition;
     }
 
     @Override
-    public int getTargetPosition() {
-        return targetPosition;
+    public void setTargetPosition(int position) {
+        targetPosition = position;
     }
 
     @Override
@@ -190,18 +190,13 @@ public class MockDcMotorEx implements DcMotorEx {
     }
 
     @Override
-    public void setMode(RunMode mode) {
-        currentRunMode = mode;
-    }
-
-    @Override
     public RunMode getMode() {
         return currentRunMode;
     }
 
     @Override
-    public void setDirection(Direction direction) {
-        currentDirection = direction;
+    public void setMode(RunMode mode) {
+        currentRunMode = mode;
     }
 
     @Override
@@ -210,18 +205,22 @@ public class MockDcMotorEx implements DcMotorEx {
     }
 
     @Override
-    public void setPower(double power) {
-        if (power <= 1.0 && power >= -1.0) {
-            currentPower = power;
-        }
-        else {
-            throw new IllegalArgumentException("Current power not between -1 and 1 (inclusive). Attempted power was " + power);
-        }
+    public void setDirection(Direction direction) {
+        currentDirection = direction;
     }
 
     @Override
     public double getPower() {
         return currentPower;
+    }
+
+    @Override
+    public void setPower(double power) {
+        if (power <= 1.0 && power >= -1.0) {
+            currentPower = power;
+        } else {
+            throw new IllegalArgumentException("Current power not between -1 and 1 (inclusive). Attempted power was " + power);
+        }
     }
 
     @Override

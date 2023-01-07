@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.Auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-
 import org.firstinspires.ftc.teamcode.Subsystems.Vision.ConeColorPipeline.ConeColor;
 import org.firstinspires.ftc.teamcode.Util.AllianceColor;
 import org.firstinspires.ftc.teamcode.Util.Vector;
@@ -23,7 +22,7 @@ public class AutoCycleRedF5 extends Auto {
         timer.reset();
         ConeColor coneColor = robot.vision.detectConeColor();
         telemetry.addData("Cone Color", coneColor);
-        robot.drive.moveVector(new Vector(0*mmPerInch, 48*mmPerInch), 90);
+        robot.drive.moveVector(new Vector(0 * mmPerInch, 48 * mmPerInch), 90);
 //        robot.
 //        while (timer.seconds() < 20) {
 //            // TODO: Insert Scoring code

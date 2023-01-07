@@ -2,9 +2,9 @@ package org.firstinspires.ftc.teamcode.Subsystems.Vision;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Robot;
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Scalar;
-import org.opencv.core.Core;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
@@ -25,28 +25,6 @@ public class ConeColorPipeline extends OpenCvPipeline {
 
 
     /**
-     * The cone color with the hsv constants
-     */
-    public enum ConeColor {
-        GREEN(new Scalar(50,80,20), new Scalar(90,255,255), "Green"),
-        ORANGE(new Scalar(8, 100, 200), new Scalar(35, 255, 255), "Orange"),
-        PINK(new Scalar(150,130,150), new Scalar(170,180,255), "Pink"),
-        OTHER(new Scalar(0,0,0), new Scalar(0,0,0), "Other"); // leave OTHER as is
-        public final Scalar lowHSV;
-        public final Scalar highHSV;
-        public final String color;
-        ConeColor(Scalar lowHSV, Scalar highHSV, String color) { this.highHSV = highHSV; this.lowHSV = lowHSV; this.color = color;}
-
-        @Override
-        public String toString() {
-            return "ConeColor{" +
-                    "lowHSV=" + lowHSV +
-                    ", highHSV=" + highHSV +
-                    '}';
-        }
-    }
-
-    /**
      * Class instantiation
      *
      * @see Robot
@@ -59,7 +37,6 @@ public class ConeColorPipeline extends OpenCvPipeline {
 
     /**
      * This method detects where the marker is.
-     *
      *
      * @param input A Mask (the class is called {@link Mat})
      * @return The marker location
@@ -82,14 +59,14 @@ public class ConeColorPipeline extends OpenCvPipeline {
         Core.inRange(mask, ConeColor.ORANGE.lowHSV, ConeColor.ORANGE.highHSV, threshOrange);
 
         // Select the mat which has the most white pixels
-        double magentaSum = Core.sumElems(threshMagenta).val[0] / (CAMERA_HEIGHT*CAMERA_WIDTH) / 255;
-        double greenSum = Core.sumElems(threshGreen).val[0] / (CAMERA_HEIGHT*CAMERA_WIDTH) / 255;
+        double magentaSum = Core.sumElems(threshMagenta).val[0] / (CAMERA_HEIGHT * CAMERA_WIDTH) / 255;
+        double greenSum = Core.sumElems(threshGreen).val[0] / (CAMERA_HEIGHT * CAMERA_WIDTH) / 255;
         double cyanSum = Core.sumElems(threshOrange).val[0] / (CAMERA_HEIGHT * CAMERA_WIDTH) / 255;
 
-        if(magentaSum > 0 || greenSum > 0 || cyanSum > 0) {
-            if(magentaSum >= greenSum && magentaSum >= cyanSum) {
+        if (magentaSum > 0 || greenSum > 0 || cyanSum > 0) {
+            if (magentaSum >= greenSum && magentaSum >= cyanSum) {
                 coneColor = ConeColor.PINK;
-            } else if(greenSum >= cyanSum) {
+            } else if (greenSum >= cyanSum) {
                 coneColor = ConeColor.GREEN;
             } else {
                 coneColor = ConeColor.ORANGE;
@@ -110,5 +87,32 @@ public class ConeColorPipeline extends OpenCvPipeline {
      */
     public ConeColor getConeColor() {
         return coneColor;
+    }
+
+    /**
+     * The cone color with the hsv constants
+     */
+    public enum ConeColor {
+        GREEN(new Scalar(50, 80, 20), new Scalar(90, 255, 255), "Green"),
+        ORANGE(new Scalar(8, 100, 200), new Scalar(35, 255, 255), "Orange"),
+        PINK(new Scalar(150, 130, 150), new Scalar(170, 180, 255), "Pink"),
+        OTHER(new Scalar(0, 0, 0), new Scalar(0, 0, 0), "Other"); // leave OTHER as is
+        public final Scalar lowHSV;
+        public final Scalar highHSV;
+        public final String color;
+
+        ConeColor(Scalar lowHSV, Scalar highHSV, String color) {
+            this.highHSV = highHSV;
+            this.lowHSV = lowHSV;
+            this.color = color;
+        }
+
+        @Override
+        public String toString() {
+            return "ConeColor{" +
+                    "lowHSV=" + lowHSV +
+                    ", highHSV=" + highHSV +
+                    '}';
+        }
     }
 }
