@@ -182,7 +182,20 @@ public class Robot {
         frontRightDriveMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         rearLeftDriveMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         rearRightDriveMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        frontLeftDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontRightDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rearLeftDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rearRightDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontLeftDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontRightDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rearLeftDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rearRightDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
 
+    private void servoInit() {
+        claw = hardwareMap.servo.get("claw");
+        clawAngle = hardwareMap.servo.get("clawAngle");
+        arm = hardwareMap.servo.get("arm");
         bar = (DcMotorEx) hardwareMap.dcMotor.get("bar");
         bar.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         bar.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
@@ -194,16 +207,10 @@ public class Robot {
         bar2.setPower(0.0);
     }
 
-    private void servoInit() {
-        claw = hardwareMap.servo.get("claw");
-        clawAngle = hardwareMap.servo.get("clawAngle");
-        arm = hardwareMap.servo.get("arm");
-    }
-
     public void subsystemInit()
     {
         Log.d(initLogTag, "Drive subsystem init started");
-        drive = new Drive(frontLeftDriveMotor, frontRightDriveMotor, rearLeftDriveMotor, rearRightDriveMotor, telemetry, timer, visionCorrectionEnabled);
+        drive = new Drive(frontLeftDriveMotor, frontRightDriveMotor, rearLeftDriveMotor, rearRightDriveMotor, telemetry, timer);
         Log.i(initLogTag, "Drive subsystem init finished");
 
         Log.d(initLogTag, "Control subsystem init started");

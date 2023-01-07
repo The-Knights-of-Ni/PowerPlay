@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.Robot;
+import org.firstinspires.ftc.teamcode.Subsystems.Drive.Drive;
 import org.firstinspires.ftc.teamcode.Subsystems.Vision.Vision;
 import org.firstinspires.ftc.teamcode.Util.AllianceColor;
 
@@ -29,12 +30,12 @@ import java.util.HashMap;
 
 @Autonomous(name = "Auto", group = "Concept")
 @Disabled
-public class Auto extends LinearOpMode {
+public abstract class Auto extends LinearOpMode {
 
     /**
      * Number of millimeters per an inch
      */
-    public static final float mmPerInch = 25.4f;
+    public static final float mmPerInch = (float) Drive.mmPerInch;
     /**
      * The robot class in the op mode
      */
@@ -45,10 +46,11 @@ public class Auto extends LinearOpMode {
      * @param allianceColor The alliance color
      */
     public void initAuto(AllianceColor allianceColor) {
+        Log.i("main", "*** Opmode control passed to teamcode ***");
         timer = new ElapsedTime();
         try {
             HashMap<String, Boolean> flags = new HashMap<>();
-            flags.put("vision", false);
+            flags.put("vision", true);
             flags.put("web", false);
             this.robot = new Robot(hardwareMap, telemetry, timer, allianceColor, gamepad1, gamepad2, flags);
             telemetry.addData("Waiting for start", "");
@@ -61,17 +63,5 @@ public class Auto extends LinearOpMode {
 
             stop();
         }
-    }
-
-    /**
-     * Override of runOpMode()
-     *
-     * <p>Please do not swallow the InterruptedException, as it is used in cases where the op mode
-     * needs to be terminated early.</p>
-     *
-     * @see com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
-     */
-    @Override
-    public void runOpMode() throws InterruptedException {
     }
 }
