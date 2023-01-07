@@ -163,9 +163,13 @@ public class Robot {
 
     public void init() {
         motorInit();
+        Log.d(initLogTag, "motor init finished");
         servoInit();
-        Log.i(initLogTag, "motor init finished");
+        Log.d(initLogTag, "servo init finished");
         subsystemInit();
+        Log.d(initLogTag,  "all subsystems initialized");
+        Log.i(initLogTag, "init finished");
+        telemetry.addData(initLogTag, "Initialization finished");
     }
 
     private void motorInit() {
@@ -225,7 +229,6 @@ public class Robot {
         else {
             Log.w(initLogTag, "Vision subsystem init skipped");
         }
-        telemetryBroadcast("Status", " all subsystems initialized");
     }
 
     public void getGamePadInputs() {
