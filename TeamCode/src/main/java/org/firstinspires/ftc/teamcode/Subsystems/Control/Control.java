@@ -21,7 +21,7 @@ public class Control extends Subsystem {
     public enum BarState {
         HIGH(4430, 1.0), //TODO: calibrate constants
         MIDDLE(3050, 1.0),
-        LOW(2430, 1.0),
+        LOW(1830, 1.0),
         PICKUP(0, 1.0);
 
         public final int position;
