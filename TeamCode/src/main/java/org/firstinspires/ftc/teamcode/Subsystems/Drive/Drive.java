@@ -32,7 +32,7 @@ public class Drive extends Subsystem {
             (TICKS_PER_MOTOR_REV_20 * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * Math.PI);
     private static final double COUNTS_CORRECTION_X = 1.37;
     private static final double COUNTS_CORRECTION_Y = 1.0;
-    private static final double COUNTS_PER_DEGREE = 1175/90; // 1000 ticks per 90 degrees
+    private static final double COUNTS_PER_DEGREE = 1180/90; // 1000 ticks per 90 degrees
 
     // Default drive speeds
     private static final double DRIVE_SPEED = 0.60;
@@ -41,7 +41,7 @@ public class Drive extends Subsystem {
     private static final double TURN_SPEED = 0.40;
 
     // PID Constants
-    private static final double motorKp = 0.003;
+    private static final double motorKp = 0.0025;
     private static final double motorKi = 0.000175;
     private static final double motorKd = 0.0003;
 
@@ -215,15 +215,19 @@ public class Drive extends Subsystem {
             // Update current variables
             currentTime = ((double) timer.nanoseconds()) * 1.0e-9 - startTime;
             currentCountFL = frontLeft.getCurrentPosition();
-            currentCountFR = (int) (frontRight.getCurrentPosition() / 0.75); // FR is always off, not sure why
+            currentCountFR = (int) (frontRight.getCurrentPosition() / 0.7); // FR is always off, not sure why
             currentCountRL = rearLeft.getCurrentPosition();
             currentCountRR = rearRight.getCurrentPosition();
 
-            // PID contro
+            // PID control
             double powerFL = flControl.calculate(tickCount[0], currentCountFL);
             double powerFR = frControl.calculate(tickCount[1], currentCountFR);
             double powerRL = rlControl.calculate(tickCount[2], currentCountRL);
             double powerRR = rrControl.calculate(tickCount[3], currentCountRR);
+            frontLeft.setPower(DRIVE_SPEED * powerFL);
+            frontRight.setPower(DRIVE_SPEED * powerFR);
+            rearLeft.setPower(DRIVE_SPEED * powerRL);
+            rearRight.setPower(DRIVE_SPEED * powerRR);
 
             // Check for target hit
             double directionSign;
@@ -231,31 +235,26 @@ public class Drive extends Subsystem {
             if (tickCount[0] == 0 || currentCountFL * directionSign >= Math.abs(tickCount[0])) {
                 isMotorFLDone = true;
                 isMotorFLNotMoving = true;
-                powerFL = 0;
+                frontLeft.setPower(0.0);
             }
             directionSign = tickCount[1] / Math.abs(tickCount[1]);
             if (tickCount[1] == 0 || currentCountFR * directionSign >= Math.abs(tickCount[1])) {
                 isMotorFRDone = true;
                 isMotorFRNotMoving = true;
-                powerFR = 0;
+                frontRight.setPower(0.0);
             }
             directionSign = tickCount[2] / Math.abs(tickCount[2]);
             if (tickCount[2] == 0 || currentCountRL * directionSign >= Math.abs(tickCount[2])) {
                 isMotorRLDone = true;
                 isMotorRLNotMoving = true;
-                powerRL = 0;
+                rearLeft.setPower(0.0);
             }
             directionSign = tickCount[3] / Math.abs(tickCount[3]);
             if (tickCount[3] == 0 || currentCountRR * directionSign >= Math.abs(tickCount[3])) {
                 isMotorRRDone = true;
                 isMotorRRNotMoving = true;
-                powerRR = 0;
+                rearRight.setPower(0.0);
             }
-
-            frontLeft.setPower(DRIVE_SPEED * powerFL);
-            frontRight.setPower(DRIVE_SPEED * powerFR);
-            rearLeft.setPower(DRIVE_SPEED * powerRL);
-            rearRight.setPower(DRIVE_SPEED * powerRR);
 
             // Check for timeout
             if (initialized) { // check if the motor is rotating
