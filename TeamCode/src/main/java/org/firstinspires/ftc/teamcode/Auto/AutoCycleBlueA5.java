@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.Auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.Subsystems.Vision.ConeColorPipeline;
+import org.firstinspires.ftc.teamcode.Subsystems.Vision.ConeColorPipeline.ConeColor;
 import org.firstinspires.ftc.teamcode.Util.AllianceColor;
 import org.firstinspires.ftc.teamcode.Util.Vector;
 
@@ -18,25 +18,23 @@ public class AutoCycleBlueA5 extends Auto {
      */
     @Override
     public void runOpMode() throws InterruptedException {
-
         initAuto(AllianceColor.BLUE);
-        ConeColorPipeline.ConeColor coneColor = robot.vision.detectConeColor();
         waitForStart();
         timer.reset();
-        robot.drive.moveVector(new Vector(24*mmPerInch, 0), -90);
-        robot.drive.moveRight(48*mmPerInch);
-        robot.drive.moveForward(22 * mmPerInch);
+        ConeColor coneColor = robot.vision.detectConeColor();
+        telemetry.addData("Cone Color", coneColor);
+        robot.drive.moveVector(new Vector(0*mmPerInch, 48*mmPerInch), 11.3);
         while (timer.seconds() < 20) {
             // TODO: Insert Scoring code
-            robot.drive.moveBackward(22 * mmPerInch);
+            robot.drive.moveVector(new Vector(-12*mmPerInch, -24*mmPerInch), 45);
             // TODO: Insert Intake code
-            robot.drive.moveForward(22 * mmPerInch);
+            robot.drive.moveVector(new Vector(12*mmPerInch, 24*mmPerInch), -45);
         }
-        if (coneColor == ConeColorPipeline.ConeColor.GREEN) {
-            robot.drive.moveForward(22 * mmPerInch);
-        }
-        else if (coneColor == ConeColorPipeline.ConeColor.ORANGE) {
-            robot.drive.moveForward(12 * mmPerInch);
+        switch (coneColor) {
+            case PINK:
+                robot.drive.moveVector(new Vector(0, 24*mmPerInch));
+            case ORANGE:
+                robot.drive.moveVector(new Vector(0, 48*mmPerInch));
         }
     }
 }

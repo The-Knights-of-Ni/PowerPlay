@@ -15,6 +15,7 @@ import java.util.ArrayList;
 
 public class WebThread extends Subsystem implements Runnable {
     WebThreadData wtd = WebThreadData.getWtd();
+//    Javalin app;
     int port;
 
     public WebThread(Telemetry telemetry) {

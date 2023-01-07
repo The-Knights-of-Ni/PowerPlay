@@ -175,6 +175,14 @@ public class Robot {
         frontRightDriveMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         rearLeftDriveMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         rearRightDriveMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        frontLeftDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontRightDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rearLeftDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rearRightDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontLeftDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontRightDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rearLeftDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rearRightDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public void subsystemInit()
