@@ -13,7 +13,6 @@ import org.firstinspires.ftc.teamcode.Subsystems.Subsystem;
 public class Control extends Subsystem {
 
     private DcMotorEx bar;
-    private DcMotorEx bar2;
     private Servo claw;
     private Servo clawAngle;
     private Servo arm;
@@ -69,7 +68,6 @@ public class Control extends Subsystem {
     public Control(Telemetry telemetry, DcMotorEx bar, DcMotorEx bar2, Servo claw, Servo clawAngle, Servo arm) {
         super(telemetry, "control");
         this.bar = bar;
-        this.bar2 = bar2;
         this.claw = claw;
         this.clawAngle = clawAngle;
         this.arm = arm;
@@ -84,13 +82,8 @@ public class Control extends Subsystem {
 
     public void extendBar(BarState position) {
         this.bar.setPower(position.power);
-        this.bar2.setPower(position.power);
-
         this.bar.setTargetPosition(position.position);
-        this.bar2.setTargetPosition(position.position);
-
         this.bar.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        this.bar2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
     }
 
     public void toggleClaw(ClawState clawState) {
