@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.Robot;
+import org.firstinspires.ftc.teamcode.Subsystems.Control.Control;
 import org.firstinspires.ftc.teamcode.Util.AllianceColor;
 
 import java.io.IOException;
@@ -20,9 +21,10 @@ public class ServoTest extends LinearOpMode {
         telemetry.update();
         timer = new ElapsedTime();
         HashMap<String, Boolean> flags = new HashMap<String, Boolean>();
-        flags.put("vision", true);
-        this.robot =  new Robot(hardwareMap, telemetry, timer, AllianceColor.BLUE, gamepad1, gamepad2,flags);
+        flags.put("vision", false);
+        this.robot =  new Robot(hardwareMap, telemetry, timer, AllianceColor.BLUE, gamepad1, gamepad2, flags);
 
+        robot.control.initDevices();
         robot.telemetryBroadcast("wait for start", "");
     }
 
@@ -34,9 +36,32 @@ public class ServoTest extends LinearOpMode {
             e.printStackTrace();
         }
         waitForStart();
-        while(opModeIsActive()) {
-            robot.getGamePadInputs();
+        while (opModeIsActive()) {
+            if(gamepad1.right_bumper) {
+                robot.control.toggleClaw(Control.ClawState.OPEN);
+            }
+            if(gamepad1.left_bumper) {
+                robot.control.toggleClaw(Control.ClawState.CLOSED);
+            }
+            if(gamepad1.a) {
+                robot.control.toggleClawAngle(Control.ClawAngleState.PICKUP);
+            }
+            if(gamepad1.b) {
+                robot.control.toggleClawAngle(Control.ClawAngleState.DROPOFF);
+            }
+            if(gamepad1.x) {
+                robot.control.toggleArm(Control.ArmState.PICKUP);
+            }
+            if(gamepad1.y) {
+                robot.control.toggleArm(Control.ArmState.DROPOFF);
+            }
+//            if(gamepad1.a) {
+//                robot.control.unfold();
+//            }
+//            if(gamepad1.b) {
+//                robot.control.deploy();
+//            }
         }
     }
-
 }
+

@@ -30,6 +30,12 @@ public class Robot {
     public DcMotorEx frontRightDriveMotor;
     public DcMotorEx rearRightDriveMotor;
     public DcMotorEx rearLeftDriveMotor;
+    public DcMotorEx bar;
+    public DcMotorEx bar2;
+    //Servos
+    public Servo claw;
+    public Servo clawAngle;
+    public Servo arm;
     // Odometry
     public List<LynxModule> allHubs;
     public DigitalChannel odometryRA;
@@ -157,8 +163,13 @@ public class Robot {
 
     public void init() {
         motorInit();
-        Log.i(initLogTag, "motor init finished");
+        Log.d(initLogTag, "motor init finished");
+        servoInit();
+        Log.d(initLogTag, "servo init finished");
         subsystemInit();
+        Log.d(initLogTag,  "all subsystems initialized");
+        Log.i(initLogTag, "init finished");
+        telemetry.addData(initLogTag, "Initialization finished");
     }
 
     private void motorInit() {
@@ -185,6 +196,21 @@ public class Robot {
         rearRightDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
+    private void servoInit() {
+        claw = hardwareMap.servo.get("claw");
+        clawAngle = hardwareMap.servo.get("clawAngle");
+        arm = hardwareMap.servo.get("arm");
+        bar = (DcMotorEx) hardwareMap.dcMotor.get("bar");
+        bar.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        bar.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        bar.setPower(0.0);
+
+        bar2 = (DcMotorEx) hardwareMap.dcMotor.get("bar2");
+        bar2.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        bar2.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        bar2.setPower(0.0);
+    }
+
     public void subsystemInit()
     {
         Log.d(initLogTag, "Drive subsystem init started");
@@ -192,7 +218,7 @@ public class Robot {
         Log.i(initLogTag, "Drive subsystem init finished");
 
         Log.d(initLogTag, "Control subsystem init started");
-        control = new Control(telemetry);
+        control = new Control(telemetry, bar, bar2, claw, clawAngle, arm);
         Log.i(initLogTag, "Control subsystem init finished");
 
         if (visionEnabled) {
@@ -203,7 +229,6 @@ public class Robot {
         else {
             Log.w(initLogTag, "Vision subsystem init skipped");
         }
-        telemetryBroadcast("Status", " all subsystems initialized");
     }
 
     public void getGamePadInputs() {
