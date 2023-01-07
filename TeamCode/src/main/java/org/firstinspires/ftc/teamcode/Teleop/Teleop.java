@@ -26,7 +26,7 @@ public class Teleop extends LinearOpMode {
         timer = new ElapsedTime();
         HashMap<String, Boolean> flags = new HashMap<String, Boolean>();
         flags.put("vision", false);
-        this.robot =  new Robot(hardwareMap, telemetry, timer, AllianceColor.BLUE, gamepad1, gamepad2,flags);
+        this.robot = new Robot(hardwareMap, telemetry, timer, AllianceColor.BLUE, gamepad1, gamepad2, flags);
         timeCurrent = timer.nanoseconds();
         timePre = timeCurrent;
 
@@ -72,7 +72,7 @@ public class Teleop extends LinearOpMode {
             deltaT = timeCurrent - timePre;
             timePre = timeCurrent;
 
-            if(robot.yButton) {
+            if (robot.yButton) {
                 driveHighPower = true;
             } else {
                 driveHighPower = false;
@@ -82,43 +82,42 @@ public class Teleop extends LinearOpMode {
             double[] motorPowers;
             if (driveHighPower) {
                 motorPowers = robot.drive.calcMotorPowers(robot.leftStickX * sensitivityHighPower, robot.leftStickY * sensitivityHighPower, robot.rightStickX * sensitivityHighPower);
-            }
-            else {
+            } else {
                 motorPowers = robot.drive.calcMotorPowers(robot.leftStickX * sensitivityLowPower, robot.leftStickY * sensitivityLowPower, robot.rightStickX * sensitivityLowPower);
             }
             robot.drive.setDrivePowers(motorPowers);
 
             // Score state control
-            if(robot.dPadUp) {
+            if (robot.dPadUp) {
                 robot.control.deploy(Control.BarState.HIGH);
             }
-            if(robot.dPadLeft) {
+            if (robot.dPadLeft) {
                 robot.control.deploy(Control.BarState.LOW);
             }
-            if(robot.dPadRight) {
+            if (robot.dPadRight) {
                 robot.control.deploy(Control.BarState.MIDDLE);
             }
-            if(robot.dPadDown) {
+            if (robot.dPadDown) {
                 robot.control.retract();
             }
 
             // Manual 4-bar override
-            if(robot.bumperRight) {
+            if (robot.bumperRight) {
                 robot.bar.setPower(1);
                 robot.bar.setTargetPosition(robot.bar.getCurrentPosition() + 50);
                 robot.bar.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
             }
-            if(robot.bumperLeft) {
+            if (robot.bumperLeft) {
                 robot.bar.setPower(1);
                 robot.bar.setTargetPosition(robot.bar.getCurrentPosition() - 50);
                 robot.bar.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
             }
 
             // Claw open-close
-            if(robot.triggerRight > 0.5) {
+            if (robot.triggerRight > 0.5) {
                 robot.control.toggleClaw(Control.ClawState.OPEN);
             }
-            if(robot.triggerLeft > 0.5) {
+            if (robot.triggerLeft > 0.5) {
                 robot.control.toggleClaw(Control.ClawState.CLOSED);
             }
 

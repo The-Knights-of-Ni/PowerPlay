@@ -8,21 +8,22 @@ import java.util.ArrayList;
  * Represents a Field with game objects.
  */
 public class Field {
-    private ArrayList<GameObject> gameObjects;
-
     public final BoundingBox boundingBox;
+    private ArrayList<GameObject> gameObjects;
 
     public Field(BoundingBox edges, ArrayList<GameObject> gameObjects) {
         this.boundingBox = edges;
         this.gameObjects = gameObjects;
     }
 
-    /** Checks if the coordinate is occupied by an object
+    /**
+     * Checks if the coordinate is occupied by an object
+     *
      * @param coordinate the coordinate to use
      * @return a boolean, true if the coordinate is occupied, false if not.
      */
     public boolean isOccupied(Coordinate coordinate) {
-        for (GameObject object: gameObjects) {
+        for (GameObject object : gameObjects) {
             if (object.occupies(coordinate)) {
                 return true;
             }

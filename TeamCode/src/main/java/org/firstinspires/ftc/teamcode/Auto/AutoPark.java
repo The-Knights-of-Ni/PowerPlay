@@ -1,13 +1,12 @@
 package org.firstinspires.ftc.teamcode.Auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-
 import org.firstinspires.ftc.teamcode.Subsystems.Vision.ConeColorPipeline.ConeColor;
 import org.firstinspires.ftc.teamcode.Util.AllianceColor;
 import org.firstinspires.ftc.teamcode.Util.Vector;
 
 @Autonomous(name = "Auto Park")
-public class AutoPark extends Auto{
+public class AutoPark extends Auto {
     /**
      * Override of runOpMode()
      *
@@ -26,15 +25,15 @@ public class AutoPark extends Auto{
         telemetry.update();
         switch (coneColor) {
             case GREEN:
-                robot.drive.moveVector(new Vector(-20*mmPerInch, 0));
-                robot.drive.moveVector(new Vector(0, 24*mmPerInch));
+                robot.drive.moveVector(new Vector(-20 * mmPerInch, 0));
+                robot.drive.moveVector(new Vector(0, 24 * mmPerInch));
                 break;
             case PINK:
-                robot.drive.moveVector(new Vector(0, 24*mmPerInch));
+                robot.drive.moveVector(new Vector(0, 24 * mmPerInch));
                 break;
             case ORANGE:
-                robot.drive.moveVector(new Vector(20*mmPerInch, 0));
-                robot.drive.moveVector(new Vector(0, 24*mmPerInch));
+                robot.drive.moveVector(new Vector(20 * mmPerInch, 0));
+                robot.drive.moveVector(new Vector(0, 24 * mmPerInch));
                 break;
         }
     }

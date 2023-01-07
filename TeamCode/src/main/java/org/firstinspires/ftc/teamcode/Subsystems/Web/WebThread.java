@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.Subsystems.Web;
 
 import android.util.JsonWriter;
-
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Subsystems.Subsystem;
 import org.firstinspires.ftc.teamcode.Util.WebLog;
@@ -15,7 +14,7 @@ import java.util.ArrayList;
 
 public class WebThread extends Subsystem implements Runnable {
     WebThreadData wtd = WebThreadData.getWtd();
-//    Javalin app;
+    //    Javalin app;
     int port;
 
     public WebThread(Telemetry telemetry) {
@@ -87,7 +86,7 @@ public class WebThread extends Subsystem implements Runnable {
     public String getLogs() {
         StringBuilder json = new StringBuilder("{");
         ArrayList<WebLog> logs = wtd.getLogs();
-        for (WebLog log: logs) {
+        for (WebLog log : logs) {
             json.append("\n{\n" + "\"tag\": ").append(log.TAG).append(",\n\"message\": ").append(log.message).append(",\n\"severity\": ").append(log.severity).append("\n},");
         }
         json = new StringBuilder(json.substring(0, json.length() - 2));

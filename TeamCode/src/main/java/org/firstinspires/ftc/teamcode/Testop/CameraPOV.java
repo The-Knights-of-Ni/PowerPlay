@@ -54,7 +54,7 @@ public class CameraPOV extends LinearOpMode {
         initCamera();
         waitForStart();
 
-        while(opModeIsActive()) {
+        while (opModeIsActive()) {
             telemetry.addData("Cone Color", pipeline.getConeColor().color);
             telemetry.update();
         }

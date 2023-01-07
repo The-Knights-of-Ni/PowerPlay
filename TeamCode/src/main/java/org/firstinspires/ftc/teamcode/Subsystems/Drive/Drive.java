@@ -1,7 +1,8 @@
 package org.firstinspires.ftc.teamcode.Subsystems.Drive;
 
 import android.util.Log;
-import com.qualcomm.robotcore.hardware.*;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Subsystems.Subsystem;
@@ -26,13 +27,12 @@ public class Drive extends Subsystem {
             (MOTOR_TICK_PER_REV_YELLOW_JACKET_312 * DRIVE_GEAR_REDUCTION)
                     / (GOBUILDA_MECANUM_DIAMETER_MM * Math.PI);
     private static final double WHEEL_DIAMETER_INCHES = 100.0 / mmPerInch; // For calculating circumference
-
-    private static final double WHEEL_DIAMETER_MM = 100.0;
     private static final double COUNTS_PER_INCH =
             (TICKS_PER_MOTOR_REV_20 * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * Math.PI);
+    private static final double WHEEL_DIAMETER_MM = 100.0;
     private static final double COUNTS_CORRECTION_X = 1.37;
     private static final double COUNTS_CORRECTION_Y = 1.0;
-    private static final double COUNTS_PER_DEGREE = 1180/90; // 1000 ticks per 90 degrees
+    private static final double COUNTS_PER_DEGREE = 1180 / 90; // 1000 ticks per 90 degrees
 
     // Default drive speeds
     private static final double DRIVE_SPEED = 0.60;
@@ -50,19 +50,16 @@ public class Drive extends Subsystem {
     public final DcMotorEx frontRight;
     public final DcMotorEx rearLeft;
     public final DcMotorEx rearRight;
-
+    private final ElapsedTime timer;
     // PID Controllers
     public PID flControl;
     public PID frControl;
     public PID rlControl;
     public PID rrControl;
-
     // State variables for robot position
     private double robotX;
     private double robotY;
     private double robotTheta;
-
-    private final ElapsedTime timer;
     private long startTime;
 
     /**
@@ -211,7 +208,7 @@ public class Drive extends Subsystem {
         int timeOutThreshold = 3; // If the encoder does not change by 2 ticks, motor is "stuck"
         double currentTime = 0.0;
 
-        while(((!isMotorFLDone) || (!isMotorFRDone) || (!isMotorRLDone) || (!isMotorRRDone)) && (!isTimeOutExceeded)) {
+        while (((!isMotorFLDone) || (!isMotorFRDone) || (!isMotorRLDone) || (!isMotorRRDone)) && (!isTimeOutExceeded)) {
             // Update current variables
             currentTime = ((double) timer.nanoseconds()) * 1.0e-9 - startTime;
             currentCountFL = frontLeft.getCurrentPosition();
@@ -301,14 +298,14 @@ public class Drive extends Subsystem {
         double angle = Math.atan2(newV.getY(), newV.getX()) - Math.PI / 4;
 
         int tickCount[] = new int[4];
-        tickCount[0] = (int)((distance * Math.cos(angle)));
-        tickCount[0] -= (int)(turnAngle * COUNTS_PER_DEGREE);
-        tickCount[1] = (int)((distance * Math.sin(angle)));
-        tickCount[1] += (int)(turnAngle * COUNTS_PER_DEGREE);
-        tickCount[2] = (int)((distance * Math.sin(angle)));
-        tickCount[2] -= (int)(turnAngle * COUNTS_PER_DEGREE);
-        tickCount[3] = (int)((distance * Math.cos(angle)));
-        tickCount[3] += (int)(turnAngle * COUNTS_PER_DEGREE);
+        tickCount[0] = (int) ((distance * Math.cos(angle)));
+        tickCount[0] -= (int) (turnAngle * COUNTS_PER_DEGREE);
+        tickCount[1] = (int) ((distance * Math.sin(angle)));
+        tickCount[1] += (int) (turnAngle * COUNTS_PER_DEGREE);
+        tickCount[2] = (int) ((distance * Math.sin(angle)));
+        tickCount[2] -= (int) (turnAngle * COUNTS_PER_DEGREE);
+        tickCount[3] = (int) ((distance * Math.cos(angle)));
+        tickCount[3] += (int) (turnAngle * COUNTS_PER_DEGREE);
 
         allMotorPIDControl(tickCount);
         stop();
