@@ -4,11 +4,11 @@ import org.firstinspires.ftc.teamcode.DriveControl.BoundingBox;
 import org.firstinspires.ftc.teamcode.Util.Vector;
 
 public class VisionCorrectionThreadData {
-    private static VisionCorrectionThreadData vtd;
-    private static Vector correctionVector;
+    private volatile static VisionCorrectionThreadData vtd;
+    private volatile static Vector correctionVector;
 
-    private static BoundingBox theoreticalPosition;
-    private static boolean close = false;
+    private volatile static BoundingBox theoreticalPosition;
+    private volatile static boolean close = false;
 
     public static VisionCorrectionThreadData getVTD() {
         return vtd;
