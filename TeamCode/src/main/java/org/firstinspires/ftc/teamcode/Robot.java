@@ -30,6 +30,11 @@ public class Robot {
     public DcMotorEx frontRightDriveMotor;
     public DcMotorEx rearRightDriveMotor;
     public DcMotorEx rearLeftDriveMotor;
+    public DcMotorEx bar;
+    //Servos
+    public Servo claw;
+    public Servo clawAngle;
+    public Servo arm;
     // Odometry
     public List<LynxModule> allHubs;
     public DigitalChannel odometryRA;
@@ -157,6 +162,7 @@ public class Robot {
 
     public void init() {
         motorInit();
+        servoInit();
         Log.i(initLogTag, "motor init finished");
         subsystemInit();
     }
@@ -175,14 +181,17 @@ public class Robot {
         frontRightDriveMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         rearLeftDriveMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         rearRightDriveMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        frontLeftDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontRightDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rearLeftDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rearRightDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontLeftDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontRightDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rearLeftDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rearRightDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        bar = (DcMotorEx) hardwareMap.dcMotor.get("bar");
+        bar.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        bar.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        bar.setPower(0.0);
+    }
+
+    private void servoInit() {
+        claw = hardwareMap.servo.get("claw");
+        clawAngle = hardwareMap.servo.get("clawAngle");
+        arm = hardwareMap.servo.get("arm");
     }
 
     public void subsystemInit()
@@ -192,7 +201,7 @@ public class Robot {
         Log.i(initLogTag, "Drive subsystem init finished");
 
         Log.d(initLogTag, "Control subsystem init started");
-        control = new Control(telemetry);
+        control = new Control(telemetry, bar, claw, clawAngle, arm);
         Log.i(initLogTag, "Control subsystem init finished");
 
         if (visionEnabled) {

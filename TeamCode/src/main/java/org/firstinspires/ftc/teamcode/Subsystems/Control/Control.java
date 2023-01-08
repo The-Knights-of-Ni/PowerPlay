@@ -12,15 +12,16 @@ import org.firstinspires.ftc.teamcode.Subsystems.Subsystem;
  */
 public class Control extends Subsystem {
 
-    private DcMotorEx extendBar;
-    private Servo flipServo;
-    private Servo clawServo;
+    private DcMotorEx bar;
+    private Servo claw;
+    private Servo clawAngle;
+    private Servo arm;
 
     public enum BarState {
-        HIGH(0, 0.5), //TODO: calibrate constants
-        MIDDLE(1, 0.5),
-        LOW(2, 0.5),
-        Pickup(0, 0.5);
+        HIGH(5230, 1.0), //TODO: calibrate constants
+        MIDDLE(3710, 1.0),
+        LOW(2475, 1.0),
+        PICKUP(0, 1.0);
 
         public final int position;
         public final double power;
@@ -31,53 +32,80 @@ public class Control extends Subsystem {
         }
     }
 
-    public Control(Telemetry telemetry, Servo flipServo, Servo clawServo) {
+    public enum ClawState {
+        CLOSED(0.72),
+        OPEN(0.63);
+
+        public final double position;
+
+        ClawState(double position) {
+            this.position = position;
+        }
+    }
+
+    public enum ArmState {
+        DROPOFF(0.19),
+        PICKUP(0);
+
+        public final double position;
+
+        ArmState(double position) {
+            this.position = position;
+        }
+    }
+
+    public enum ClawAngleState {
+        PICKUP(0.05),
+        DROPOFF(0.675);
+
+        public final double position;
+
+        ClawAngleState(double position) {
+            this.position = position;
+        }
+    }
+
+    public Control(Telemetry telemetry, DcMotorEx bar, Servo claw, Servo clawAngle, Servo arm) {
         super(telemetry, "control");
-        this.flipServo = flipServo;
-        this.clawServo = clawServo;
+        this.bar = bar;
+        this.claw = claw;
+        this.clawAngle = clawAngle;
+        this.arm = arm;
     }
 
-    public Control(Telemetry telemetry) { // TODO: Delete this
-        super(telemetry, "control");
+    public void initDevices() {
+        this.extendBar(BarState.PICKUP);
+        this.toggleArm(ArmState.PICKUP);
+        this.toggleClawAngle(ClawAngleState.PICKUP);
+        this.toggleClaw(ClawState.CLOSED);
     }
 
-    public void extend4Bar(BarState position) {
-        this.turn4Bar(position);
-        switch (position) {
-            case LOW:
-                this.turnFlipServo(0);
-                break;
-            case MIDDLE:
-                this.turnFlipServo(1);
-                break;
-            case HIGH:
-                this.turnFlipServo(2);
-                break;
-        }
+    public void extendBar(BarState position) {
+        this.bar.setPower(position.power);
+        this.bar.setTargetPosition(position.position);
+        this.bar.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
     }
 
-    private void turn4Bar(BarState position) {
-        this.extendBar.setTargetPosition(position.position);
-        this.extendBar.setPower(position.power);
-        this.extendBar.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    public void toggleClaw(ClawState clawState) {
+        this.claw.setPosition(clawState.position);
     }
 
-    private void turnFlipServo(double position) {
-        this.flipServo.setPosition(position);
+    public void toggleArm(ArmState armState) {
+        this.arm.setPosition(armState.position);
     }
 
-    private void turnClawServo(double position) {
-        this.clawServo.setPosition(position);
+    public void toggleClawAngle(ClawAngleState clawAngleState) {
+        this.clawAngle.setPosition(clawAngleState.position);
     }
 
-
-    public void turn4BarWithClaw(BarState position) {
-        flipServo.setPosition(position.position);
-        if (position.position > 0.25) {
-            clawServo.setPosition(1.25 - position.position);
-        }
-        else {
-            clawServo.setPosition(0.25 - position.position);
-        }
+    public void deploy(BarState barState) {
+        this.extendBar(barState);
+        this.toggleClawAngle(ClawAngleState.DROPOFF);
+        this.toggleArm(ArmState.DROPOFF);
+    }
+    public void retract() {
+        this.toggleClawAngle(ClawAngleState.PICKUP);
+        this.toggleArm(ArmState.PICKUP);
+        this.extendBar(BarState.PICKUP);
     }
 }
