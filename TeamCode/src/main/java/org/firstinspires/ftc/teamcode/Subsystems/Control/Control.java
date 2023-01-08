@@ -18,9 +18,9 @@ public class Control extends Subsystem {
     private Servo arm;
 
     public enum BarState {
-        HIGH(4430, 1.0), //TODO: calibrate constants
-        MIDDLE(3050, 1.0),
-        LOW(1830, 1.0),
+        HIGH(5230, 1.0), //TODO: calibrate constants
+        MIDDLE(3710, 1.0),
+        LOW(2475, 1.0),
         PICKUP(0, 1.0);
 
         public final int position;
@@ -44,8 +44,8 @@ public class Control extends Subsystem {
     }
 
     public enum ArmState {
-        DROPOFF(0.23),
-        PICKUP(0.025);
+        DROPOFF(0.19),
+        PICKUP(0);
 
         public final double position;
 
@@ -56,7 +56,7 @@ public class Control extends Subsystem {
 
     public enum ClawAngleState {
         PICKUP(0),
-        DROPOFF(0.625);
+        DROPOFF(0.675);
 
         public final double position;
 
