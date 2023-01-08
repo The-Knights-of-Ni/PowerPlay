@@ -23,12 +23,12 @@ public class AutoCycleBlueA5 extends Auto {
         timer.reset();
         ConeColor coneColor = robot.vision.detectConeColor();
         telemetry.addData("Cone Color", coneColor);
-        robot.drive.moveVector(new Vector(0*mmPerInch, 48*mmPerInch), 11.3);
+        robot.drive.moveVector(new Vector(12*mmPerInch, 12*mmPerInch));
+        robot.drive.moveVector(new Vector(0*mmPerInch, 96*mmPerInch));
         while (timer.seconds() < 20) {
-            // TODO: Insert Scoring code
-            robot.drive.moveVector(new Vector(-12*mmPerInch, -24*mmPerInch), 45);
+            robot.drive.moveVector(new Vector(-12*mmPerInch, -24*mmPerInch), 0);
             // TODO: Insert Intake code
-            robot.drive.moveVector(new Vector(12*mmPerInch, 24*mmPerInch), -45);
+            robot.drive.moveVector(new Vector(12*mmPerInch, 24*mmPerInch), 0);
         }
         switch (coneColor) {
             case PINK:
