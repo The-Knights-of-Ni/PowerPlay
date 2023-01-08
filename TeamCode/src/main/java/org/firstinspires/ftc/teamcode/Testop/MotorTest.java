@@ -25,7 +25,7 @@ public class MotorTest extends LinearOpMode {
         this.robot = new Robot(hardwareMap, telemetry, timer, AllianceColor.BLUE, gamepad1, gamepad2, flags);
 
         // Initializing start state
-        robot.control.initDevices();
+        robot.control.initDevicesTeleop();
 
         waitForStart();
         while (opModeIsActive()) {

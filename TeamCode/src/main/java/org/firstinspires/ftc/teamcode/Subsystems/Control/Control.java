@@ -44,7 +44,7 @@ public class Control extends Subsystem {
     }
 
     public enum ArmState {
-        DROPOFF(0.19),
+        DROPOFF(0.215),
         PICKUP(0);
 
         public final double position;
@@ -73,11 +73,17 @@ public class Control extends Subsystem {
         this.arm = arm;
     }
 
-    public void initDevices() {
+    public void initDevicesAuto() {
         this.extendBar(BarState.PICKUP);
         this.toggleArm(ArmState.PICKUP);
-        this.toggleClawAngle(ClawAngleState.PICKUP);
         this.toggleClaw(ClawState.CLOSED);
+    }
+
+    public void initDevicesTeleop() {
+        this.extendBar(BarState.PICKUP);
+        this.toggleArm(ArmState.PICKUP);
+        this.toggleClaw(ClawState.CLOSED);
+        this.toggleClawAngle(ClawAngleState.PICKUP);
     }
 
     public void extendBar(BarState position) {

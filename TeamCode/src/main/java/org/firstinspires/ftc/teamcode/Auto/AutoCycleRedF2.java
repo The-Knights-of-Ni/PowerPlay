@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.Auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+
+import org.firstinspires.ftc.teamcode.Subsystems.Control.Control;
 import org.firstinspires.ftc.teamcode.Subsystems.Vision.ConeColorPipeline.ConeColor;
 import org.firstinspires.ftc.teamcode.Util.AllianceColor;
 import org.firstinspires.ftc.teamcode.Util.Vector;
@@ -16,13 +18,17 @@ public class AutoCycleRedF2 extends Auto {
         telemetry.addData("Cone Color", coneColor);
         robot.drive.moveVector(new Vector(0*mmPerInch, 48*mmPerInch));
         robot.drive.moveVector(new Vector(12*mmPerInch, 0*mmPerInch));
+
+        robot.control.deploy(Control.BarState.HIGH);
+        while(robot.bar.getCurrentPosition() - Control.BarState.HIGH.position < -10);
+        robot.control.toggleClaw(Control.ClawState.OPEN);
         // TODO: Score preloaded here
-        robot.drive.moveVector(new Vector(-12*mmPerInch, 0));
-        robot.drive.moveVector(new Vector(0, 0), -90);
-        robot.drive.moveVector(new Vector(0*mmPerInch, -21.5*mmPerInch));
-        // TODO: Pickup cone
-        robot.drive.moveVector(new Vector(0*mmPerInch, 21.5*mmPerInch));
-        robot.drive.moveVector(new Vector(0*mmPerInch, 0*mmPerInch), 45);
+//        robot.drive.moveVector(new Vector(-12*mmPerInch, 0));
+//        robot.drive.moveVector(new Vector(0, 0), -90);
+//        robot.drive.moveVector(new Vector(0*mmPerInch, -21.5*mmPerInch));
+//        // TODO: Pickup cone
+//        robot.drive.moveVector(new Vector(0*mmPerInch, 21.5*mmPerInch));
+//        robot.drive.moveVector(new Vector(0*mmPerInch, 0*mmPerInch), 45);
         // TODO: Score/Cycle
         // TODO: Park based on cone color
 

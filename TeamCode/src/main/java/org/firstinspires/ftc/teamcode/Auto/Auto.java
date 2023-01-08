@@ -53,14 +53,13 @@ public abstract class Auto extends LinearOpMode {
             flags.put("vision", true);
             flags.put("web", false);
             this.robot = new Robot(hardwareMap, telemetry, timer, allianceColor, gamepad1, gamepad2, flags);
+            robot.control.initDevicesAuto();
             telemetry.addData("Waiting for start", "");
             telemetry.update();
         } catch (Exception ioException) {
-//            telemetry.addData("ERROR: ", );
             telemetry.addData("ERROR: ", "IO EXCEPTION", ioException);
             telemetry.update();
             Log.e("main", "fatal error IO EXCEPTION", ioException);
-
             stop();
         }
     }

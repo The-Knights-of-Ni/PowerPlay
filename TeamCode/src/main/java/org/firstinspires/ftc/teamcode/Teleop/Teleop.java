@@ -34,10 +34,6 @@ public class Teleop extends LinearOpMode {
         telemetry.update();
     }
 
-    private void initDevices() {
-        robot.control.initDevices();
-    }
-
     /**
      * Override of runOpMode()
      *
@@ -55,7 +51,7 @@ public class Teleop extends LinearOpMode {
         }
 
         ElapsedTime timer = new ElapsedTime();
-        initDevices();
+        robot.control.initDevicesTeleop();
         waitForStart();
 
         telemetry.clearAll();
