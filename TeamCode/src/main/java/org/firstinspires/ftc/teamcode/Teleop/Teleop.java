@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.Robot;
@@ -72,6 +73,10 @@ public class Teleop extends LinearOpMode {
                 driveHighPower = true;
             } else {
                 driveHighPower = false;
+            }
+
+            if(robot.bButton) {
+                robot.bar.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             }
 
             // Robot drive movement

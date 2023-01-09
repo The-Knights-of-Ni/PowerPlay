@@ -19,8 +19,8 @@ public class Control extends Subsystem {
 
     public enum BarState {
         HIGH(5230, 1.0), //TODO: calibrate constants
-        MIDDLE(3710, 1.0),
-        LOW(2475, 1.0),
+        MIDDLE(3810, 1.0),
+        LOW(3500, 1.0),
         PICKUP(0, 1.0);
 
         public final int position;
@@ -77,6 +77,8 @@ public class Control extends Subsystem {
         this.extendBar(BarState.PICKUP);
         this.toggleArm(ArmState.PICKUP);
         this.toggleClaw(ClawState.CLOSED);
+        this.toggleClawAngle(ClawAngleState.PICKUP);
+
     }
 
     public void initDevicesTeleop() {

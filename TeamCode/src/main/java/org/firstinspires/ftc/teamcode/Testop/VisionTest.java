@@ -20,7 +20,11 @@ import java.util.HashMap;
 public class VisionTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
+        waitForStart();
         Robot robot = new Robot(hardwareMap, telemetry, new ElapsedTime(), AllianceColor.BLUE, gamepad1, gamepad2, new HashMap<>());
-        telemetry.addData("cone color", robot.vision.detectConeColor());
+        while(opModeIsActive()) {
+            telemetry.addData("cone color", robot.vision.detectConeColor());
+            telemetry.update();
+        }
     }
 }
