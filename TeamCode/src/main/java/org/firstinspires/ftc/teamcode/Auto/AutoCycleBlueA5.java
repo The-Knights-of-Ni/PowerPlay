@@ -24,10 +24,6 @@ public class AutoCycleBlueA5 extends Auto {
         telemetry.update();
         robot.vision.stop();
 
-        // Manual override to get the cone above floor
-        robot.bar.setTargetPosition(200);
-        robot.bar.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-
         // Move towards high goal & score pre-loaded
         robot.drive.moveVector(new Vector(0*mmPerInch, 48*mmPerInch));
         robot.control.deploy(Control.BarState.HIGH);
