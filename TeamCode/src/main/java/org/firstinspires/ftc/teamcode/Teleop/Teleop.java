@@ -90,26 +90,26 @@ public class Teleop extends LinearOpMode {
             robot.drive.setDrivePowers(motorPowers);
 
             // Score state control
-            if(robot.dPadUp) {
+            if(robot.dPadUp || robot.dPadUp2) {
                 robot.control.deploy(Control.BarState.HIGH);
             }
-            if(robot.dPadLeft) {
+            if(robot.dPadLeft || robot.dPadLeft2) {
                 robot.control.deploy(Control.BarState.LOW);
             }
-            if(robot.dPadRight) {
+            if(robot.dPadRight || robot.dPadRight2) {
                 robot.control.deploy(Control.BarState.MIDDLE);
             }
-            if(robot.dPadDown) {
+            if(robot.dPadDown || robot.dPadDown2) {
                 robot.control.retract();
             }
 
             // Manual 4-bar override
-            if(robot.bumperRight) {
+            if(robot.bumperRight || robot.bumperRight2) {
                 robot.bar.setPower(1);
                 robot.bar.setTargetPosition(robot.bar.getCurrentPosition() + 50);
                 robot.bar.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
             }
-            if(robot.bumperLeft) {
+            if(robot.bumperLeft || robot.bumperLeft2) {
                 robot.bar.setPower(1);
                 robot.bar.setTargetPosition(robot.bar.getCurrentPosition() - 50);
                 robot.bar.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
