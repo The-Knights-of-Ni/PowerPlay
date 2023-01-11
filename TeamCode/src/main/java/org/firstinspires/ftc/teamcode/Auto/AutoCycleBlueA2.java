@@ -29,7 +29,7 @@ public class AutoCycleBlueA2 extends Auto {
         robot.control.deploy(Control.BarState.HIGH);
         robot.drive.moveVector(new Vector(-11*mmPerInch, 0*mmPerInch));
         sleep(2000);
-        robot.drive.moveVector(new Vector(0*mmPerInch, 5*mmPerInch));
+        robot.drive.moveVector(new Vector(0*mmPerInch, 7*mmPerInch));
         robot.control.toggleClaw(Control.ClawState.OPEN);
         sleep(500);
 
