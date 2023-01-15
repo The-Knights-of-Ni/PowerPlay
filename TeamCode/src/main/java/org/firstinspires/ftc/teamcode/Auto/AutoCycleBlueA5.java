@@ -13,16 +13,19 @@ public class AutoCycleBlueA5 extends Auto {
     @Override
     public void runOpMode() throws InterruptedException {
         // ALWAYS START ROBOT 3 in. from edge of the tile that's farther from center of field
-        // Initialize devices
+        // Initialize devices, scan cone color
         initAuto(AllianceColor.BLUE);
+        ConeColor coneColor = ConeColor.OTHER;
+        while(coneColor == ConeColor.OTHER) {
+            coneColor = robot.vision.detectConeColor();
+        }
+        robot.vision.stop();
         waitForStart();
         timer.reset();
 
         // Scan for cone color, display on telemetry
-        ConeColor coneColor = robot.vision.detectConeColor();
         telemetry.addData("Cone Color", coneColor.color);
         telemetry.update();
-        robot.vision.stop();
 
         // Move towards high goal & score pre-loaded
         robot.drive.moveVector(new Vector(0*mmPerInch, 48*mmPerInch));
