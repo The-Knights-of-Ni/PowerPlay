@@ -15,16 +15,16 @@ public class AutoCycleRedF5 extends Auto {
         // ALWAYS START ROBOT 3 in. from edge of the tile that's farther from center of field
         // Initialize devices
         initAuto(AllianceColor.RED);
+        waitForStart();
+        timer.reset();
+
+        // Scan for cone color, display on telemetry
+        robot.vision.start();
         ConeColor coneColor = ConeColor.OTHER;
         while(coneColor == ConeColor.OTHER) {
             coneColor = robot.vision.detectConeColor();
         }
         robot.vision.stop();
-
-        waitForStart();
-        timer.reset();
-
-        // Scan for cone color, display on telemetry
         telemetry.addData("Cone Color", coneColor.color);
         telemetry.update();
 

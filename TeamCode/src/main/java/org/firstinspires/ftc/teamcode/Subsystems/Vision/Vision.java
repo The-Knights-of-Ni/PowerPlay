@@ -74,8 +74,6 @@ public class Vision extends Subsystem {
         super(telemetry, "vision");
         this.hardwareMap = hardwareMap;
         this.allianceColor = allianceColor;
-        // Create camera instances for the detection pipeline
-        initDetectionPipeline();
 
         // Telemetry
         telemetry.addLine("Vision init complete");
@@ -123,6 +121,11 @@ public class Vision extends Subsystem {
     public OpenGLMatrix createMatrix(float x, float y, float z, float u, float v, float w) {
         return OpenGLMatrix.translation(x, y, z)
                 .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, u, v, w));
+    }
+
+    public void start() {
+        // Create camera instances for the detection pipeline
+        initDetectionPipeline();
     }
 
     public void stop() {

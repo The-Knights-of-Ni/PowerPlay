@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Robot;
+import org.firstinspires.ftc.teamcode.Subsystems.Vision.ConeColorPipeline;
 import org.firstinspires.ftc.teamcode.Util.AllianceColor;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -20,11 +21,16 @@ import java.util.HashMap;
 public class VisionTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        waitForStart();
         Robot robot = new Robot(hardwareMap, telemetry, new ElapsedTime(), AllianceColor.BLUE, gamepad1, gamepad2, new HashMap<>());
-        while(opModeIsActive()) {
-            telemetry.addData("cone color", robot.vision.detectConeColor());
-            telemetry.update();
+
+        waitForStart();
+        robot.vision.start();
+        ConeColorPipeline.ConeColor coneColor = ConeColorPipeline.ConeColor.OTHER;
+        while(coneColor == ConeColorPipeline.ConeColor.OTHER) {
+            coneColor = robot.vision.detectConeColor();
         }
+        telemetry.addData("cone color", coneColor);
+        telemetry.update();
+        sleep(10000);
     }
 }

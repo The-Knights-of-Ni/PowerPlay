@@ -13,20 +13,25 @@ public class AutoPark extends Auto{
         initAuto(AllianceColor.RED);
         waitForStart();
         timer.reset();
-        ConeColor coneColor = robot.vision.detectConeColor();
+        robot.vision.start();
+        ConeColor coneColor = ConeColor.OTHER;
+        while(coneColor == ConeColor.OTHER) {
+            coneColor = robot.vision.detectConeColor();
+        }
+        robot.vision.stop();
         telemetry.addData("Cone Color", coneColor.color);
         telemetry.update();
         switch (coneColor) {
             case GREEN:
                 robot.drive.moveVector(new Vector(-20*mmPerInch, 0));
-                robot.drive.moveVector(new Vector(0, 24*mmPerInch));
+                robot.drive.moveVector(new Vector(0, 36*mmPerInch));
                 break;
             case PINK:
-                robot.drive.moveVector(new Vector(0, 24*mmPerInch));
+                robot.drive.moveVector(new Vector(0, 36*mmPerInch));
                 break;
             case ORANGE:
                 robot.drive.moveVector(new Vector(20*mmPerInch, 0));
-                robot.drive.moveVector(new Vector(0, 24*mmPerInch));
+                robot.drive.moveVector(new Vector(0, 36*mmPerInch));
                 break;
         }
     }
