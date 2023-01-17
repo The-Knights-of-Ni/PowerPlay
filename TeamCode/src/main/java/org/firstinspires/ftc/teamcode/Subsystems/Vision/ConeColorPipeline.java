@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Subsystems.Vision;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Robot;
 import org.opencv.core.Mat;
+import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Core;
 import org.opencv.imgproc.Imgproc;
@@ -29,8 +30,8 @@ public class ConeColorPipeline extends OpenCvPipeline {
      */
     public enum ConeColor {
         GREEN(new Scalar(50,80,20), new Scalar(90,255,255), "Green"),
-        ORANGE(new Scalar(8, 100, 200), new Scalar(35, 255, 255), "Orange"),
-        PINK(new Scalar(150,130,150), new Scalar(170,180,255), "Pink"),
+        ORANGE(new Scalar(4, 100, 50), new Scalar(25, 255, 255), "Orange"),
+        PINK(new Scalar(145,100,50), new Scalar(170,230,255), "Pink"),
         OTHER(new Scalar(0,0,0), new Scalar(0,0,0), "Other"); // leave OTHER as is
         public final Scalar lowHSV;
         public final Scalar highHSV;
@@ -72,19 +73,23 @@ public class ConeColorPipeline extends OpenCvPipeline {
         Mat mask = new Mat();
         Imgproc.cvtColor(input, mask, Imgproc.COLOR_RGB2HSV);
 
+        final int CROP_WIDTH = 960;
+        Rect rectCrop = new Rect(480, 0, CROP_WIDTH, CAMERA_HEIGHT);
+        Mat crop = new Mat(mask, rectCrop);
+
         // Find all pixels within given threshold color values
         Mat threshMagenta = new Mat();
         Mat threshGreen = new Mat();
         Mat threshOrange = new Mat();
 
-        Core.inRange(mask, ConeColor.PINK.lowHSV, ConeColor.PINK.highHSV, threshMagenta);
-        Core.inRange(mask, ConeColor.GREEN.lowHSV, ConeColor.GREEN.highHSV, threshGreen);
-        Core.inRange(mask, ConeColor.ORANGE.lowHSV, ConeColor.ORANGE.highHSV, threshOrange);
+        Core.inRange(crop, ConeColor.PINK.lowHSV, ConeColor.PINK.highHSV, threshMagenta);
+        Core.inRange(crop, ConeColor.GREEN.lowHSV, ConeColor.GREEN.highHSV, threshGreen);
+        Core.inRange(crop, ConeColor.ORANGE.lowHSV, ConeColor.ORANGE.highHSV, threshOrange);
 
         // Select the mat which has the most white pixels
-        double magentaSum = Core.sumElems(threshMagenta).val[0] / (CAMERA_HEIGHT*CAMERA_WIDTH) / 255;
-        double greenSum = Core.sumElems(threshGreen).val[0] / (CAMERA_HEIGHT*CAMERA_WIDTH) / 255;
-        double cyanSum = Core.sumElems(threshOrange).val[0] / (CAMERA_HEIGHT * CAMERA_WIDTH) / 255;
+        double magentaSum = Core.sumElems(threshMagenta).val[0] / (CAMERA_HEIGHT*CROP_WIDTH) / 255;
+        double greenSum = Core.sumElems(threshGreen).val[0] / (CAMERA_HEIGHT*CROP_WIDTH) / 255;
+        double cyanSum = Core.sumElems(threshOrange).val[0] / (CAMERA_HEIGHT * CROP_WIDTH) / 255;
 
         if(magentaSum > 0 || greenSum > 0 || cyanSum > 0) {
             if(magentaSum >= greenSum && magentaSum >= cyanSum) {

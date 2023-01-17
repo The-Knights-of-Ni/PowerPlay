@@ -29,7 +29,8 @@ public class VisionTest extends LinearOpMode {
         while(coneColor == ConeColorPipeline.ConeColor.OTHER) {
             coneColor = robot.vision.detectConeColor();
         }
-        telemetry.addData("cone color", coneColor);
+        robot.vision.stop();
+        telemetry.addData("cone color", coneColor.color);
         telemetry.update();
         sleep(10000);
     }

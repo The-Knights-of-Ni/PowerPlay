@@ -60,7 +60,7 @@ public class Teleop extends LinearOpMode {
         timePre = timeCurrent;
 
         final double sensitivityHighPower = 1.0; // multiply inputs with this on high power mode
-        final double sensitivityLowPower = 0.5; // multiply inputs with this on non-high power mode
+        final double sensitivityLowPower = 0.7; // multiply inputs with this on non-high power mode
 
         while (opModeIsActive()) { // clearer nomenclature for variables
             robot.getGamePadInputs();
