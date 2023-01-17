@@ -117,12 +117,12 @@ public class Teleop extends LinearOpMode {
             // Manual 4-bar override
             if(robot.bumperRight || robot.bumperRight2) {
                 robot.bar.setPower(1);
-                robot.bar.setTargetPosition(robot.bar.getCurrentPosition() + 50);
+                robot.bar.setTargetPosition(robot.bar.getCurrentPosition() + 150);
                 robot.bar.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
             }
             if(robot.bumperLeft || robot.bumperLeft2) {
                 robot.bar.setPower(1);
-                robot.bar.setTargetPosition(robot.bar.getCurrentPosition() - 50);
+                robot.bar.setTargetPosition(robot.bar.getCurrentPosition() - 150);
                 robot.bar.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
             }
 
