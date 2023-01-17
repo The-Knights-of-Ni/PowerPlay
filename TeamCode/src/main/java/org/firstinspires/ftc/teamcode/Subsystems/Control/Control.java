@@ -108,8 +108,18 @@ public class Control extends Subsystem {
 
     public void deploy(BarState barState) {
         this.extendBar(barState);
+        if(barState == BarState.HIGH) {
+            this.toggleClawAngle(ClawAngleState.DROPOFF);
+            this.toggleArm(ArmState.DROPOFF);
+        }
+    }
+    public void dropoffArm() {
         this.toggleClawAngle(ClawAngleState.DROPOFF);
         this.toggleArm(ArmState.DROPOFF);
+    }
+    public void pickupArm() {
+        this.toggleClawAngle(ClawAngleState.PICKUP);
+        this.toggleArm(ArmState.PICKUP);
     }
     public void retract() {
         this.toggleClawAngle(ClawAngleState.PICKUP);

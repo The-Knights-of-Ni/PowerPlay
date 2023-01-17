@@ -21,6 +21,7 @@ public class Teleop extends LinearOpMode {
     private Robot robot;
 
     private boolean driveHighPower = true;
+    private boolean armDeployed = false;
 
     private void initOpMode() throws IOException {
         // Initialize DC motor objects
@@ -77,6 +78,16 @@ public class Teleop extends LinearOpMode {
 
             if(robot.bButton) {
                 robot.bar.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            }
+
+            if(robot.aButton && !robot.isaButtonPressedPrev) {
+                if(armDeployed) {
+                    robot.control.pickupArm();
+                    armDeployed = false;
+                } else {
+                    robot.control.dropoffArm();
+                    armDeployed = true;
+                }
             }
 
             // Robot drive movement
