@@ -27,7 +27,6 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.
 public class Vision extends Subsystem {
     public static final int CAMERA_WIDTH = 1920; // width of wanted camera resolution
     public static final int CAMERA_HEIGHT = 1080; // height of wanted camera resolution
-    public static final int HORIZON = 100; // horizon value to tune
     public static final String WEBCAM_NAME =
             "Webcam 1"; // insert webcam name from configuration if using webcam
     public static final String VUFORIA_KEY = "AdaaiLz/////AAABmY48m0KCh0LSrL2edcDLhdMoRzt30ceXdmqa4QAa4krhLO2RXrW8IHU" +

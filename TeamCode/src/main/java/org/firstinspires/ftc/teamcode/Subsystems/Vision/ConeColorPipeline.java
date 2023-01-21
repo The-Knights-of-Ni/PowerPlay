@@ -31,7 +31,7 @@ public class ConeColorPipeline extends OpenCvPipeline {
     public enum ConeColor {
         GREEN(new Scalar(50,80,20), new Scalar(90,255,255), "Green"),
         ORANGE(new Scalar(4, 100, 50), new Scalar(25, 255, 255), "Orange"),
-        PINK(new Scalar(145,100,50), new Scalar(170,230,255), "Pink"),
+        PINK(new Scalar(145,100,50), new Scalar(165,200,255), "Pink"),
         OTHER(new Scalar(0,0,0), new Scalar(0,0,0), "Other"); // leave OTHER as is
         public final Scalar lowHSV;
         public final Scalar highHSV;
@@ -73,8 +73,9 @@ public class ConeColorPipeline extends OpenCvPipeline {
         Mat mask = new Mat();
         Imgproc.cvtColor(input, mask, Imgproc.COLOR_RGB2HSV);
 
-        final int CROP_WIDTH = 960;
-        Rect rectCrop = new Rect(480, 0, CROP_WIDTH, CAMERA_HEIGHT);
+        final int CROP_WIDTH = 480;
+        final int CROP_HEIGHT = 400;
+        Rect rectCrop = new Rect(720, 324, CROP_WIDTH, CROP_HEIGHT);
         Mat crop = new Mat(mask, rectCrop);
 
         // Find all pixels within given threshold color values
