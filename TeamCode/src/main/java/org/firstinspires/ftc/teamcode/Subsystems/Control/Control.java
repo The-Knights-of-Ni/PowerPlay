@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.Subsystems.Subsystem;
 
 
@@ -18,9 +20,9 @@ public class Control extends Subsystem {
     private Servo arm;
 
     public enum BarState {
-        HIGH(4780, 1.0), //TODO: calibrate constants
-        MIDDLE(3810, 1.0),
-        LOW(3500, 1.0),
+        HIGH(5700, 1.0), //TODO: calibrate constants
+        MIDDLE(4810, 1.0),
+        LOW(3575, 1.0),
         PICKUP(0, 1.0);
 
         public final int position;
@@ -34,7 +36,7 @@ public class Control extends Subsystem {
 
     public enum ClawState {
         CLOSED(0.72),
-        OPEN(0.63);
+        OPEN(0.65);
 
         public final double position;
 
@@ -44,7 +46,7 @@ public class Control extends Subsystem {
     }
 
     public enum ArmState {
-        DROPOFF(0.215),
+        DROPOFF(0.2),
         PICKUP(0);
 
         public final double position;
@@ -106,12 +108,33 @@ public class Control extends Subsystem {
         this.clawAngle.setPosition(clawAngleState.position);
     }
 
+    class ScoreThread extends Thread {
+        private final Control control;
+        private final BarState barState;
+
+        public ScoreThread(Control control, BarState barState) {
+            this.control = control;
+            this.barState = barState;
+        }
+        @Override
+        public void run() {
+            try {
+                Thread.sleep(1000);
+                if(barState == BarState.HIGH) {
+                    control.toggleClawAngle(ClawAngleState.DROPOFF);
+                    control.toggleArm(ArmState.DROPOFF);
+                } else {
+                    control.toggleClawAngle(ClawAngleState.PICKUP);
+                    control.toggleArm(ArmState.PICKUP);
+                }
+            } catch (Exception e) {
+//            telemetry.addData("Thread Status", "Interrupted " + e);
+            }
+        }
+    }
     public void deploy(BarState barState) {
         this.extendBar(barState);
-        if(barState == BarState.HIGH) {
-            this.toggleClawAngle(ClawAngleState.DROPOFF);
-            this.toggleArm(ArmState.DROPOFF);
-        }
+        new ScoreThread(this, barState).start();
     }
     public void dropoffArm() {
         this.toggleClawAngle(ClawAngleState.DROPOFF);
