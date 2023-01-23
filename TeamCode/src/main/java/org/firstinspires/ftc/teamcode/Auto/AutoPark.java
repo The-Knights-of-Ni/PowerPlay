@@ -23,14 +23,14 @@ public class AutoPark extends Auto{
         telemetry.update();
         switch (coneColor) {
             case GREEN:
-                robot.drive.moveVector(new Vector(-20*mmPerInch, 0));
+                robot.drive.moveVector(new Vector(-24*mmPerInch, 0));
                 robot.drive.moveVector(new Vector(0, 36*mmPerInch));
                 break;
             case PINK:
                 robot.drive.moveVector(new Vector(0, 36*mmPerInch));
                 break;
             case ORANGE:
-                robot.drive.moveVector(new Vector(20*mmPerInch, 0));
+                robot.drive.moveVector(new Vector(24*mmPerInch, 0));
                 robot.drive.moveVector(new Vector(0, 36*mmPerInch));
                 break;
         }
