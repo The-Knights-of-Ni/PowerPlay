@@ -36,9 +36,6 @@ public class Drive extends Subsystem {
 
     // Default drive speeds
     private static final double DRIVE_SPEED = 0.60;
-    private static final double DRIVE_SPEED_X = 0.70;
-    private static final double DRIVE_SPEED_Y = 0.80;
-    private static final double TURN_SPEED = 0.40;
 
     // PID Constants
     private static final double motorKp = 0.0025;
@@ -52,10 +49,10 @@ public class Drive extends Subsystem {
     public final DcMotorEx rearRight;
 
     // PID Controllers
-    public PID flControl;
-    public PID frControl;
-    public PID rlControl;
-    public PID rrControl;
+    public ControlSystem flControl;
+    public ControlSystem frControl;
+    public ControlSystem rlControl;
+    public ControlSystem rrControl;
 
     // State variables for robot position
     private double robotX;
@@ -133,7 +130,7 @@ public class Drive extends Subsystem {
     /**
      * Sets all drive motor powers to zero
      */
-    private void stop() {
+    public void stop() {
         this.frontLeft.setPower(0);
         this.frontRight.setPower(0);
         this.rearLeft.setPower(0);
@@ -283,9 +280,9 @@ public class Drive extends Subsystem {
             prevCountRR = currentCountRR;
 
             initialized = true;
-            Log.d("Target tick", tickCount[0] + " " + tickCount[1] + " " + tickCount[2] + " " + tickCount[3]);
-            Log.d("Current tick", currentCountFL + " " + currentCountFR + " " + currentCountRL + " " + currentCountRR);
-            Log.d("Current power", powerFL + " " + powerFR + " " + powerRL + " " + powerRR);
+            Log.d("PID", "Target tick" + tickCount[0] + " " + tickCount[1] + " " + tickCount[2] + " " + tickCount[3]);
+            Log.d("PID", "Current tick" + currentCountFL + " " + currentCountFR + " " + currentCountRL + " " + currentCountRR);
+            Log.d("PID", "Current power" + powerFL + " " + powerFR + " " + powerRL + " " + powerRR);
         }
     }
 
@@ -300,7 +297,7 @@ public class Drive extends Subsystem {
         double distance = Math.hypot(newV.getX(), newV.getY()) * Math.sqrt(2);
         double angle = Math.atan2(newV.getY(), newV.getX()) - Math.PI / 4;
 
-        int tickCount[] = new int[4];
+        int[] tickCount = new int[4];
         tickCount[0] = (int)((distance * Math.cos(angle)));
         tickCount[0] -= (int)(turnAngle * COUNTS_PER_DEGREE);
         tickCount[1] = (int)((distance * Math.sin(angle)));

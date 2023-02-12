@@ -24,10 +24,10 @@ class DriveTest {
     @Test
     void testCalcMotorPower2D() {
         Drive drive = init();
-        assertEquals(0.5, drive.calcMotorPowers(0, 1, 0)[0], 0.5);
-        assertEquals(0.5, drive.calcMotorPowers(0, 1, 0)[1], 0.5);
-        assertEquals(0.5, drive.calcMotorPowers(0, 1, 0)[2], 0.5);
-        assertEquals(0.5, drive.calcMotorPowers(0, 1, 0)[3], 0.5);
+        assertEquals(0.5, drive.calcMotorPowers(0, 1, 0)[0], 0.3);
+        assertEquals(0.5, drive.calcMotorPowers(0, 1, 0)[1], 0.3);
+        assertEquals(0.5, drive.calcMotorPowers(0, 1, 0)[2], 0.3);
+        assertEquals(0.5, drive.calcMotorPowers(0, 1, 0)[3], 0.3);
         assertNotEquals(0, drive.calcMotorPowers(0, 1, 0)[0]);
         assertNotEquals(0, drive.calcMotorPowers(0, 1, 0)[1]);
         assertNotEquals(0, drive.calcMotorPowers(0, 1, 0)[2]);

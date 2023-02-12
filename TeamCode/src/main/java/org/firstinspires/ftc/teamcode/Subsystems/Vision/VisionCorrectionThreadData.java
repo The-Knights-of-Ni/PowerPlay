@@ -1,13 +1,12 @@
 package org.firstinspires.ftc.teamcode.Subsystems.Vision;
 
-import org.firstinspires.ftc.teamcode.DriveControl.BoundingBox;
 import org.firstinspires.ftc.teamcode.Util.Vector;
 
 public class VisionCorrectionThreadData {
     private static VisionCorrectionThreadData vtd;
     private static Vector correctionVector;
 
-    private static BoundingBox theoreticalPosition;
+    private static Vector theoreticalPosition;
     private static boolean close = false;
 
     public static VisionCorrectionThreadData getVTD() {
@@ -30,11 +29,11 @@ public class VisionCorrectionThreadData {
         vtd.close = newClose;
     }
 
-    public BoundingBox getTheoreticalPosition() {
+    public Vector getTheoreticalPosition() {
         return theoreticalPosition;
     }
 
-    public void setTheoreticalPosition(BoundingBox newPosition) {
+    public void setTheoreticalPosition(Vector newPosition) {
         vtd.theoreticalPosition = newPosition;
     }
 }

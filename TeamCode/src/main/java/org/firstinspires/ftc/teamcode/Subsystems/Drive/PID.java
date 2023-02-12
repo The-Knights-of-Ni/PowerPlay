@@ -2,10 +2,10 @@ package org.firstinspires.ftc.teamcode.Subsystems.Drive;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-public class PID {
-    private double Kp;
-    private double Ki;
-    private double Kd;
+public class PID implements ControlSystem {
+    private final double Kp;
+    private final double Ki;
+    private final double Kd;
 
     protected boolean hasRun = false;
 
@@ -25,18 +25,17 @@ public class PID {
      * calculate PID output
      * @param target the target position
      * @param measured current system state
-     * @return PID output
+     * @return PID output (a double from -1 to 1)
      */
+    @Override
     public double calculate(double target, double measured) {
         double dt = getDT();
         double error = calculateError(target, measured);
-        double derivative = calculateDerivative(error,dt);
+        double derivative = calculateDerivative(error, dt);
         integrate(error, dt);
         previousError = error;
-
         // Cap output at range (-1,1)
-        double cappedOutput = Math.min(1, Math.max(-1, error * Kp + integralSum * Ki + derivative * Kd));
-        return cappedOutput;
+        return Math.min(1, Math.max(-1, error * Kp + integralSum * Ki + derivative * Kd));
     }
 
     /**

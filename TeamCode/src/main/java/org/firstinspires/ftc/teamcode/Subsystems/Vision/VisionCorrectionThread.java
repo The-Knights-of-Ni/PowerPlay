@@ -23,9 +23,9 @@ import org.firstinspires.ftc.robotcore.internal.network.CallbackLooper;
 import org.firstinspires.ftc.robotcore.internal.system.ContinuationSynchronizer;
 import org.firstinspires.ftc.robotcore.internal.system.Deadline;
 
-import org.firstinspires.ftc.teamcode.DriveControl.BoundingBox;
 import org.firstinspires.ftc.teamcode.Util.ThreadExceptionHandler;
 
+import org.firstinspires.ftc.teamcode.Util.Vector;
 import org.tensorflow.lite.Interpreter;
 
 import android.graphics.Bitmap;
@@ -195,7 +195,7 @@ public class VisionCorrectionThread implements Runnable {
             Thread.currentThread().setUncaughtExceptionHandler(new ThreadExceptionHandler());
             if (lock.writeLock().tryLock()) {
                 try {
-                    vtd.setCorrectionVector(getBoundingBoxFromModel().distanceFrom(vtd.getTheoreticalPosition()));
+                    vtd.setCorrectionVector((Vector) getBoundingBoxFromModel().subtract(vtd.getTheoreticalPosition()));
                 } catch (IOException e) {
                     Log.e(TAG, "Image Error", e);
                 } finally {
@@ -209,7 +209,7 @@ public class VisionCorrectionThread implements Runnable {
         Thread.currentThread().interrupt();
     }
 
-    private BoundingBox getBoundingBoxFromModel() throws IOException {
+    private Vector getBoundingBoxFromModel() throws IOException {
         Precision.DoubleEquivalence precision = Precision.doubleEquivalenceOfEpsilon(1e-6);
         double distanceOff = 0;
         Map<String, Object> inputs = new HashMap<>();
@@ -225,14 +225,6 @@ public class VisionCorrectionThread implements Runnable {
         Map<String, Object> outputs = new HashMap<>();
         outputs.put("output_1", distanceOff);
         modelInterpreter.run(inputs, outputs);
-        // create a connected sequence of line segments forming the unit square
-        LinePath path = LinePath.builder(precision)
-                .append(Vector2D.ZERO)
-                .append(Vector2D.Unit.PLUS_X)
-                .append(Vector2D.of(1, 1))
-                .append(Vector2D.Unit.PLUS_Y)
-                .build(true); // build the path, ending it with the starting point
-        ConvexArea shape = ConvexArea.convexPolygonFromPath(path);
-        return new BoundingBox(shape); //TODO: Add code for obtaining usable bounding boxes from TF model, delete this filler when complete
+        return new Vector(1, 1); //TODO: Add code for obtaining usable bounding boxes from TF model, delete this filler when complete
     }
 }

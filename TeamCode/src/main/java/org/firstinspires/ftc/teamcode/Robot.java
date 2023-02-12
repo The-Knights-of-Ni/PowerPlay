@@ -10,10 +10,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Subsystems.Control.Control;
 import org.firstinspires.ftc.teamcode.Subsystems.Drive.Drive;
 import org.firstinspires.ftc.teamcode.Subsystems.Vision.Vision;
-import org.firstinspires.ftc.teamcode.Subsystems.Web.WebThread;
-import org.firstinspires.ftc.teamcode.Subsystems.Web.WebThreadData;
 import org.firstinspires.ftc.teamcode.Util.AllianceColor;
-import org.firstinspires.ftc.teamcode.Util.WebLog;
 
 import java.util.HashMap;
 import java.util.List;
@@ -105,14 +102,12 @@ public class Robot {
     public Drive drive;
     public Control control;
     public Vision vision;
-    public WebThread web;
     private final AllianceColor allianceColor;
     public final boolean visionEnabled;
     private final boolean webEnabled;
     private final boolean visionCorrectionEnabled;
     private final boolean odometryEnabled;
 
-    private WebThreadData wtd;
     private final HardwareMap hardwareMap;
     private final Telemetry telemetry;
     private static final double joystickDeadZone = 0.1;
@@ -144,7 +139,6 @@ public class Robot {
         this.telemetry = telemetry;
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
-        this.wtd = WebThreadData.getWtd();
         init();
     }
 
@@ -291,8 +285,6 @@ public class Robot {
     public void telemetryBroadcast(String caption, String value) {
         telemetry.addData(caption, value);
         telemetry.update();
-        if (webEnabled)
-            wtd.addLog(new WebLog(caption, value, WebLog.LogSeverity.INFO));
         Log.i(caption, value);
     }
 }
