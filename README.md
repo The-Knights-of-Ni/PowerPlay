@@ -8,7 +8,7 @@ This repository contains FTC Team 5206's repository for the Power Play (2022-202
 
 ## Branches
 
-Create branches for individual components in the code. Do not commit directly to master. Do not commit branch merges on your own. Contact @rlin232 or @moogloof for any urgent merge requests.
+Create branches for individual components in the code. Do not commit directly to master. Do not commit branch merges on your own. Contact @rlin232, @moogloof, or @albonec for any urgent merge requests.
 # Docs
 * A notion documentation page exists.
 * There is javadoc for most things.
