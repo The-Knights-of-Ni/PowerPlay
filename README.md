@@ -12,3 +12,4 @@ Create branches for individual components in the code. Do not commit directly to
 # Docs
 * A notion documentation page exists.
 * There is javadoc for most things.
+=============
