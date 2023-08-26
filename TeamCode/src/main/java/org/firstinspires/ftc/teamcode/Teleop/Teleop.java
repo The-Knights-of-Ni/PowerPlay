@@ -64,23 +64,19 @@ public class Teleop extends LinearOpMode {
         final double sensitivityLowPower = 0.7; // multiply inputs with this on non-high power mode
 
         while (opModeIsActive()) { // clearer nomenclature for variables
-            robot.getGamePadInputs();
+            robot.gamepads.update();
 
             timeCurrent = timer.nanoseconds();
             deltaT = timeCurrent - timePre;
             timePre = timeCurrent;
 
-            if(robot.yButton) {
-                driveHighPower = true;
-            } else {
-                driveHighPower = false;
-            }
+            driveHighPower = robot.gamepads.yButton.toggle;
 
-            if(robot.bButton) {
+            if (robot.gamepads.bButton.isPressed()) {
                 robot.bar.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             }
 
-            if(robot.aButton && !robot.isaButtonPressedPrev) {
+            if (robot.gamepads.aButton.isPressed() && !robot.gamepads.aButton.hasPressedPrev()) {
                 if(armDeployed) {
                     robot.control.pickupArm();
                     armDeployed = false;
@@ -93,44 +89,44 @@ public class Teleop extends LinearOpMode {
             // Robot drive movement
             double[] motorPowers;
             if (driveHighPower) {
-                motorPowers = robot.drive.calcMotorPowers(robot.leftStickX * sensitivityHighPower, robot.leftStickY * sensitivityHighPower, robot.rightStickX * sensitivityHighPower);
+                motorPowers = robot.drive.calcMotorPowers(robot.gamepads.leftStickX * sensitivityHighPower, robot.gamepads.leftStickY * sensitivityHighPower, robot.gamepads.rightStickX * sensitivityHighPower);
             }
             else {
-                motorPowers = robot.drive.calcMotorPowers(robot.leftStickX * sensitivityLowPower, robot.leftStickY * sensitivityLowPower, robot.rightStickX * sensitivityLowPower);
+                motorPowers = robot.drive.calcMotorPowers(robot.gamepads.leftStickX * sensitivityLowPower, robot.gamepads.leftStickY * sensitivityLowPower, robot.gamepads.rightStickX * sensitivityLowPower);
             }
             robot.drive.setDrivePowers(motorPowers);
 
             // Score state control
-            if(robot.dPadUp || robot.dPadUp2) {
+            if (robot.gamepads.dPadUp.isPressed() || robot.gamepads.dPadUp2.isPressed()) {
                 robot.control.deploy(Control.BarState.HIGH);
             }
-            if(robot.dPadLeft || robot.dPadLeft2) {
+            if (robot.gamepads.dPadLeft.isPressed() || robot.gamepads.dPadLeft2.isPressed()) {
                 robot.control.deploy(Control.BarState.LOW);
             }
-            if(robot.dPadRight || robot.dPadRight2) {
+            if (robot.gamepads.dPadRight.isPressed() || robot.gamepads.dPadRight2.isPressed()) {
                 robot.control.deploy(Control.BarState.MIDDLE);
             }
-            if(robot.dPadDown || robot.dPadDown2) {
+            if (robot.gamepads.dPadDown.isPressed() || robot.gamepads.dPadDown2.isPressed()) {
                 robot.control.retract();
             }
 
             // Manual 4-bar override
-            if(robot.bumperRight || robot.bumperRight2) {
+            if (robot.gamepads.bumperRight.isPressed() || robot.gamepads.bumperRight2.isPressed()) {
                 robot.bar.setPower(1);
                 robot.bar.setTargetPosition(robot.bar.getCurrentPosition() + 150);
                 robot.bar.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
             }
-            if(robot.bumperLeft || robot.bumperLeft2) {
+            if (robot.gamepads.bumperLeft.isPressed() || robot.gamepads.bumperLeft2.isPressed()) {
                 robot.bar.setPower(1);
                 robot.bar.setTargetPosition(robot.bar.getCurrentPosition() - 150);
                 robot.bar.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
             }
 
             // Claw open-close
-            if(robot.triggerRight > 0.5) {
+            if (robot.gamepads.triggerRight > 0.5) {
                 robot.control.toggleClaw(Control.ClawState.OPEN);
             }
-            if(robot.triggerLeft > 0.5) {
+            if (robot.gamepads.triggerLeft > 0.5) {
                 robot.control.toggleClaw(Control.ClawState.CLOSED);
             }
 

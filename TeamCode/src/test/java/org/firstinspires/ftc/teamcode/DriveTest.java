@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.Subsystems.Drive.Drive;
-import org.firstinspires.ftc.teamcode.Util.Vector;
 import org.junit.jupiter.api.Test;
 
 class DriveTest {
@@ -18,7 +17,7 @@ class DriveTest {
         MockDcMotorEx mockRR = new MockDcMotorEx(DcMotor.RunMode.RUN_USING_ENCODER);
         ElapsedTime timer = new ElapsedTime();
         MockTelemetry telemetry = new MockTelemetry();
-        return new Drive(mockFL, mockFR, mockRL, mockRR, telemetry, timer);
+        return new Drive(mockFL, mockFR, mockRL, mockRR, false, telemetry, timer);
     }
 
     @Test

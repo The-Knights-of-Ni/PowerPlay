@@ -103,7 +103,6 @@ public class ConeColorPipeline extends OpenCvPipeline {
         } else {
             coneColor = ConeColor.OTHER;
         }
-
         // Return whichever mat is desired to be viewed on Camera Stream
         return threshMagenta;
     }
