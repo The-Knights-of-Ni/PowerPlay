@@ -3,7 +3,10 @@ package org.firstinspires.ftc.teamcode;
 import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
+import java.util.HashMap;
+
 public class MockTelemetry implements Telemetry {
+    public HashMap<String, String> logs;
 
     @Override
     public Item addData(String caption, String format, Object... args) {

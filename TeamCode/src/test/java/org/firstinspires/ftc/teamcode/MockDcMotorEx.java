@@ -213,8 +213,7 @@ public class MockDcMotorEx implements DcMotorEx {
     public void setPower(double power) {
         if (power <= 1.0 && power >= -1.0) {
             currentPower = power;
-        }
-        else {
+        } else {
             throw new IllegalArgumentException("Current power not between -1 and 1 (inclusive). Attempted power was " + power);
         }
     }

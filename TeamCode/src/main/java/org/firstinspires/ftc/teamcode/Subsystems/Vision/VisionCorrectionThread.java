@@ -23,7 +23,7 @@ import org.firstinspires.ftc.robotcore.internal.network.CallbackLooper;
 import org.firstinspires.ftc.robotcore.internal.system.ContinuationSynchronizer;
 import org.firstinspires.ftc.robotcore.internal.system.Deadline;
 
-import org.firstinspires.ftc.teamcode.DriveControl.BoundingBox;
+import org.firstinspires.ftc.teamcode.Geometry.BoundingBox;
 import org.firstinspires.ftc.teamcode.Util.ThreadExceptionHandler;
 
 import org.tensorflow.lite.Interpreter;

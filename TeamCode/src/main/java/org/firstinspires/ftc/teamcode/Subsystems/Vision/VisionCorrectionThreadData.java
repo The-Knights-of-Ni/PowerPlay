@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.Subsystems.Vision;
 
-import org.firstinspires.ftc.teamcode.DriveControl.BoundingBox;
+import org.firstinspires.ftc.teamcode.Geometry.BoundingBox;
 import org.firstinspires.ftc.teamcode.Util.Vector;
 
 public class VisionCorrectionThreadData {
