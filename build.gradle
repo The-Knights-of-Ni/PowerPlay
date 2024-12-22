@@ -10,17 +10,19 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.4.2'
+        // Note for FTC Teams: Do not modify this yourself.
+        classpath 'com.android.tools.build:gradle:8.5.2'
     }
 }
 
-System.setProperty( "user.dir", project.projectDir.toString() )
-System.println("Configuration Started: PowerPlay")
+System.setProperty("user.dir", project.projectDir.toString())
+System.println("Configuration Started: CenterStage")
 System.println("********************************")
-System.println("projectdir="+project.projectDir.toString())
-System.println("project version="+project.version.toString())
-System.println("gradle version="+gradle.gradleVersion)
-System.println("root project="+gradle.rootProject)
+System.println("project dir=" + project.projectDir.toString())
+System.println("project version=" + project.version.toString())
+System.println("gradle version=" + gradle.gradleVersion)
+System.println("root project=" + gradle.rootProject)
+System.println("gradle java version=" + System.getProperty("java.version"))
 
 // This is now required because aapt2 has to be downloaded from the
 // google() repository beginning with version 3.2 of the Android Gradle Plugin
@@ -33,8 +35,4 @@ allprojects {
 
 repositories {
     mavenCentral()
-
-    flatDir {
-        dirs '../libs'
-    }
 }

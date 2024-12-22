@@ -13,26 +13,32 @@ public class AutoPark extends Auto{
         initAuto(AllianceColor.RED);
         waitForStart();
         timer.reset();
-        robot.vision.start();
+//        robot.vision.start();
         ConeColor coneColor = ConeColor.OTHER;
-        while(coneColor == ConeColor.OTHER) {
-            coneColor = robot.vision.detectConeColor();
-        }
-        robot.vision.stop();
+//        while(coneColor == ConeColor.OTHER) {
+//            coneColor = robot.vision.detectConeColor();
+//        }
+//        robot.vision.stop();
         telemetry.addData("Cone Color", coneColor.color);
         telemetry.update();
-        switch (coneColor) {
-            case GREEN:
-                robot.drive.moveVector(new Vector(-24*mmPerInch, 0));
-                robot.drive.moveVector(new Vector(0, 36*mmPerInch));
-                break;
-            case PINK:
-                robot.drive.moveVector(new Vector(0, 36*mmPerInch));
-                break;
-            case ORANGE:
-                robot.drive.moveVector(new Vector(24*mmPerInch, 0));
-                robot.drive.moveVector(new Vector(0, 36*mmPerInch));
-                break;
-        }
+
+        robot.drive.moveVector(new Vector(12*mmPerInch, 0));
+        robot.drive.moveVector(new Vector(-12*mmPerInch, 0));
+        robot.drive.moveVector(new Vector(0, 12*mmPerInch));
+        robot.drive.moveVector(new Vector(0, -12*mmPerInch));
+
+//        switch (coneColor) {
+//            case GREEN:
+//                robot.drive.moveVector(new Vector(-24*mmPerInch, 0));
+//                robot.drive.moveVector(new Vector(0, 36*mmPerInch));
+//                break;
+//            case PINK:
+//                robot.drive.moveVector(new Vector(0, 36*mmPerInch));
+//                break;
+//            case ORANGE:
+//                robot.drive.moveVector(new Vector(24*mmPerInch, 0));
+//                robot.drive.moveVector(new Vector(0, 36*mmPerInch));
+//                break;
+//        }
     }
 }

@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.Subsystems.Drive.Drive;
-import org.firstinspires.ftc.teamcode.Subsystems.Vision.Vision;
+//import org.firstinspires.ftc.teamcode.Subsystems.Vision.Vision;
 import org.firstinspires.ftc.teamcode.Util.AllianceColor;
 
 import java.util.HashMap;
@@ -50,7 +50,7 @@ public abstract class Auto extends LinearOpMode {
         timer = new ElapsedTime();
         try {
             HashMap<String, Boolean> flags = new HashMap<>();
-            flags.put("vision", true);
+            flags.put("vision", false);
             flags.put("web", false);
             this.robot = new Robot(hardwareMap, telemetry, timer, allianceColor, gamepad1, gamepad2, flags);
             robot.control.initDevicesAuto();

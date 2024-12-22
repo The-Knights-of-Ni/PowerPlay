@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Subsystems.Control.Control;
 import org.firstinspires.ftc.teamcode.Subsystems.Drive.Drive;
-import org.firstinspires.ftc.teamcode.Subsystems.Vision.Vision;
+//import org.firstinspires.ftc.teamcode.Subsystems.Vision.Vision;
 import org.firstinspires.ftc.teamcode.Subsystems.Web.WebThread;
 import org.firstinspires.ftc.teamcode.Subsystems.Web.WebThreadData;
 import org.firstinspires.ftc.teamcode.Util.AllianceColor;
@@ -50,7 +50,7 @@ public class Robot {
     // Subsystems
     public Drive drive;
     public Control control;
-    public Vision vision;
+//    public Vision vision;
     public WebThread web;
     private final AllianceColor allianceColor;
     public final boolean visionEnabled;
@@ -71,7 +71,7 @@ public class Robot {
         telemetry.setDisplayFormat(Telemetry.DisplayFormat.HTML); // Allow usage of some HTML tags
         telemetry.log().setDisplayOrder(Telemetry.Log.DisplayOrder.OLDEST_FIRST);
         telemetry.log().setCapacity(5);
-        telemetryBroadcast("init", "started");
+//        telemetryBroadcast("init", "started");
         Log.i(initLogTag, "started");
         Log.v(initLogTag, "android version: " + Build.VERSION.RELEASE);
 //        double batteryVoltage = getBatteryVoltage();
@@ -126,16 +126,16 @@ public class Robot {
         rearLeftDriveMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         rearRightDriveMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 
-        bar = (DcMotorEx) hardwareMap.dcMotor.get("bar");
-        bar.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        bar.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        bar.setPower(0.0);
+//        bar = (DcMotorEx) hardwareMap.dcMotor.get("bar");
+//        bar.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+//        bar.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+//        bar.setPower(0.0);
     }
 
     private void servoInit() {
-        claw = hardwareMap.servo.get("claw");
-        clawAngle = hardwareMap.servo.get("clawAngle");
-        arm = hardwareMap.servo.get("arm");
+//        claw = hardwareMap.servo.get("claw");
+//        clawAngle = hardwareMap.servo.get("clawAngle");
+//        arm = hardwareMap.servo.get("arm");
     }
 
     public void subsystemInit()
@@ -150,7 +150,7 @@ public class Robot {
 
         if (visionEnabled) {
             Log.d("init", "Vision subsystem init started");
-            vision = new Vision(telemetry, hardwareMap, allianceColor, visionCorrectionEnabled);
+//            vision = new Vision(telemetry, hardwareMap, allianceColor, visionCorrectionEnabled);
             Log.i("init", "Vision subsystem init finished");
         }
         else {
@@ -169,7 +169,7 @@ public class Robot {
                 Log.e(initLogTag, "Web Thread init failed " + e.getMessage());
             }
         }
-        telemetryBroadcast("Status", "all subsystems initialized");
+//        telemetryBroadcast("Status", "all subsystems initialized");
     }
 
     public Telemetry.Item telemetryBroadcast(String caption, String value) {

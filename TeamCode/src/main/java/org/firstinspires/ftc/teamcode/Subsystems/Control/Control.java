@@ -76,10 +76,10 @@ public class Control extends Subsystem {
     }
 
     public void initDevicesAuto() {
-        this.extendBar(BarState.PICKUP);
-        this.toggleArm(ArmState.PICKUP);
-        this.toggleClaw(ClawState.CLOSED);
-        this.toggleClawAngle(ClawAngleState.PICKUP);
+//        this.extendBar(BarState.PICKUP);
+//        this.toggleArm(ArmState.PICKUP);
+//        this.toggleClaw(ClawState.CLOSED);
+//        this.toggleClawAngle(ClawAngleState.PICKUP);
 
     }
 

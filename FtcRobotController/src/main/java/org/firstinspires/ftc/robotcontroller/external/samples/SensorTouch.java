@@ -32,53 +32,47 @@ package org.firstinspires.ftc.robotcontroller.external.samples;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.IrSeekerSensor;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 
 /*
- * This is an example LinearOpMode that shows how to use
- * the Modern Robotics ITR Seeker
+ * This OpMode demonstrates how to use a REV Robotics Touch Sensor, REV Robotics Magnetic Limit Switch, or other device
+ * that implements the TouchSensor interface. Any touch sensor that connects its output to ground when pressed
+ * (known as "active low") can be configured as a "REV Touch Sensor". This includes REV's Magnetic Limit Switch.
  *
- * The op mode assumes that the IR Seeker
- * is configured with a name of "sensor_ir".
+ * The OpMode assumes that the touch sensor is configured with a name of "sensor_touch".
  *
- * Set the switch on the Modern Robotics IR beacon to 1200 at 180.  <br>
- * Turn on the IR beacon.
- * Make sure the side of the beacon with the LED on is facing the robot. <br>
+ * A REV Robotics Touch Sensor must be configured on digital port number 1, 3, 5, or 7.
+ * A Magnetic Limit Switch can be configured on any digital port.
  *
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
+ * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list.
  */
-@TeleOp(name = "Sensor: MR IR Seeker", group = "Sensor")
+@TeleOp(name = "Sensor: REV touch sensor", group = "Sensor")
 @Disabled
-public class SensorMRIrSeeker extends LinearOpMode {
+public class SensorTouch extends LinearOpMode {
+    TouchSensor touchSensor;  // Touch sensor Object
 
-  @Override
-  public void runOpMode() {
+    @Override
+    public void runOpMode() {
 
-    IrSeekerSensor irSeeker;    // Hardware Device Object
+        // get a reference to our touchSensor object.
+        touchSensor = hardwareMap.get(TouchSensor.class, "sensor_touch");
 
-    // get a reference to our GyroSensor object.
-    irSeeker = hardwareMap.get(IrSeekerSensor.class, "sensor_ir");
+        // wait for the start button to be pressed.
+        waitForStart();
 
-    // wait for the start button to be pressed.
-    waitForStart();
+        // while the OpMode is active, loop and read whether the sensor is being pressed.
+        // Note we use opModeIsActive() as our loop condition because it is an interruptible method.
+        while (opModeIsActive()) {
 
-    while (opModeIsActive())  {
+            // send the info back to driver station using telemetry function.
+            if (touchSensor.isPressed()) {
+                telemetry.addData("Touch Sensor", "Is Pressed");
+            } else {
+                telemetry.addData("Touch Sensor", "Is Not Pressed");
+            }
 
-      // Ensure we have a IR signal
-      if (irSeeker.signalDetected())
-      {
-        // Display angle and strength
-        telemetry.addData("Angle",    irSeeker.getAngle());
-        telemetry.addData("Strength", irSeeker.getStrength());
-      }
-      else
-      {
-        // Display loss of signal
-        telemetry.addData("Seeker", "Signal Lost");
-      }
-
-      telemetry.update();
+            telemetry.update();
+        }
     }
-  }
 }

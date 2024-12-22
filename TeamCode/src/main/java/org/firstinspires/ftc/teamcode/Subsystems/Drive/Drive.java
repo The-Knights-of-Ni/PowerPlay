@@ -308,7 +308,7 @@ public class Drive extends Subsystem {
         tickCount[2] -= (int)(turnAngle * COUNTS_PER_DEGREE);
         tickCount[3] = (int)((distance * Math.cos(angle)));
         tickCount[3] += (int)(turnAngle * COUNTS_PER_DEGREE);
-        MoveSystem[] pids = {new PID(motorKp, motorKi, motorKd), new PID(motorKp, motorKi, motorKd), new PID(motorKp, motorKi, motorKd)};
+        MoveSystem[] pids = {new PID(motorKp, motorKi, motorKd), new PID(motorKp, motorKi, motorKd), new PID(motorKp, motorKi, motorKd), new PID(motorKp, motorKi, motorKd)};
         allMotorControl(tickCount, pids);
         stop();
     }

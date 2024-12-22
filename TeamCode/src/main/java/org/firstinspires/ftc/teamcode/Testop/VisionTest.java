@@ -24,12 +24,12 @@ public class VisionTest extends LinearOpMode {
         Robot robot = new Robot(hardwareMap, telemetry, new ElapsedTime(), AllianceColor.BLUE, gamepad1, gamepad2, new HashMap<>());
 
         waitForStart();
-        robot.vision.start();
+//        robot.vision.start();
         ConeColorPipeline.ConeColor coneColor = ConeColorPipeline.ConeColor.OTHER;
-        while(coneColor == ConeColorPipeline.ConeColor.OTHER) {
-            coneColor = robot.vision.detectConeColor();
-        }
-        robot.vision.stop();
+//        while(coneColor == ConeColorPipeline.ConeColor.OTHER) {
+//            coneColor = robot.vision.detectConeColor();
+//        }
+//        robot.vision.stop();
         telemetry.addData("cone color", coneColor.color);
         telemetry.update();
         sleep(10000);
